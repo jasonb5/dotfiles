@@ -18,8 +18,10 @@ link_files() {
 
     shift
 
-    backup_file "${install_path}/${filename}"
+    if [[ ! -h "${install_path}/${filename}" ]]; then
+      backup_file "${install_path}/${filename}"
 
-    ln -sf "${filename}" "${install_path}"
+      ln -sf "${PWD}/${filename}" "${install_path}"
+    fi
   done
 }
