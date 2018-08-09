@@ -19,6 +19,10 @@ popd
 
 pushd "${dotfile_path}"
 
+git submodule init
+
+git submodule update
+
 . .bash.function.sh
 
 link_files "$HOME" $(cat files.txt)

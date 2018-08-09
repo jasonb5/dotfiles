@@ -1,3 +1,5 @@
+.vim
+.tmux.conf
 .bashrc
 .bash.alias.sh
 .bash.function.sh
