@@ -1,3 +1,9 @@
+gen_tls_cert() {
+  openssl genrsa -out "${1}.key" 4096
+
+  openssl req -x509 -new -nodes -key "${1}.key" -sha256 -days 1024 -subj "/C=US/ST=CA/L=Bay Area/O=Blackhole/CN=blackhole" -out "${1}.crt"
+}
+
 gen_ca() {
   openssl genrsa -out ca.key 4096
 
