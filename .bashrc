@@ -1,3 +1,3 @@
-. .bash.alias.sh
+. ~/.bash.alias.sh
 
-. .bash.function.sh
+. ~/.bash.function.sh
