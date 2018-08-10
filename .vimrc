@@ -6,6 +6,10 @@ call vundle#begin()
 
 Plugin 'kaicataldo/material.vim'
 
+Plugin 'vim-airline/vim-airline'
+
+Plugin 'jreybert/vimagit'
+
 call vundle#end()
 
 filetype plugin on
@@ -18,6 +22,8 @@ set background=dark
 colorscheme material
 
 let g:material_theme_style = 'dark'
+
+let g:airline_theme = 'material'
 
 inoremap jk <esc>
 
