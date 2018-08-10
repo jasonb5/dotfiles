@@ -9,3 +9,13 @@ read candidate_path
 [[ -n "${candidate_path}" ]] && install_path="${candidate_path}"
 
 echo "Installing into \"${install_path}\""
+
+cd ${install_path}
+
+git clone https://github.com/jasonb5/dotfiles
+
+cd dotfiles
+
+git submodule init
+
+git submodule update
