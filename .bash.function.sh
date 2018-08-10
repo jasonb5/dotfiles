@@ -1,3 +1,7 @@
+is_installed() {
+  [[ -z "$(command -v $1)" ]] && echo "1" || echo "0"
+}
+
 gen_tls_cert() {
   openssl genrsa -out "${1}.key" 4096
 

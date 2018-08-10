@@ -28,3 +28,5 @@ git submodule update
 link_files "$HOME" $(cat files.txt)
 
 popd
+
+[[ "$(is_installed vim)" == "0" ]] && vim +PluginInstall +qall
