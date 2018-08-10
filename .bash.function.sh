@@ -80,6 +80,8 @@ link_files() {
     if [[ ! -h "${install_path}/${filename}" ]]; then
       backup_file "${install_path}/${filename}"
 
+      echo "Linking ${PWD}/${filename} to ${install_path}"
+
       ln -sf "${PWD}/${filename}" "${install_path}"
     fi
   done
