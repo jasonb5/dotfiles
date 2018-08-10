@@ -10,6 +10,8 @@ read candidate_path
 
 echo "Installing into \"${install_path}\""
 
+[[ -e "${install_path}" ]] || mkdir -p ${install_path}
+
 cd ${install_path}
 
 git clone https://github.com/jasonb5/dotfiles
