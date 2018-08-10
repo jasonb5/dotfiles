@@ -32,3 +32,5 @@ git submodule update
 echo "Linking files from \"files.txt\""
 
 link_files "${HOME}" $(cat files.txt)
+
+[[ "$(is_installed vim)" == "0" ]] && vim Silent +PluginInstall +qall
