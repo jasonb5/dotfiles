@@ -1,6 +1,6 @@
 export DOTFILE_PATH=/root/devel/dotfiles
 
-export TERM="screen-256color"
+export TERM="xterm-256color"
 
 . ~/.bash.alias.sh
 

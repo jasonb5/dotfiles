@@ -2,6 +2,7 @@
 .tmux.conf
 .gitconfig
 .bashrc
+.bash_profile
 .bash.alias.sh
 .bash.function.sh
 .vimrc
