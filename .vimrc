@@ -4,11 +4,15 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+" Colorschemes
 Plugin 'kaicataldo/material.vim'
 
+" Functionality plugins
 Plugin 'vim-airline/vim-airline'
-
 Plugin 'jreybert/vimagit'
+
+" Typescript
+Plugin 'leafgarland/typescript-vim'
 
 call vundle#end()
 
