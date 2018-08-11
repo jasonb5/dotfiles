@@ -7,6 +7,10 @@ call vundle#begin()
 " General
 Plugin 'VundleVim/Vundle.vim'
 
+" Airline
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+
 " Colorschemes
 Plugin 'NLKNguyen/papercolor-theme'
 
@@ -44,6 +48,7 @@ set t_Co=256
 colorscheme PaperColor
 
 let highlight_builtins = 1
+let g:airline_theme = 'papercolor'
 
 inoremap jk <esc>
 
