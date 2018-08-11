@@ -7,8 +7,10 @@ alias ef="vim ${HOME}/.bash.function.sh"
 
 alias dot="cd ${DOTFILE_PATH}"
 
+alias gs="git status"
 alias ga="git add"
 alias gr="git reset --hard HEAD"
 alias gc="git checkout"
 alias gcm="git commit"
-alias gr="git rm"
+alias grm="git rm"
+alias gp="git push"
