@@ -1,3 +1,7 @@
+search() {
+  find ${PWD} -type f -exec grep -nH ${1} {} \;
+}
+
 contains() {
   [[ -z "$(cat $1 | grep $2)" ]] && echo 1 || echo 0
 }
