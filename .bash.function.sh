@@ -1,5 +1,9 @@
+contains() {
+  [[ -z "$(cat $1 | grep $2)" ]] && echo 1 || echo 0
+}
+
 is_installed() {
-  [[ -z "$(command -v $1)" ]] && echo "1" || echo "0"
+  [[ -z "$(command -v $1)" ]] && echo 1 || echo 0
 }
 
 gen_tls_cert() {

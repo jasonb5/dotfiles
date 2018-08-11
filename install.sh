@@ -33,4 +33,10 @@ echo "Linking files from \"files.txt\""
 
 link_files "${HOME}" $(cat files.txt)
 
-[[ "$(is_installed vim)" == "0" ]] && vim Silent +PluginInstall +qall
+if [[ $(contains "${PWD}/.bashrc" "DOTFILE_PATH") -eq 1 ]]; then
+  echo -e "export DOTFILE_PATH=${PWD}\n\n$(cat ${PWD}/.bashrc)" > "${PWD}/.bashrc"
+fi
+
+[[ $(is_installed vim) -eq 0 ]] && vim Silent +PluginInstall +qall
+
+exec bash
