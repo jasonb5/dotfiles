@@ -49,6 +49,7 @@ colorscheme PaperColor
 
 let highlight_builtins = 1
 let g:airline_theme = 'papercolor'
+let g:go_version_warning = 0
 
 inoremap jk <esc>
 
@@ -59,9 +60,9 @@ nnoremap <C-H> <C-W><C-H>
 
 au BufNewFile,BufRead *.py
     \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
-    \ set fileformat=unix
+    \ softtabstop=4
+    \ shiftwidth=4
+    \ textwidth=79
+    \ expandtab
+    \ autoindent
+    \ fileformat=unix
