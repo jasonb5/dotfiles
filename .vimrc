@@ -51,12 +51,17 @@ let highlight_builtins = 1
 let g:airline_theme = 'papercolor'
 let g:go_version_warning = 0
 
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+
 inoremap jk <esc>
 
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+nnoremap <S-n> :bnext<cr>
 
 au BufNewFile,BufRead *.py
     \ set tabstop=4
