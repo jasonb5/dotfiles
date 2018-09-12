@@ -37,6 +37,6 @@ if [[ $(contains "${PWD}/.bashrc" "DOTFILE_PATH") -eq 1 ]]; then
   echo -e "export DOTFILE_PATH=${PWD}\n\n$(cat ${PWD}/.bashrc)" > "${PWD}/.bashrc"
 fi
 
-[[ $(is_installed vim) -eq 0 ]] && vim Silent +PluginInstall +qall
+[[ $(is_installed vim) -ne 0 ]] && apt update && apt install -y vim
 
-exec bash
+[[ $(is_installed vim) -eq 0 ]] && vim Silent +PluginInstall +qall
