@@ -21,13 +21,14 @@ Plugin 'fatih/vim-go'
 Plugin 'vim-scripts/dtrace-syntax-file'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'hdima/python-syntax'
-Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'}
+Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'NLKNguyen/c-syntax.vim'
 Plugin 'leafgarland/typescript-vim'
 
 " Python
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'vim-syntastic/syntastic'
+Plugin 'nvie/vim-flake8'
 
 call vundle#end()
 
