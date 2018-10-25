@@ -45,6 +45,7 @@ set showmatch
 set background=dark
 set encoding=utf-8
 set t_Co=256
+set backspace=indent,eol,start
 
 colorscheme PaperColor
 
