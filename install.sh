@@ -15,11 +15,15 @@ echo "Installing into \"${install_path}\""
 
 cd "${install_path}"
 
+dotfile_path="${install_path}/dotfiles"
+
 echo "Cloning dotfile from ${github_url}"
 
 git clone ${github_url}
 
-cd "dotfiles"
+cd "${dotfile_path}"
+
+echo "${dotfile_path}" > "${dotfile_path}/.DOTFILE_INSTALL_PATH"
 
 echo "Checking out submodules"
 

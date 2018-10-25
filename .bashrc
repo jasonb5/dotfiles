@@ -1,4 +1,4 @@
-export DOTFILE_PATH=/root/devel/dotfiles
+export DOTFILE_PATH="$(cat ${HOME}/.DOTFILE_INSTALL_PATH)"
 
 export TERM="xterm-256color"
 
