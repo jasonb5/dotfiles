@@ -17,30 +17,31 @@ cd "${install_path}"
 
 dotfile_path="${install_path}/dotfiles"
 
-echo "Cloning dotfile from ${github_url}"
+if [[ -e "${dotfile_path}" ]]
+then
+  cd "${dotfile_path}"
 
-git clone ${github_url}
+  git pull
 
-cd "${dotfile_path}"
+  git submodule update
+else
+  echo "Cloning dotfile from ${github_url} to ${dotfile_path}"
 
-echo "${dotfile_path}" > "${dotfile_path}/.DOTFILE_INSTALL_PATH"
+  git clone ${github_url}
 
-echo "Checking out submodules"
+  cd "${dotfile_path}"
 
-git submodule init
+  echo "${dotfile_path}" > "${dotfile_path}/.DOTFILE_INSTALL_PATH"
 
-git submodule update
+  echo "Checking out submodules"
+
+  git submodule init
+
+  git submodule update
+fi
 
 . "${PWD}/.bash.function.sh"
 
 echo "Linking files from \"files.txt\""
 
 link_files "${HOME}" $(cat files.txt)
-
-if [[ $(contains "${PWD}/.bashrc" "DOTFILE_PATH") -eq 1 ]]; then
-  echo -e "export DOTFILE_PATH=${PWD}\n\n$(cat ${PWD}/.bashrc)" > "${PWD}/.bashrc"
-fi
-
-[[ $(is_installed vim) -ne 0 ]] && apt update && apt install -y vim
-
-[[ $(is_installed vim) -eq 0 ]] && vim Silent +PluginInstall +qall

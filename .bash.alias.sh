@@ -1,3 +1,5 @@
+unalias -a
+
 alias sb=". ${HOME}/.bashrc"
 
 alias eb="vim ${HOME}/.bashrc"
@@ -7,10 +9,7 @@ alias ef="vim ${HOME}/.bash.function.sh"
 
 alias dot="cd ${DOTFILE_PATH}"
 
-alias gs="git status"
-alias ga="git add"
-alias gr="git reset --hard HEAD"
-alias gc="git checkout"
-alias gcm="git commit"
-alias grm="git rm"
-alias gp="git push"
+alias kube="kubectl"
+alias pods="kube get pods"
+alias skube="kube -n kube-system"
+alias spods="skube get pods"
