@@ -6,4 +6,4 @@
 .bash.alias.sh
 .bash.function.sh
 .vimrc
-.DOTFILE_INSTALL_PATH
+.dotfile_path

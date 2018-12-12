@@ -1,39 +1,42 @@
-backup_file() {
-  local file_path="${1}"
-
-  [[ -e "${file_path}" ]] && mv "${file_path}" "${file_path}.bak"
+function pexec {
+  kube exec -it $1 /bin/bash
 }
 
-link_files() {
-  local install_dir="${1}" && shift
-
-  while [[ $# -gt 0 ]]; do
-    local install_file="${install_dir}/${1}" && shift
-
-    if [[ ! -h "${install_file}" ]]; then
-      backup_file "${install_file}"
-
-      echo "Linking ${PWD}/${install_file##*/} to ${install_path}"
-
-      ln -sf "${PWD}/${install_file##*/}" "${install_path}"
-    fi
-  done
+function spexec {
+  skube exec -it $1 /bin/bash
 }
 
-unlink_files() {
-  local install_dir="${1}" && shift
+function install_dotfiles {
+	for filename in $(cat files.txt); do
+		local src_path="${PWD}/${filename}"
+		local dst_path="${HOME}/${filename}"
+		local bak_path="${dst_path}.bak"
+	
+		if [[ -e ${dst_path} ]] && [[ ! -h ${dst_path} ]]; then
+			echo "Backing up ${dst_path}"
 
-  while [[ $# -gt 0 ]]; do
-    local install_file="${install_dir}/${1}" && shift
+			mv ${dst_path} ${bak_path}
+		fi	
 
-    if [[ -h "${install_file}" ]]; then
-      local backup="${install_file}.bak"
-
-      unlink "${install_file}"      
-
-      if [[ -e "${backup}" ]]; then
-        mv "${backup}" "${install_file}"
-      fi
+    if [[ ! -h ${dst_path} ]]; then
+      echo "Linking ${src_path} to ${dst_path}"
+     
+      ln -s ${src_path} ${dst_path}
     fi
+	done
+}
+
+function uninstall_dotfiles {
+  for filename in $(cat files.txt); do
+		local dst_path="${HOME}/${filename}"
+		local bak_path="${dst_path}.bak"
+
+    if [[ -h ${dst_path} ]]; then
+     unlink ${dst_path}
+    fi
+
+    if [[ -e ${bak_path} ]]; then
+      mv ${bak_path} ${dst_path}
+    fi  
   done
 }

@@ -31,9 +31,9 @@ else
 
   cd "${dotfile_path}"
 
-  echo "${dotfile_path}" > "${dotfile_path}/.DOTFILE_INSTALL_PATH"
-
   echo "Checking out submodules"
+
+  cp files.txt files_local.txt
 
   git submodule init
 
@@ -42,6 +42,6 @@ fi
 
 . "${PWD}/.bash.function.sh"
 
-echo "Linking files from \"files.txt\""
+[[ ! -e ".dotfile_path" ]] && echo "${dotfile_path}" > .dotfile_path
 
-link_files "${HOME}" $(cat files.txt)
+install_dotfiles
