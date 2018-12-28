@@ -3,6 +3,7 @@
 .gitconfig
 .bashrc
 .bash_profile
+.bash.init.sh
 .bash.alias.sh
 .bash.function.sh
 .vimrc

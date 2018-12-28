@@ -1,3 +1,17 @@
+function prepend_path {
+  [[ $(contains $PATH $1) -eq 1 ]] && export PATH="$1:$PATH"
+}
+
+function contains {
+  [[ "$1" =~ "$2" ]] && echo 0 || echo 1
+}
+
+function is_installed {
+  command $1 >/dev/null 2>&1
+
+  echo $?
+}
+
 function pexec {
   kube exec -it $1 /bin/bash
 }
