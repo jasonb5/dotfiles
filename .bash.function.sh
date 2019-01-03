@@ -1,3 +1,118 @@
+function kube_templates {
+cat << EOF > "$1.yaml"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $1-deployment
+  labels:
+    app: $1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: $1
+  template:
+    metadata:
+      labels:
+        app: $1
+    spec:
+      containers:
+      - name: $1
+        image: $1:APPVERSION
+        ports:
+        - containerPort: 80
+#        volumeMounts:
+#        - mountPath: /data
+#          name: data-volume
+#        - mountPath: /etc/config
+#          readOnly: true
+#          name: $1-secret
+#        - mountPath: /etc/config
+#          name: $1-config
+#      volumes:
+#      - name: data-volume
+#        persistentVolumeClaim:
+#          claimName: data-volume
+#      - name: $1-secret
+#        secret:
+#          secretName: $1-secret
+#      - name: $1-config
+#        configMap:
+#          name: $1-config
+---
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: $1-config
+#data:
+#  test.txt: |
+#    hello=world
+#---
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: $1-secret
+#type: Opaque
+#data:
+#  username: hello
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: $1-service
+spec:
+  selector:
+    app: $1
+  ports:
+  - protocol: TCP
+    port: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: $1-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: $1-service
+          servicePort: 80
+---
+#apiVersion: v1
+#kind: PersistentVolume
+#metadata:
+#  name: $1-pv
+#spec:
+#  capacity:
+#    storage: 5Gi
+#  volumeMode: Filesystem
+#  accessModes:
+#    - ReadWriteOnce
+#  persistentVolumeReclaimPolicy: Retain
+#  storageClassName: slow
+#  hostPath:
+#    path: /data
+#    type: DirectoryOrCreate
+#---
+#kind: PersistentVolumeClaim
+#apiVersion: v1
+#metadata:
+#  name: $1-pvc
+#spec:
+#  accessModes:
+#    - ReadWriteOnce
+#  volumeMode: Filesystem
+#  resources:
+#    requests:
+#      storage: 8Gi
+#  storageClassName: slow
+#  selector:
+#    matchLabels:
+#      name: $1-pv
+EOF
+}
+
 function prepend_path {
   [[ $(contains $PATH $1) -eq 1 ]] && export PATH="$1:$PATH"
 }
