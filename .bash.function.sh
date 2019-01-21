@@ -10,7 +10,7 @@ function console_colors {
   done
 }
 
-function kube_templates {
+function kube_deployment {
 cat << EOF > "$1.yaml"
 apiVersion: apps/v1
 kind: Deployment
@@ -93,37 +93,42 @@ spec:
           serviceName: $1
           servicePort: 80
 ---
-#apiVersion: v1
-#kind: PersistentVolume
-#metadata:
-#  name: $1
-#spec:
-#  capacity:
-#    storage: 8Gi
-#  volumeMode: Filesystem
-#  accessModes:
-#    - ReadWriteOnce
-#  persistentVolumeReclaimPolicy: Retain
-#  storageClassName: slow
-#  hostPath:
-#    path: /data
-#    type: DirectoryOrCreate
-#---
-#kind: PersistentVolumeClaim
-#apiVersion: v1
-#metadata:
-#  name: $1
-#spec:
-#  accessModes:
-#    - ReadWriteOnce
-#  volumeMode: Filesystem
-#  resources:
-#    requests:
-#      storage: 8Gi
-#  storageClassName: slow
-#  selector:
-#    matchLabels:
-#      name: $1
+EOF
+}
+
+function kube_storage {
+cat << EOF > "${1}-persistence.yaml"
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: $1
+spec:
+  capacity:
+    storage: 8Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: slow
+  hostPath:
+    path: /data
+    type: DirectoryOrCreate
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: $1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: slow
+  selector:
+    matchLabels:
+      name: $1
 EOF
 }
 
