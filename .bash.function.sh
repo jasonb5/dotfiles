@@ -3,7 +3,7 @@ cat << EOF > "$1.yaml"
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: $1-deployment
+  name: $1
   labels:
     app: $1
 spec:
@@ -29,21 +29,23 @@ spec:
 #          name: $1-secret
 #        - mountPath: /etc/config
 #          name: $1-config
+#      nodeSelector:
+#        tier: frontend
 #      volumes:
 #      - name: data-volume
 #        persistentVolumeClaim:
 #          claimName: data-volume
 #      - name: $1-secret
 #        secret:
-#          secretName: $1-secret
+#          secretName: $1
 #      - name: $1-config
 #        configMap:
-#          name: $1-config
----
+#          name: $1
+#---
 #apiVersion: v1
 #kind: ConfigMap
 #metadata:
-#  name: $1-config
+#  name: $1
 #data:
 #  test.txt: |
 #    hello=world
@@ -51,7 +53,7 @@ spec:
 #apiVersion: v1
 #kind: Secret
 #metadata:
-#  name: $1-secret
+#  name: $1
 #type: Opaque
 #data:
 #  username: hello
@@ -59,7 +61,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: $1-service
+  name: $1
 spec:
   selector:
     app: $1
@@ -70,22 +72,22 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: $1-ingress
+  name: $1
 spec:
   rules:
   - http:
       paths:
       - backend:
-          serviceName: $1-service
+          serviceName: $1
           servicePort: 80
 ---
 #apiVersion: v1
 #kind: PersistentVolume
 #metadata:
-#  name: $1-pv
+#  name: $1
 #spec:
 #  capacity:
-#    storage: 5Gi
+#    storage: 8Gi
 #  volumeMode: Filesystem
 #  accessModes:
 #    - ReadWriteOnce
@@ -98,7 +100,7 @@ spec:
 #kind: PersistentVolumeClaim
 #apiVersion: v1
 #metadata:
-#  name: $1-pvc
+#  name: $1
 #spec:
 #  accessModes:
 #    - ReadWriteOnce
@@ -109,7 +111,7 @@ spec:
 #  storageClassName: slow
 #  selector:
 #    matchLabels:
-#      name: $1-pv
+#      name: $1
 EOF
 }
 
