@@ -66,7 +66,7 @@ nnoremap <C-H> <C-W><C-H>
 
 nnoremap <S-n> :bnext<cr>
 
-au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
 
 au FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 au FileType python setlocal ts=4 sts=4 sw=4 expandtab
