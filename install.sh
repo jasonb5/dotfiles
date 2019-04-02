@@ -45,3 +45,7 @@ fi
 [[ ! -e ".dotfile_path" ]] && echo "${dotfile_path}" > .dotfile_path
 
 install_dotfiles
+
+[[ $(is_installed apt-get) -eq 1 ]] && apt-get update && apt-get install -y vim
+
+[[ $(is_installed vim) -eq 1 ]] && vim +PluginInstall +qall

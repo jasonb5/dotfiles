@@ -146,14 +146,6 @@ function is_installed {
   echo $?
 }
 
-function pexec {
-  kube exec -it $1 /bin/bash
-}
-
-function spexec {
-  skube exec -it $1 /bin/bash
-}
-
 function install_dotfiles {
 	for filename in $(cat files.txt); do
 		local src_path="${PWD}/${filename}"
