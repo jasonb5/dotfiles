@@ -48,4 +48,4 @@ install_dotfiles
 
 [[ $(is_installed apt-get) -eq 1 ]] && apt-get update && apt-get install -y vim
 
-[[ $(is_installed vim) -eq 1 ]] && vim +PluginInstall +qall
+[[ $(is_installed vim) -eq 1 ]] && vim -E +PluginInstall +qall
