@@ -1,3 +1,7 @@
+function dfind {
+  find . -iname "*.${1}" -type f -exec grep -nH -E "${2}" {} \;
+}
+
 function console_colors {
   #Foreground
   for clfg in {30..37} {90..97} 39 ; do
