@@ -1,5 +1,71 @@
-function dfind {
-  find . -iname "*.${1}" -type f -exec grep -nH -E "${2}" {} \;
+function dump_certs {
+  if [[ $# < 1 ]]
+  then
+    echo "Usage dump_certs HOST"
+
+    echo " e.g. dump_certs www.google.com"
+  else
+    openssl s_client -showcerts -verify 5 -connect ${1}:443 < /dev/null | awk '/BEGIN/,/END/{ if(/BEGIN/){a++}; out="cert"a".pem"; print >out}' 
+
+    for cert in *.pem; do newname=$(openssl x509 -noout -subject -in $cert | sed -n 's/^.*CN=\(.*\)$/\1/; s/[ ,.*]/_/g; s/__/_/g; s/^_//g;p').pem; mv $cert $newname; done
+  fi
+}
+
+function kube_account {
+  if [[ $# < 4 ]]
+  then
+    echo "Usage kube_account USERNAME NAMESPACE CLUSTERNAME CLUSTERADDRESS"
+
+    echo "  e.g. kube_account test development bigcluster https://127.0.0.1:6443"
+  else
+    openssl genrsa -out ${1}.key 2048
+
+    openssl req -new -key ${1}.key -out ${1}.csr -subj "/CN=${1}/O=${2}"
+
+    sudo openssl x509 -req -in ${1}.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out ${1}.crt -days 365
+
+    sudo chown $(id -g):$(id -u) ${1}.crt
+
+    kubectl --kubeconfig ${1}-config config set-credentials ${1} --client-certificate=${1}.crt --client-key=${1}.key --embed-certs
+
+    kubectl --kubeconfig ${1}-config config set-context ${1}-context --cluster=${3} --namespace=${2} --user=${1}
+
+    sudo kubectl --kubeconfig ${1}-config config set-cluster ${3} --server ${4} --embed-certs --certificate-authority=/etc/kubernetes/pki/ca.crt
+
+    kubectl --kubeconfig ${1}-config config use-context ${1}-context
+
+cat << EOF >> ${1}-role-rolebinding.yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: ${2}
+  name: deployment-manager
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["deployments", "replicasets", "pods"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"] You can also use ["*"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: ${1}-deployment-manager-binding
+  namespace: ${2}
+subjects:
+- kind: User
+  name: ${1}
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: deployment-manager
+  apiGroup: ""
+EOF
+  fi
+}
+
+function kube_config_test {
+  local kubeconfig=${1} && shift  
+
+  kubectl --kubeconfig ${kubeconfig} ${@}
 }
 
 function console_colors {
@@ -12,128 +78,6 @@ function console_colors {
     done
     echo #Newline
   done
-}
-
-function kube_deployment {
-cat << EOF > "$1.yaml"
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: $1
-  labels:
-    app: $1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: $1
-  template:
-    metadata:
-      labels:
-        app: $1
-    spec:
-      containers:
-      - name: $1
-        image: $1:APPVERSION
-        ports:
-        - containerPort: 80
-#        volumeMounts:
-#        - mountPath: /data
-#          name: data-volume
-#        - mountPath: /etc/config
-#          readOnly: true
-#          name: $1-secret
-#        - mountPath: /etc/config
-#          name: $1-config
-#      nodeSelector:
-#        tier: frontend
-#      volumes:
-#      - name: data-volume
-#        persistentVolumeClaim:
-#          claimName: data-volume
-#      - name: $1-secret
-#        secret:
-#          secretName: $1
-#      - name: $1-config
-#        configMap:
-#          name: $1
-#---
-#apiVersion: v1
-#kind: ConfigMap
-#metadata:
-#  name: $1
-#data:
-#  test.txt: |
-#    hello=world
-#---
-#apiVersion: v1
-#kind: Secret
-#metadata:
-#  name: $1
-#type: Opaque
-#data:
-#  username: hello
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: $1
-spec:
-  selector:
-    app: $1
-  ports:
-  - protocol: TCP
-    port: 80
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: $1
-spec:
-  rules:
-  - http:
-      paths:
-      - backend:
-          serviceName: $1
-          servicePort: 80
----
-EOF
-}
-
-function kube_storage {
-cat << EOF > "${1}-persistence.yaml"
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: $1
-spec:
-  capacity:
-    storage: 8Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: slow
-  hostPath:
-    path: /data
-    type: DirectoryOrCreate
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: $1
-spec:
-  accessModes:
-    - ReadWriteOnce
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 8Gi
-  storageClassName: slow
-  selector:
-    matchLabels:
-      name: $1
-EOF
 }
 
 function prepend_path {
