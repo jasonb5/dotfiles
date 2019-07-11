@@ -1,32 +1,46 @@
-set nocompatible
-filetype off
+if &compatible
+  set nocompatible
+endif
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
-" General
-Plugin 'VundleVim/Vundle.vim'
+if dein#load_state('~/.cache/dein')
+  call dein#begin('~/.cache/dein')
 
-" Airline
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+  " General
+  call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
 
-" Colorschemes
-Plugin 'NLKNguyen/papercolor-theme'
+  " Airline
+  call dein#add('vim-airline/vim-airline')
+  call dein#add('vim-airline/vim-airline-themes')
 
-" Python
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'nvie/vim-flake8'
+  " Color Schemes
+  call dein#add('NLKNguyen/papercolor-theme')
 
-" Dockerfile
-Plugin 'ekalinin/Dockerfile.vim'
-Plugin 'stephpy/vim-yaml'
+  " Python
+  call dein#add('vim-scripts/indentpython.vim')
+  call dein#add('nvie/vim-flake8')
 
-call vundle#end()
+  " Typescript
+  call dein#add('Quramy/vim-js-pretty-template')
+  call dein#add('jason0x43/vim-js-indent')
+  call dein#add('HerringtonDarkholme/yats.vim')
+
+  " Dockerfile
+  call dein#add('ekalinin/Dockerfile.vim')
+  call dein#add('stephpy/vim-yaml')
+
+  call dein#end()
+  call dein#save_state()
+endif
 
 filetype plugin indent on
 
 syntax enable
+
+if dein#check_install()
+  call dein#install()
+endif
 
 set number
 set expandtab
@@ -50,6 +64,8 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 let g:flake8_show_in_gutter = 1
 let g:flake8_show_in_file = 1
+
+let g:typescript_indent_disable = 1
 
 inoremap jk <esc>
 
