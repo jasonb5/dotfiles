@@ -22,22 +22,12 @@ then
   cd "${dotfile_path}"
 
   git pull
-
-  git submodule update
 else
   echo "Cloning dotfile from ${github_url} to ${dotfile_path}"
 
   git clone ${github_url}
 
   cd "${dotfile_path}"
-
-  echo "Checking out submodules"
-
-  cp files.txt files_local.txt
-
-  git submodule init
-
-  git submodule update
 fi
 
 . "${PWD}/.bash.function.sh"
@@ -47,3 +37,12 @@ fi
 install_dotfiles
 
 [[ $(is_installed apt-get) -eq 1 ]] && apt-get update && apt-get install -y vim
+
+if [[ ! -e "${HOME}/.cache/dein" ]]
+then
+  curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
+
+  bash installer.sh ${HOME}/.cache/dein
+
+  rm installer.sh
+fi
