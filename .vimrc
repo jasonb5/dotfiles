@@ -18,17 +18,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('NLKNguyen/papercolor-theme')
 
   " Python
-  call dein#add('vim-scripts/indentpython.vim')
   call dein#add('nvie/vim-flake8')
-
-  " Typescript
-  call dein#add('Quramy/vim-js-pretty-template')
-  call dein#add('jason0x43/vim-js-indent')
-  call dein#add('HerringtonDarkholme/yats.vim')
-
-  " Dockerfile
-  call dein#add('ekalinin/Dockerfile.vim')
-  call dein#add('stephpy/vim-yaml')
 
   call dein#end()
   call dein#save_state()
@@ -37,6 +27,8 @@ endif
 filetype plugin indent on
 
 syntax enable
+
+call map(dein#check_clean(), "delete(v:val, 'rf')")
 
 if dein#check_install()
   call dein#install()
