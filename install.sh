@@ -1,42 +1,52 @@
 #! /bin/bash
 
-install_path="${HOME}/devel"
-github_url="https://github.com/jasonb5/dotfiles"
+INSTALL_PATH="${HOME}/devel"
+GITHUB_URL="https://github.com/jasonb5/dotfiles"
 
-echo -n "Install path? (default ${install_path}): "
+read -p "Install path (default: ${INSTALL_PATH}): " candidate_path
 
-read candidate_path
+[[ -n "${candidate_path}" ]] && INSTALL_PATH="${candidate_path}"
 
-[[ -n "${candidate_path}" ]] && install_path="${candidate_path}"
+echo "Installing into \"${INSTALL_PATH}\""
 
-echo "Installing into \"${install_path}\""
+[[ ! -e "${INSTALL_PATH}" ]] && mkdir -p ${INSTALL_PATH}
 
-[[ ! -e "${install_path}" ]] && mkdir -p ${install_path}
+cd "${INSTALL_PATH}"
 
-cd "${install_path}"
+DOTFILE_PATH="${INSTALL_PATH}/dotfiles"
 
-dotfile_path="${install_path}/dotfiles"
-
-if [[ -e "${dotfile_path}" ]]
+if [[ -e "${DOTFILE_PATH}" ]]
 then
-  cd "${dotfile_path}"
+  cd "${DOTFILE_PATH}"
 
   git pull
 else
-  echo "Cloning dotfile from ${github_url} to ${dotfile_path}"
+  echo "Cloning ${GITHUB_URL} to ${DOTFILE_PATH}"
 
-  git clone ${github_url}
+  git clone ${GITHUB_URL}
 
-  cd "${dotfile_path}"
+  cd "${DOTFILE_PATH}"
 fi
 
 . "${PWD}/.bash.function.sh"
 
-[[ ! -e ".dotfile_path" ]] && echo "${dotfile_path}" > .dotfile_path
+[[ ! -e "${PWD}/.dotfile_path" ]] && echo "${DOTFILE_PATH}" > "${PWD}/.dotfile_path"
 
 install_dotfiles
 
-[[ $(is_installed apt-get) -eq 1 ]] && apt-get update && apt-get install -y vim
+if [[ $(is_installed apt-get) -eq 1 ]]
+then
+  SUDO=""
+
+  if [[ $(is_installed sudo) -eq 1 ]] && [[ $(id -u -n) != "root" ]]
+  then
+    SUDO="sudo"
+  fi
+
+  ${SUDO} apt-get update
+
+  ${SUDO} apt-get install -y vim
+fi
 
 if [[ ! -e "${HOME}/.cache/dein" ]]
 then
