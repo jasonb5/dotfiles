@@ -18,7 +18,16 @@ if dein#load_state('~/.cache/dein')
   call dein#add('NLKNguyen/papercolor-theme')
 
   " Python
-  call dein#add('nvie/vim-flake8')
+  call dein#add('Vimjas/vim-python-pep8-indent.git')
+
+  " Typescript
+  call dein#add('Quramy/tsuquyomi')
+
+  " Syntax
+  call dein#add('vim-syntastic/syntastic.git')
+
+  " Autocomplete
+  call dein#add('ycm-core/YouCompleteMe')
 
   call dein#end()
   call dein#save_state()
@@ -57,7 +66,16 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:flake8_show_in_gutter = 1
 let g:flake8_show_in_file = 1
 
-let g:typescript_indent_disable = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_python_flake8_args = '--max-line-length=120'
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
 inoremap jk <esc>
 
@@ -67,9 +85,6 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 nnoremap <S-n> :bnext<cr>
-
-" Call commands
-au BufWritePost *.py call flake8#Flake8()
 
 " Setting file types
 au BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
