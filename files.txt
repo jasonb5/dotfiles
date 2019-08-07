@@ -1,11 +1,9 @@
-.vim
-.tmux.conf
-.gitconfig
-.bashrc
-.bash_profile
-.bash.init.sh
 .bash.alias.sh
 .bash.function.sh
-.vimrc
-.dotfile_path
+.bash.init.sh
+.bash_profile
+.bashrc
+.gitconfig
 .klipper
+.tmux.conf
+.vimrc
