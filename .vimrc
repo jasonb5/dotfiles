@@ -1,5 +1,8 @@
 call plug#begin('~/.vim/plugged')
 
+" General
+Plug 'ervandew/supertab'
+
 " Airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -39,6 +42,7 @@ set backspace=indent,eol,start
 silent! colorscheme PaperColor
 
 let highlight_builtins = 1
+let mapleader = ','
 let g:airline_theme = 'papercolor'
 let g:go_version_warning = 0
 
@@ -46,6 +50,8 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 let g:python_highlight_all = 1
+
+let g:jedi#popup_on_dot = 0
 
 let g:flake8_show_in_gutter = 1
 let g:flake8_show_in_file = 1
