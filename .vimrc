@@ -21,7 +21,7 @@ call plug#end()
 
 filetype plugin indent on
 
-silent! syntax enable
+syntax enable
 
 set number
 set expandtab
@@ -34,7 +34,7 @@ set encoding=utf-8
 set t_Co=256
 set backspace=indent,eol,start
 
-colorscheme PaperColor
+silent! colorscheme PaperColor
 
 let highlight_builtins = 1
 let g:airline_theme = 'papercolor'

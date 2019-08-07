@@ -13,6 +13,8 @@ function install_system_application {
     curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
     ${SUDO} apt-get install --no-install-recommends -y vim-nox build-essential cmake python3-dev python-dev nodejs
+
+    vim +PlugInstall +qall
   fi
 }
 
