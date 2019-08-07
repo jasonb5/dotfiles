@@ -8,14 +8,16 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'NLKNguyen/papercolor-theme'
 
 " Python
+Plug 'vim-python/python-syntax'
 
 " Typescript
 Plug 'Quramy/tsuquyomi'
 
 " Syntax
+Plug 'vim-syntastic/syntastic'
 
 " Autocomplete
-Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer' }
+Plug 'davidhalter/jedi-vim'
 
 call plug#end()
 
@@ -42,6 +44,8 @@ let g:go_version_warning = 0
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
+
+let g:python_highlight_all = 1
 
 let g:flake8_show_in_gutter = 1
 let g:flake8_show_in_file = 1

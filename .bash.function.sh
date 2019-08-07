@@ -10,9 +10,9 @@ function install_system_application {
   then
     ${SUDO} apt-get update
 
-    curl -sL https://deb.nodesource.com/setup_12.x | bash -
+    # curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
-    ${SUDO} apt-get install --no-install-recommends -y vim-nox build-essential cmake python3-dev python-dev nodejs
+    ${SUDO} apt-get install --no-install-recommends -y vim-nox
 
     vim +PlugInstall +qall
   fi
