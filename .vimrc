@@ -15,7 +15,7 @@ Plug 'Quramy/tsuquyomi'
 " Syntax
 
 " Autocomplete
-Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
+Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --ts-completer' }
 
 call plug#end()
 

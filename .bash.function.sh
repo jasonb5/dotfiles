@@ -10,7 +10,9 @@ function install_system_application {
   then
     ${SUDO} apt-get update
 
-    ${SUDO} apt-get install --no-install-recommends -y vim build-essential cmake python3-dev python-dev 
+    curl -sL https://deb.nodesource.com/setup_12.x | bash -
+
+    ${SUDO} apt-get install --no-install-recommends -y vim build-essential cmake python3-dev python-dev nodejs
   fi
 }
 
