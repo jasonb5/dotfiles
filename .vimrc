@@ -1,47 +1,34 @@
-if &compatible
-  set nocompatible
-endif
+call plug#begin('~/.vim/plugged')
 
-set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
+" Airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
-if dein#load_state('~/.cache/dein')
-  call dein#begin('~/.cache/dein')
+" Color Schemes
+Plug 'NLKNguyen/papercolor-theme'
 
-  " General
-  call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
+" Python
+Plug 'Vimjas/vim-python-pep8-indent.git'
 
-  " Airline
-  call dein#add('vim-airline/vim-airline')
-  call dein#add('vim-airline/vim-airline-themes')
+" Typescript
+Plug 'Quramy/tsuquyomi'
 
-  " Color Schemes
-  call dein#add('NLKNguyen/papercolor-theme')
+" Syntax
+Plug 'vim-syntastic/syntastic.git'
 
-  " Python
-  call dein#add('Vimjas/vim-python-pep8-indent.git')
+function! BuildYCM(info)
+  !conda create -n vim -y
+  !conda activate vim
+endfunction
 
-  " Typescript
-  call dein#add('Quramy/tsuquyomi')
+" Autocomplete
+Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
 
-  " Syntax
-  call dein#add('vim-syntastic/syntastic.git')
-
-  " Autocomplete
-  call dein#add('ycm-core/YouCompleteMe')
-
-  call dein#end()
-  call dein#save_state()
-endif
+call plug#end()
 
 filetype plugin indent on
 
 syntax enable
-
-call map(dein#check_clean(), "delete(v:val, 'rf')")
-
-if dein#check_install()
-  call dein#install()
-endif
 
 set number
 set expandtab

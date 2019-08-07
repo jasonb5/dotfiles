@@ -34,25 +34,6 @@ fi
 
 install_dotfiles
 
-if [[ $(is_installed apt-get) -eq 1 ]]
-then
-  SUDO=""
+install_system_application
 
-  if [[ $(is_installed sudo) -eq 1 ]] && [[ $(id -u -n) != "root" ]]
-  then
-    SUDO="sudo"
-  fi
-
-  ${SUDO} apt-get update
-
-  ${SUDO} apt-get install -y vim
-fi
-
-if [[ ! -e "${HOME}/.cache/dein" ]]
-then
-  curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
-
-  bash installer.sh ${HOME}/.cache/dein
-
-  rm installer.sh
-fi
+install_vim_plug
