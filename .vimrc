@@ -15,6 +15,7 @@ Plug 'vim-python/python-syntax'
 
 " Typescript
 Plug 'Quramy/tsuquyomi'
+Plug 'leafgarland/typescript-vim'
 
 " Syntax
 Plug 'vim-syntastic/syntastic'
