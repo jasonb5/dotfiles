@@ -32,8 +32,8 @@ fi
 
 [[ ! -e "${PWD}/.dotfile_path" ]] && echo "${DOTFILE_PATH}" > "${PWD}/.dotfile_path"
 
-install_dotfiles
-
 install_system_application
+
+install_dotfiles
 
 install_vim_plug
