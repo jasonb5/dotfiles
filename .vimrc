@@ -21,7 +21,7 @@ call plug#end()
 
 filetype plugin indent on
 
-syntax enable
+silent! syntax enable
 
 set number
 set expandtab
