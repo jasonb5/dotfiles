@@ -32,6 +32,8 @@ fi
 
 [[ ! -e "${PWD}/.dotfile_path" ]] && echo "${DOTFILE_PATH}" > "${PWD}/.dotfile_path"
 
+check_system
+
 install_system_application
 
 install_dotfiles

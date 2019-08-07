@@ -8,21 +8,14 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'NLKNguyen/papercolor-theme'
 
 " Python
-Plug 'Vimjas/vim-python-pep8-indent.git'
 
 " Typescript
 Plug 'Quramy/tsuquyomi'
 
 " Syntax
-Plug 'vim-syntastic/syntastic.git'
-
-function! BuildYCM(info)
-  !conda create -n vim -y
-  !conda activate vim
-endfunction
 
 " Autocomplete
-Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
+Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
 
 call plug#end()
 

@@ -1,3 +1,5 @@
+SUDO=""
+
 function install_vim_plug {
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -6,16 +8,16 @@ function install_vim_plug {
 function install_system_application {
   if [[ $(is_installed apt-get) -eq 1 ]]
   then
-    SUDO=""
-
-    if [[ $(is_installed sudo) -eq 1 ]] && [[ $(id -u -n) != "root" ]]
-    then
-      SUDO="sudo"
-    fi
-
     ${SUDO} apt-get update
 
-    ${SUDO} apt-get install -y vim
+    ${SUDO} apt-get install --no-install-recommends -y vim build-essential cmake python3-dev python-dev 
+  fi
+}
+
+function check_system {
+  if [[ $(is_installed sudo) -eq 1 ]] && [[ $(id -u -n) != "root" ]]
+  then
+    SUDO="sudo"
   fi
 }
 
