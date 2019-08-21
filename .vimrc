@@ -23,6 +23,9 @@ Plug 'vim-syntastic/syntastic'
 " Autocomplete
 Plug 'davidhalter/jedi-vim'
 
+" Dockerfile
+Plug 'ekalinin/Dockerfile.vim'
+
 call plug#end()
 
 filetype plugin indent on
