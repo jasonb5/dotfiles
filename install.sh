@@ -30,7 +30,7 @@ fi
 
 . "${PWD}/.bash.function.sh"
 
-[[ ! -e "${PWD}/.dotfile_path" ]] && echo "${DOTFILE_PATH}" > "${PWD}/.dotfile_path"
+[[ ! -e "${HOME}/.dotfile_path" ]] && echo "${DOTFILE_PATH}" > "${HOME}/.dotfile_path"
 
 check_system
 
