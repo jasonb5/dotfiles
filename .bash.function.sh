@@ -3,6 +3,8 @@ SUDO=""
 function install_vim_plug {
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+    vim +PlugInstall +qall
 }
 
 function install_system_application {
@@ -13,8 +15,6 @@ function install_system_application {
     # curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
     ${SUDO} apt-get install --no-install-recommends -y vim-nox
-
-    vim +PlugInstall +qall
   fi
 }
 
