@@ -26,6 +26,9 @@ Plug 'davidhalter/jedi-vim'
 " Dockerfile
 Plug 'ekalinin/Dockerfile.vim'
 
+" Go
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
 call plug#end()
 
 filetype plugin indent on
@@ -86,3 +89,4 @@ au BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
 " Set formatting for filetypes
 au FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 au FileType python setlocal ts=4 sts=4 sw=4 expandtab
+au FileType go inoremap <buffer> . .<C-x><C-o>
