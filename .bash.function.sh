@@ -38,63 +38,6 @@ function dump_certs {
   fi
 }
 
-function kube_account {
-  if [[ $# < 4 ]]
-  then
-    echo "Usage kube_account USERNAME NAMESPACE CLUSTERNAME CLUSTERADDRESS"
-
-    echo "  e.g. kube_account test development bigcluster https://127.0.0.1:6443"
-  else
-    openssl genrsa -out ${1}.key 2048
-
-    openssl req -new -key ${1}.key -out ${1}.csr -subj "/CN=${1}/O=${2}"
-
-    sudo openssl x509 -req -in ${1}.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out ${1}.crt -days 365
-
-    sudo chown $(id -g):$(id -u) ${1}.crt
-
-    kubectl --kubeconfig ${1}-config config set-credentials ${1} --client-certificate=${1}.crt --client-key=${1}.key --embed-certs
-
-    kubectl --kubeconfig ${1}-config config set-context ${1}-context --cluster=${3} --namespace=${2} --user=${1}
-
-    sudo kubectl --kubeconfig ${1}-config config set-cluster ${3} --server ${4} --embed-certs --certificate-authority=/etc/kubernetes/pki/ca.crt
-
-    kubectl --kubeconfig ${1}-config config use-context ${1}-context
-
-cat << EOF >> ${1}-role-rolebinding.yaml
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  namespace: ${2}
-  name: deployment-manager
-rules:
-- apiGroups: ["", "extensions", "apps"]
-  resources: ["deployments", "replicasets", "pods"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"] You can also use ["*"]
----
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: ${1}-deployment-manager-binding
-  namespace: ${2}
-subjects:
-- kind: User
-  name: ${1}
-  apiGroup: ""
-roleRef:
-  kind: Role
-  name: deployment-manager
-  apiGroup: ""
-EOF
-  fi
-}
-
-function kube_config_test {
-  local kubeconfig=${1} && shift  
-
-  kubectl --kubeconfig ${kubeconfig} ${@}
-}
-
 function console_colors {
   #Foreground
   for clfg in {30..37} {90..97} 39 ; do
