@@ -2,19 +2,13 @@
 
 . ~/.bash.function.sh
 
-. ~/.bash.init.sh
+export TERM="xterm-256color"
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/conda/etc/profile.d/conda.sh" ]; then
-        . "/opt/conda/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/conda/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+RESET="\[\e[0m\]"
+C1="\[\e[91m\]" # LIGHT RED
+C2="\[\e[94m\]" # LIGHT BLUE
+C3="\[\e[92m\]" # LIGHT GREEN
+C4="\[\e[95m\]" # LIGHT MAGENTA
+C5="\[\e[97m\]" # WHITE
+
+PS1="${C4}$(uname -s) ($(uname -r)):${RESET} ${C1}[\u]${RESET}${C5}@${RESET}${C3}\h${RESET} ${C5}in${RESET} ${C2}[\w]${RESET}\n${C5}$ ${RESET}"

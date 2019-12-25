@@ -9,4 +9,6 @@ alias ea="vim ${HOME}/.bash.alias.sh"
 alias ef="vim ${HOME}/.bash.function.sh"
 
 alias dotcd="pushd ${DOTFILE_PATH}"
-alias dot="dotcd && git status"
+alias dot="dotcd && git status && popd"
+
+alias ls="ls -lah --color"

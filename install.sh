@@ -32,10 +32,4 @@ fi
 
 [[ ! -e "${HOME}/.dotfile_path" ]] && echo "${DOTFILE_PATH}" > "${HOME}/.dotfile_path"
 
-check_system
-
-install_system_application
-
-install_dotfiles
-
-install_vim_plug
+init_system

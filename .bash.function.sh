@@ -1,30 +1,3 @@
-SUDO=""
-
-function install_vim_plug {
-  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-    vim +PlugInstall +qall
-}
-
-function install_system_application {
-  if [[ $(is_installed apt-get) -eq 1 ]]
-  then
-    ${SUDO} apt-get update
-
-    # curl -sL https://deb.nodesource.com/setup_12.x | bash -
-
-    ${SUDO} apt-get install --no-install-recommends -y vim-nox
-  fi
-}
-
-function check_system {
-  if [[ $(is_installed sudo) -eq 1 ]] && [[ $(id -u -n) != "root" ]]
-  then
-    SUDO="sudo"
-  fi
-}
-
 function dump_certs {
   if [[ $# < 1 ]]
   then
@@ -38,87 +11,48 @@ function dump_certs {
   fi
 }
 
-function kube_account {
-  if [[ $# < 4 ]]
-  then
-    echo "Usage kube_account USERNAME NAMESPACE CLUSTERNAME CLUSTERADDRESS"
+####################
+# Required functions
+####################
 
-    echo "  e.g. kube_account test development bigcluster https://127.0.0.1:6443"
-  else
-    openssl genrsa -out ${1}.key 2048
+SUDO=""
 
-    openssl req -new -key ${1}.key -out ${1}.csr -subj "/CN=${1}/O=${2}"
-
-    sudo openssl x509 -req -in ${1}.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out ${1}.crt -days 365
-
-    sudo chown $(id -g):$(id -u) ${1}.crt
-
-    kubectl --kubeconfig ${1}-config config set-credentials ${1} --client-certificate=${1}.crt --client-key=${1}.key --embed-certs
-
-    kubectl --kubeconfig ${1}-config config set-context ${1}-context --cluster=${3} --namespace=${2} --user=${1}
-
-    sudo kubectl --kubeconfig ${1}-config config set-cluster ${3} --server ${4} --embed-certs --certificate-authority=/etc/kubernetes/pki/ca.crt
-
-    kubectl --kubeconfig ${1}-config config use-context ${1}-context
-
-cat << EOF >> ${1}-role-rolebinding.yaml
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  namespace: ${2}
-  name: deployment-manager
-rules:
-- apiGroups: ["", "extensions", "apps"]
-  resources: ["deployments", "replicasets", "pods"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"] You can also use ["*"]
----
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: ${1}-deployment-manager-binding
-  namespace: ${2}
-subjects:
-- kind: User
-  name: ${1}
-  apiGroup: ""
-roleRef:
-  kind: Role
-  name: deployment-manager
-  apiGroup: ""
-EOF
-  fi
+function is_root {
+  [[ $(id -u -n) == "root" ]] && echo 0 || echo 1
 }
 
-function kube_config_test {
-  local kubeconfig=${1} && shift  
-
-  kubectl --kubeconfig ${kubeconfig} ${@}
-}
-
-function console_colors {
-  #Foreground
-  for clfg in {30..37} {90..97} 39 ; do
-    #Formatting
-    for attr in 0 1 2 4 5 7 ; do
-      #Print the result
-      echo -en "\e[${attr};49;${clfg}m ^[${attr};49;${clfg}m \e[0m"
-    done
-    echo #Newline
-  done
-}
-
-function prepend_path {
-  [[ $(contains $PATH $1) -eq 1 ]] && export PATH="$1:$PATH"
-}
-
-function contains {
-  [[ "$1" =~ "$2" ]] && echo 0 || echo 1
-}
-
-function is_installed {
-  command $1 >/dev/null 2>&1
+function command_exists {
+  command -v $1 >/dev/null 2>&1
 
   echo $?
+}
+
+function find_conda_path {
+  echo $(find /opt/*conda*/bin ${HOME}/*conda*/bin -type d 2>/dev/null)
+}
+
+function init_system {
+  if [[ $(command_exists sudo) -eq 0 ]] && [[ $(is_root) -eq 1 ]]
+  then
+    SUDO="sudo"
+  fi
+
+  CONDA_PATH="$(find_conda_path)"
+
+  [[ "${PATH}" =~ "${CONDA_PATH}" ]] && echo "Conda path already in path" || export PATH="${CONDA_PATH}:${PATH}"
+
+  install_system_applications
+
+  install_dotfiles
+}
+
+function install_system_applications {
+  if [[ $(command_exists apt) -eq 0 ]]
+  then
+    ${SUDO} apt update
+
+    ${SUDO} apt install --no-install-recommends -y vim-nox tmux
+  fi
 }
 
 function install_dotfiles {
@@ -154,4 +88,11 @@ function uninstall_dotfiles {
       mv ${bak_path} ${dst_path}
     fi  
   done
+}
+
+function install_vim_plug {
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+    vim +PlugInstall +qall
 }
