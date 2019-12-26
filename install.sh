@@ -30,6 +30,4 @@ fi
 
 . "${PWD}/.bash.function.sh"
 
-[[ ! -e "${HOME}/.dotfile_path" ]] && echo "${DOTFILE_PATH}" > "${HOME}/.dotfile_path"
-
 init_system

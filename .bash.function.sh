@@ -31,6 +31,14 @@ function find_conda_path {
   echo $(find /opt/*conda*/bin ${HOME}/*conda*/bin -type d 2>/dev/null)
 }
 
+function contains {
+  [[ "${1}" =~ "${2}" ]] && echo 1 || echo 0
+}
+
+function prepend_file {
+  echo -e "${1}\n$(cat ${2})" > ${2}
+}
+
 function init_system {
   if [[ $(command_exists sudo) -eq 0 ]] && [[ $(is_root) -eq 1 ]]
   then
@@ -39,11 +47,15 @@ function init_system {
 
   CONDA_PATH="$(find_conda_path)"
 
-  [[ "${PATH}" =~ "${CONDA_PATH}" ]] && echo "Conda path already in path" || export PATH="${CONDA_PATH}:${PATH}"
+  (( $(contains "${PATH}" "${CONDA_PATH}") )) && echo "Conda path already in path" || export PATH="${CONDA_PATH}:${PATH}"
 
   install_system_applications
 
   install_dotfiles
+
+  (( $(contains "$(cat ${HOME}/.bashrc)" "DOTFILE_PATH") )) || prepend_file "export DOTFILE_PATH=${PWD}" "${HOME}/.bashrc"
+
+  . ${HOME}/.bashrc
 }
 
 function install_system_applications {

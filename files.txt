@@ -1,9 +1,7 @@
 .bash.alias.sh
 .bash.function.sh
-.bash.init.sh
-.bash_profile
 .bashrc
 .gitconfig
-.klipper
 .tmux.conf
+.vim
 .vimrc
