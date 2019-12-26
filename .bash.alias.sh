@@ -7,6 +7,7 @@ alias ev="vim ${HOME}/.vimrc"
 alias ei="vim ${HOME}/.bash.init.sh"
 alias ea="vim ${HOME}/.bash.alias.sh"
 alias ef="vim ${HOME}/.bash.function.sh"
+alias et="vim ${HOME}/.tmux.conf"
 
 alias dot="pushd ${DOTFILE_PATH} && git pull && popd"
 
