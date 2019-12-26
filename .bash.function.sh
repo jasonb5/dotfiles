@@ -53,7 +53,7 @@ function init_system {
 
   install_dotfiles
 
-  (( $(contains "$(cat ${HOME}/.bashrc)" "DOTFILE_PATH") )) || prepend_file "export DOTFILE_PATH=${PWD}" "${HOME}/.bashrc"
+  echo "${PWD}" > ${HOME}/.dotfile_path
 
   . ${HOME}/.bashrc
 }

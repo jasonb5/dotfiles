@@ -1,4 +1,5 @@
-export DOTFILE_PATH=/home/titters/devel/dotfiles
+export DOTFILE_PATH="$(cat ${HOME}/.dotfile_path)"
+
 . ~/.bash.alias.sh
 
 . ~/.bash.function.sh
