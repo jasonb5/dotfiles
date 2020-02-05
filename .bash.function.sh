@@ -1,3 +1,19 @@
+function rm_finalizer {
+  kubectl patch ${1} ${2} --type merge -p '{"metadata":{"finalizers": [null]}}'
+}
+
+function check {
+  cat "${1}"
+
+  read -ep "Continue (y/n): " cont
+
+  [[ "${cont}" == "y" ]] && cat "${1}" || echo ""
+}
+
+function get_field {
+  tr -s " " | cut -d " " -f ${1}
+}
+
 function dump_certs {
   if [[ $# < 1 ]]
   then
