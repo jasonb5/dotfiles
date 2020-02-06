@@ -69,6 +69,11 @@ function init_system {
 
   install_dotfiles
 
+  if [[ $(command_exists vim) -eq 0 ]]
+  then
+    install_vim_plug
+  fi
+
   echo "${PWD}" > ${HOME}/.dotfile_path
 
   . ${HOME}/.bashrc
