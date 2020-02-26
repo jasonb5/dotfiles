@@ -10,8 +10,11 @@ alias ef="vim ${HOME}/.bash.function.sh"
 alias et="vim ${HOME}/.tmux.conf"
 
 alias dot="pushd ${DOTFILE_PATH} && git pull && popd"
+alias cdot="pushd ${DOTFILE_PATH}"
 
 alias ls="ls -lah --color"
+
+alias d="docker"
 
 alias k="kubectl"
 alias kdrain="kubectl drain --ignore-daemonsets --delete-local-data"
