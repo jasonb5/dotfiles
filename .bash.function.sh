@@ -1,3 +1,54 @@
+function switch_nvidia {
+  sudo sed -i.bak "/vfio.*/d" /etc/initramfs-tools/modules 
+
+  sudo sed -i.bak "/vfio.*/d" /etc/modules
+
+  sudo rm /etc/modprobe.d/vfio.conf
+
+  sudo rm /etc/modprobe.d/nvidia.conf
+
+  echo "blacklist i915" | sudo tee /etc/modprobe.d/blacklist-intel.conf
+
+  sudo update-initramfs -u -k all
+
+  sudo sysctl -w vm.nr_hugepages=0
+}
+
+function switch_intel {
+  if [[ -e "/etc/modprobe.d/blacklist-intel.conf" ]]
+  then
+    sudo rm /etc/modprobe.d/blacklist-intel.conf
+  fi
+
+  if [[ -z "$(grep -E vfio /etc/initramfs-tools/modules)" ]]
+  then
+    echo "vfio vfio_iommu_type1 vfio_virqfd vfio_pci ids=10de:1b81,10de:10f0" | sudo tee -a /etc/initramfs-tools/modules
+  fi
+
+  if [[ -z "$(grep -E vfio /etc/modules)" ]]
+  then
+    echo "vfio vfio_iommu_type1 vfio_pci ids=10de:1b81,10de:10f0" | sudo tee -a /etc/modules
+  fi
+
+  if [[ ! -e "/etc/modprobe.d/vfio.conf" ]]
+  then
+    echo "options vfio-pci ids=10de:1b81,10de:10f0" | sudo tee /etc/modprobe.d/vfio.conf
+  fi
+
+  if [[ ! -e "/etc/modprobe.d/nvidia.conf" ]]
+  then
+cat << EOF | sudo tee /etc/modprobe.d/nvidia.conf
+softdep nouveau pre: vfio-pci
+softdep nvidia pre: vfio-pci
+softdep nvidia* pre: vfio-pci
+EOF
+  fi
+
+  sudo update-initramfs -u -k all
+
+  sudo sysctl -w vm.nr_hugepages=5200
+}
+
 function rm_finalizer {
   kubectl patch ${1} ${2} --type merge -p '{"metadata":{"finalizers": [null]}}'
 }
@@ -50,6 +101,31 @@ function dump_certs {
   fi
 }
 
+function GIT_BRANCH {
+  BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+  [[ ! -z "${BRANCH}" ]] && echo " (${BRANCH})"
+}
+
+function colors {
+  T='gYw'   # The test text
+
+  echo -e "\n                 40m     41m     42m     43m\
+       44m     45m     46m     47m";
+
+  for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' \
+             '1;32m' '  33m' '1;33m' '  34m' '1;34m' '  35m' '1;35m' \
+             '  36m' '1;36m' '  37m' '1;37m';
+    do FG=${FGs// /}
+    echo -en " $FGs \033[$FG  $T  "
+    for BG in 40m 41m 42m 43m 44m 45m 46m 47m;
+      do echo -en "$EINS \033[$FG\033[$BG  $T  \033[0m";
+    done
+    echo;
+  done
+  echo
+}
+
 ####################
 # Required functions
 ####################
@@ -83,10 +159,6 @@ function init_system {
   then
     SUDO="sudo"
   fi
-
-  CONDA_PATH="$(find_conda_path)"
-
-  (( $(contains "${PATH}" "${CONDA_PATH}") )) && echo "Conda path already in path" || export PATH="${CONDA_PATH}:${PATH}"
 
   install_system_applications
 
