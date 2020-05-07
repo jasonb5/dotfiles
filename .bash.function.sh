@@ -173,12 +173,19 @@ function init_system {
 
   CONDA_PATH=$(find_conda_path)
 
+  if [[ ! -z "${CONDA_PATH}" ]]
+  then
+    SHELL_NAME=${SHELL:-bash}
+
+    conda init ${SHELL_NAME##*/}
+
 cat << EOF >> ${HOME}/.bash.init.sh
 if [[ \$(contains \$PATH \$CONDA_PATH) -eq 0 ]]
 then
   export PATH=\$PATH:\$CONDA_PATH
 fi
 EOF
+  fi
 
   . ${HOME}/.bashrc
 }
