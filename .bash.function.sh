@@ -171,6 +171,15 @@ function init_system {
 
   echo "${PWD}" > ${HOME}/.dotfile_path
 
+  CONDA_PATH=$(find_conda_path)
+
+cat << EOF >> ${HOME}/.bash.init.sh
+if [[ \$(contains \$PATH \$CONDA_PATH) -eq 0 ]]
+then
+  export PATH=\$PATH:\$CONDA_PATH
+fi
+EOF
+
   . ${HOME}/.bashrc
 }
 

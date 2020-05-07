@@ -14,6 +14,9 @@ WHITE="\[\033[37m\]"
 
 . ~/.bash.function.sh
 
-. /home/titters/.init-functions.sh
+if [[ -e ~/.bash.init.sh ]]
+then
+  . ~/.bash.init.sh
+fi
 
 PS1="$RESET$CYAN$(whoami)$RESET$WHITE@$RESET$PURPLE\h$RESET$GREEN\$(GIT_BRANCH)\n$RESET$BLUE[\w]$RESET: "
