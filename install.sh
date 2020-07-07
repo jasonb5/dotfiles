@@ -1,19 +1,20 @@
 #! /bin/bash
 
 INSTALL_PATH="${HOME}/devel"
+DOTFILE_PATH="${INSTALL_PATH}/dotfiles"
 GITHUB_URL="https://github.com/jasonb5/dotfiles"
 
-read -p "Install path (default: ${INSTALL_PATH}): " candidate_path
+while [[ "$#" -gt 0 ]]
+do
+  flag="${1}"
+  shift
 
-[[ -n "${candidate_path}" ]] && INSTALL_PATH="${candidate_path}"
-
-echo "Installing into \"${INSTALL_PATH}\""
-
-[[ ! -e "${INSTALL_PATH}" ]] && mkdir -p ${INSTALL_PATH}
-
-cd "${INSTALL_PATH}"
-
-DOTFILE_PATH="${INSTALL_PATH}/dotfiles"
+  case "${flag}" in
+    --debug)
+      set -x
+      ;;
+  esac
+done
 
 if [[ -e "${DOTFILE_PATH}" ]]
 then

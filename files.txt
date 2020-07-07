@@ -3,4 +3,5 @@
 .bashrc
 .gitconfig
 .tmux.conf
+.vim
 .vimrc

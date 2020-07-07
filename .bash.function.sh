@@ -1,3 +1,27 @@
+function conda_install {
+  pushd "${HOME}"
+
+  if [[ "$(uname)" == "Darwin" ]]
+  then
+    curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+  elif [[ "$(uname)" == "Linux" ]]
+  then
+    curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  fi 
+
+  bash Miniconda3-latest-*-x86_64.sh -bf -p ${HOME}/conda
+
+  popd
+}
+
+function conda_update_base {
+  conda update -n base -c defaults conda
+}
+
+function conda_revisions {
+  conda list --revisions
+}
+
 function switch_nvidia {
   sudo sed -i.bak "/vfio.*/d" /etc/initramfs-tools/modules 
 
@@ -130,12 +154,6 @@ function colors {
 # Required functions
 ####################
 
-SUDO=""
-
-function is_root {
-  [[ $(id -u -n) == "root" ]] && echo 0 || echo 1
-}
-
 function command_exists {
   command -v $1 >/dev/null 2>&1
 
@@ -155,39 +173,17 @@ function prepend_file {
 }
 
 function init_system {
-  if [[ $(command_exists sudo) -eq 0 ]] && [[ $(is_root) -eq 1 ]]
-  then
-    SUDO="sudo"
-  fi
-
-  install_system_applications
-
   install_dotfiles
+
+cat << EOF > "${HOME}/.env"
+DOTFILE_PATH="${DOTFILE_PATH}"
+CONDA_PATH="$(find_conda_path)"
+EOF
 
   if [[ $(command_exists vim) -eq 0 ]]
   then
     install_vim_plug
   fi
-
-  echo "${PWD}" > ${HOME}/.dotfile_path
-
-  CONDA_PATH=$(find_conda_path)
-
-  if [[ ! -z "${CONDA_PATH}" ]]
-  then
-    SHELL_NAME=${SHELL:-bash}
-
-    conda init ${SHELL_NAME##*/}
-
-cat << EOF >> ${HOME}/.bash.init.sh
-if [[ \$(contains \$PATH \$CONDA_PATH) -eq 0 ]]
-then
-  export PATH=\$PATH:\$CONDA_PATH
-fi
-EOF
-  fi
-
-  . ${HOME}/.bashrc
 }
 
 function install_system_applications {

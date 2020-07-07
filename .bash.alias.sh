@@ -12,7 +12,8 @@ alias et="vim ${HOME}/.tmux.conf"
 alias dot="pushd ${DOTFILE_PATH} && git pull && popd"
 alias cdot="pushd ${DOTFILE_PATH}"
 
-alias ls="ls -lah --color"
+alias ls="ls -lh"
+alias lsa="ls -lah"
 
 alias d="docker"
 
