@@ -27,7 +27,7 @@ Plug 'davidhalter/jedi-vim'
 Plug 'ekalinin/Dockerfile.vim'
 
 " Go
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go'}
 
 call plug#end()
 
