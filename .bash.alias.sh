@@ -12,8 +12,15 @@ alias et="vim ${HOME}/.tmux.conf"
 alias dot="pushd ${DOTFILE_PATH} && git pull && popd"
 alias cdot="pushd ${DOTFILE_PATH}"
 
-alias ls="ls -lh"
-alias lsa="ls -lah"
+if [[ "$(uname)" == "Linux" ]]
+then
+  LS_EXTRA="--color"
+else
+  LS_EXTRA=""
+fi
+
+alias ls="ls -lh ${LS_EXTRA}"
+alias lsa="ls -lah ${LS_EXTRA}"
 
 alias d="docker"
 
