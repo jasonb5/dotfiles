@@ -164,8 +164,12 @@ function find_conda_path {
   echo $(find /opt/*conda*/bin ${HOME}/*conda*/bin -type d 2>/dev/null)
 }
 
-function contains {
+function str_contains {
   [[ "${1}" =~ "${2}" ]] && echo 1 || echo 0
+}
+
+function file_contains {
+  grep -E "${1}" "${2}"; echo $?
 }
 
 function prepend_file {
@@ -183,6 +187,11 @@ EOF
   if [[ $(command_exists vim) -eq 0 ]]
   then
     install_vim_plug
+  fi
+
+  if [[ $(str_contains $(cat ~/.bash_profile) "source ~/.bashrc") -eq 0 ]]
+  then
+    echo "source ~/.bashrc" >> ~/.bash_profile
   fi
 }
 
