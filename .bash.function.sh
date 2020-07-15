@@ -189,10 +189,17 @@ EOF
     install_vim_plug
   fi
 
-  if [[ $(str_contains $(cat ~/.bash_profile) "source ~/.bashrc") -eq 0 ]]
+  if [[ ! -e "${HOME}/.bash_profile" ]]
   then
-    echo "source ~/.bashrc" >> ~/.bash_profile
+    touch "${HOME}/.bash_profile"
   fi
+
+  if [[ $(str_contains $(cat ~/.bash_profile) "source ${HOME}/.bashrc") -eq 0 ]]
+  then
+    echo "source ${HOME}/.bashrc" >> "${HOME}/.bash_profile"
+  fi
+
+  . "${HOME}/.bash_profile"
 }
 
 function install_system_applications {

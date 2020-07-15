@@ -24,7 +24,7 @@ then
 else
   echo "Cloning ${GITHUB_URL} to ${DOTFILE_PATH}"
 
-  git clone ${GITHUB_URL}
+  git clone ${GITHUB_URL} "${DOTFILE_PATH}"
 
   cd "${DOTFILE_PATH}"
 fi
