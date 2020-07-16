@@ -14,6 +14,15 @@ function conda_install {
   popd
 }
 
+function conda_dev {
+  if [[ ! -z "$(conda env list | grep dev)" ]]
+  then
+    conda env remove -n dev
+  fi
+
+  conda create -n dev -y -c conda-forge conda-build anaconda-client bump2version
+}
+
 function conda_update_base {
   conda update -n base -c defaults conda
 }
