@@ -22,55 +22,41 @@ function conda_revisions {
   conda list --revisions
 }
 
-function switch_nvidia {
-  sudo sed -i.bak "/vfio.*/d" /etc/initramfs-tools/modules 
+modprobe_override=/etc/modprobe.d/vfio-driver-override.conf
 
-  sudo sed -i.bak "/vfio.*/d" /etc/modules
+function vm-prep {
+  echo 1 | sudo tee /proc/sys/vm/compact_memory
 
-  sudo rm /etc/modprobe.d/vfio.conf
+  echo 8192 | sudo tee /proc/sys/vm/nr_hugepages
 
-  sudo rm /etc/modprobe.d/nvidia.conf
-
-  echo "blacklist i915" | sudo tee /etc/modprobe.d/blacklist-intel.conf
-
-  sudo update-initramfs -u -k all
-
-  sudo sysctl -w vm.nr_hugepages=0
+  for file in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo "performance" | sudo tee "${file}"; done
 }
 
-function switch_intel {
-  if [[ -e "/etc/modprobe.d/blacklist-intel.conf" ]]
-  then
-    sudo rm /etc/modprobe.d/blacklist-intel.conf
-  fi
+function vm-release {
+  echo 0 | sudo tee /proc/sys/vm/nr_hugepages
 
-  if [[ -z "$(grep -E vfio /etc/initramfs-tools/modules)" ]]
-  then
-    echo "vfio vfio_iommu_type1 vfio_virqfd vfio_pci ids=10de:1b81,10de:10f0" | sudo tee -a /etc/initramfs-tools/modules
-  fi
+  for file in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo "powersave" | sudo tee "${file}"; done
+}
 
-  if [[ -z "$(grep -E vfio /etc/modules)" ]]
-  then
-    echo "vfio vfio_iommu_type1 vfio_pci ids=10de:1b81,10de:10f0" | sudo tee -a /etc/modules
-  fi
+function lock-nvidia {
+  echo "options vfio-pci ids=10de:1b81,10de:10f0,1106:3483" | sudo tee "${modprobe_override}"
 
-  if [[ ! -e "/etc/modprobe.d/vfio.conf" ]]
-  then
-    echo "options vfio-pci ids=10de:1b81,10de:10f0" | sudo tee /etc/modprobe.d/vfio.conf
-  fi
+  sudo update-initramfs -u
+}
 
-  if [[ ! -e "/etc/modprobe.d/nvidia.conf" ]]
-  then
-cat << EOF | sudo tee /etc/modprobe.d/nvidia.conf
-softdep nouveau pre: vfio-pci
-softdep nvidia pre: vfio-pci
-softdep nvidia* pre: vfio-pci
-EOF
-  fi
+function unlock-nvidia {
+  sudo rm "${modprobe_override}"
 
-  sudo update-initramfs -u -k all
+  sudo update-initramfs -u
+}
 
-  sudo sysctl -w vm.nr_hugepages=5200
+function iommu_groups {
+  for d in /sys/kernel/iommu_groups/*/devices/*;
+  do
+    n=${d#*/iommu_groups/*}; n=${n%%/*}
+    printf 'IOMMU Group %s ' "$n"
+    lspci -nns "${d##*/}"
+  done
 }
 
 function rm_finalizer {
@@ -89,29 +75,6 @@ function get_field {
   tr -s " " | cut -d " " -f ${1}
 }
 
-function tiller_rbac {
-cat << EOF | kubectl apply -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tiller
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system
-EOF
-}
-
 function dump_certs {
   if [[ $# < 1 ]]
   then
@@ -123,12 +86,6 @@ function dump_certs {
 
     for cert in *.pem; do newname=$(openssl x509 -noout -subject -in $cert | sed -n 's/^.*CN=\(.*\)$/\1/; s/[ ,.*]/_/g; s/__/_/g; s/^_//g;p').pem; mv $cert $newname; done
   fi
-}
-
-function GIT_BRANCH {
-  BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
-
-  [[ ! -z "${BRANCH}" ]] && echo " (${BRANCH})"
 }
 
 function colors {
@@ -153,6 +110,18 @@ function colors {
 ####################
 # Required functions
 ####################
+
+SUDO=""
+
+function GIT_BRANCH {
+  BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+  [[ ! -z "${BRANCH}" ]] && echo " (${BRANCH})"
+}
+
+function is_root {
+  [[ $(id -u -n) == "root" ]] && echo 0 || echo 1
+}
 
 function command_exists {
   command -v $1 >/dev/null 2>&1
@@ -189,14 +158,9 @@ EOF
     install_vim_plug
   fi
 
-  if [[ ! -e "${HOME}/.bash_profile" ]]
+  if [[ -z "$(grep "source ${HOME}/.bash_profile" ${HOME}/.bashrc)" ]]
   then
-    touch "${HOME}/.bash_profile"
-  fi
-
-  if [[ $(str_contains $(cat ~/.bash_profile) "source ${HOME}/.bashrc") -eq 0 ]]
-  then
-    echo "source ${HOME}/.bashrc" >> "${HOME}/.bash_profile"
+    echo "source ${HOME}/.bash_profile" >> "${HOME}/.bashrc"
   fi
 
   . "${HOME}/.bash_profile"
