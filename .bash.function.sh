@@ -158,6 +158,11 @@ EOF
     install_vim_plug
   fi
 
+  if [[ $(commnad_exists conda) -eq 0 ]]
+  then
+    conda init bash
+  fi
+
   if [[ -z "$(grep "source ${HOME}/.bash_profile" ${HOME}/.bashrc)" ]]
   then
     echo "source ${HOME}/.bash_profile" >> "${HOME}/.bashrc"
