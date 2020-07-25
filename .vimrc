@@ -11,7 +11,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'NLKNguyen/papercolor-theme'
 
 " Python
-Plug 'vim-python/python-syntax'
 Plug 'psf/black'
 
 " Typescript
@@ -23,7 +22,6 @@ Plug 'vim-syntastic/syntastic'
 Plug 'sheerun/vim-polyglot'
 
 " Autocomplete
-Plug 'davidhalter/jedi-vim'
 
 " Dockerfile
 Plug 'ekalinin/Dockerfile.vim'
