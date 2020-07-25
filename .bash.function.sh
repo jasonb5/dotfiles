@@ -167,7 +167,7 @@ EOF
     install_vim_plug
   fi
 
-  if [[ $(commnad_exists conda) -eq 0 ]]
+  if [[ $(command_exists conda) -eq 0 ]]
   then
     conda init bash
   fi
