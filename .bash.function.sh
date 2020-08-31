@@ -14,65 +14,6 @@ function conda_install {
   popd
 }
 
-function conda_dev {
-  if [[ ! -z "$(conda env list | grep dev)" ]]
-  then
-    conda env remove -n dev
-  fi
-
-  conda create -n dev -y -c conda-forge conda-build anaconda-client bump2version
-}
-
-function conda_update_base {
-  conda update -n base -c defaults conda
-}
-
-function conda_revisions {
-  conda list --revisions
-}
-
-modprobe_override=/etc/modprobe.d/vfio-driver-override.conf
-
-function vm-prep {
-  echo 1 | sudo tee /proc/sys/vm/compact_memory
-
-  echo 8192 | sudo tee /proc/sys/vm/nr_hugepages
-
-  for file in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo "performance" | sudo tee "${file}"; done
-}
-
-function vm-release {
-  echo 0 | sudo tee /proc/sys/vm/nr_hugepages
-
-  for file in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo "powersave" | sudo tee "${file}"; done
-}
-
-function vfio-rebind {
-  dev=$1; shift
-  drv=$1; shift
-  while [ -n "$drv" ]; do
-    echo $dev > /sys/bus/pci/devices/$dev/driver/unbind
-    echo $dev > /sys/bus/pci/drivers/$drv/bind
-
-    echo "$dev -> $drv"
-
-    dev=$1; shift
-    drv=$1; shift
-  done
-}
-
-function lock-nvidia {
-  echo "options vfio-pci ids=10de:1b81,10de:10f0" | sudo tee "${modprobe_override}"
-
-  sudo update-initramfs -u
-}
-
-function unlock-nvidia {
-  sudo rm "${modprobe_override}"
-
-  sudo update-initramfs -u
-}
-
 function iommu_groups {
   for d in /sys/kernel/iommu_groups/*/devices/*;
   do
