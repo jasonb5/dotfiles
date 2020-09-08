@@ -17,6 +17,9 @@ Plug 'psf/black'
 Plug 'Quramy/tsuquyomi'
 Plug 'leafgarland/typescript-vim'
 
+" Go
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go'}
+
 " Syntax
 Plug 'vim-syntastic/syntastic'
 Plug 'sheerun/vim-polyglot'
@@ -25,9 +28,6 @@ Plug 'sheerun/vim-polyglot'
 
 " Dockerfile
 Plug 'ekalinin/Dockerfile.vim'
-
-" Go
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go'}
 
 call plug#end()
 
