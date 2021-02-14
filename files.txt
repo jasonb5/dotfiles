@@ -1,6 +1,0 @@
-.bash.alias.sh
-.bash.function.sh
-.bash_profile
-.gitconfig
-.tmux.conf
-.vimrc
