@@ -1,22 +1,14 @@
 #!/bin/bash
 
-declare -a FILES
+DOTFILES="${HOME}/devel/dotfiles"
 
-FILES=(
-	.tmux.conf
-	.vimrc
-	.gitconfig
-)
+if [ ! -e "${DOTFILES}" ]
+then
+	git clone https://github.com/jasonb5/dotfiles "${DOTFILES}"
+fi
 
-git submodule init
+cd "${DOTFILES}"
 
-for x in ${FILES[*]}
-do
-	ln -sf "${PWD}/${x}" "${HOME}/${x}"
-done
+source .bashrc.dotfiles
 
-[ ! -f "${HOME}/.vim/autoload/plug.vim" ] && \
-  mkdir -p ${HOME}/.vim/autoload && \
-  ln -sf "${PWD}/vim-plug/plug.vim" "${HOME}/.vim/autoload/plug.vim"
-
-vim -E -s -u "${HOME}/.vimrc" +PlugInstall +qall
+install_dotfiles

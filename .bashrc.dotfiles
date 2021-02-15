@@ -1,0 +1,18 @@
+CLEAR="\[\033[0m\]"
+PURPLE="\[\033[35m\]"
+CYAN="\[\033[36m\]"
+
+export PROMPT_COMMAND=__prompt
+
+function __prompt {
+  EXIT="$?"
+
+  L1="${PURPLE}$(whoami)@$(hostname): $(pwd)${CLEAR}"
+  L2="${CYAN}${EXIT} $> ${CLEAR}"
+
+  PS1="${L1}\n${L2}"
+}
+
+source .dotfiles.functions.sh
+
+source .dotfiles.alias.sh
