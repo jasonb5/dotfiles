@@ -1,8 +1,9 @@
 unalias -a
 
 alias ev="vim ~/.vimrc"
-alias eb="vim ~/.bashrc.dotfiles"
+alias ep="vim ~/.bash_profile"
+alias eb="vim ~/.dotfiles.bashrc"
 alias ef="vim ~/.dotfiles.functions.sh"
 alias ea="vim ~/.dotfiles.alias.sh"
 
-alias sb="source ~/.bashrc"
+alias sb="source ~/.bash_profile"
