@@ -13,6 +13,9 @@ function __prompt {
   PS1="${L1}\n${L2}"
 }
 
+[[ -z "$(echo ${PATH} | grep ${HOME}/conda/bin)" ]] && \
+  export PATH=${HOME}/conda/bin:${PATH}
+
 source .dotfiles.functions.sh
 
 source .dotfiles.alias.sh

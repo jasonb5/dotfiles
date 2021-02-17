@@ -9,6 +9,6 @@ fi
 
 cd "${DOTFILES}"
 
-source .bashrc.dotfiles
+source ${PWD}/.dotfiles.functions.sh
 
-install_dotfiles
+dotfiles_install
