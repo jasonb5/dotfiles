@@ -10,9 +10,10 @@ FILES=(
   .dotfiles.alias.sh
 )
 
-git submodule init
-
 function install_dotfiles {
+  git submodule init
+  git submodule update
+
   for x in ${FILES[*]}
   do
     ln -sf "${PWD}/${x}" "${HOME}/${x}"
