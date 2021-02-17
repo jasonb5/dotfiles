@@ -7,7 +7,7 @@ export PROMPT_COMMAND=__prompt
 function __prompt {
   EXIT="$?"
 
-  L1="${PURPLE}$(whoami)@$(hostname): $(pwd)${CLEAR}"
+  L1="${CONDA_PROMPT_MODIFIER:-}${PURPLE}$(whoami)@$(hostname): $(pwd)${CLEAR}"
   L2="${CYAN}${EXIT} $> ${CLEAR}"
 
   PS1="${L1}\n${L2}"
