@@ -13,9 +13,17 @@ function __prompt {
   PS1="${L1}\n${L2}"
 }
 
-[[ -z "$(echo ${PATH} | grep ${HOME}/conda/bin)" ]] && \
-  export PATH=${HOME}/conda/bin:${PATH}
+source "${HOME}/.dotfiles.bashrc.dynamic"
 
-source .dotfiles.functions.sh
+if [ -z "$(echo "${PATH}" | grep "${CONDA_PATH}")" ]; then
+  export PATH="${CONDA_PATH}:${PATH}"
+fi
 
-source .dotfiles.alias.sh
+BASHRC_USER="${HOME}/.dotfiles.bashrc.user"
+
+# Load user bashrc
+[ -x "${BASHRC_USER}" ] && source "${BASHRC_USER}"
+
+source "${HOME}/.dotfiles.functions.sh"
+
+source "${HOME}/.dotfiles.alias.sh"

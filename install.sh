@@ -1,14 +1,14 @@
-#!/bin/bash
+set -x
 
-DOTFILES="${HOME}/devel/dotfiles"
+DOTFILE_PATH="${HOME}/devel/dotfiles"
 
-if [ ! -e "${DOTFILES}" ]
+if [ ! -e "${DOTFILE_PATH}" ]
 then
-	git clone https://github.com/jasonb5/dotfiles "${DOTFILES}"
+	git clone https://github.com/jasonb5/dotfiles ${DOTFILE_PATH}
 fi
 
-cd "${DOTFILES}"
+cd "${DOTFILE_PATH}"
 
-source ${PWD}/.dotfiles.functions.sh
+source "${PWD}/.dotfiles.functions.sh"
 
-dotfiles_install
+install_dotfiles

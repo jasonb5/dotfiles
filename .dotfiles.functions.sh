@@ -1,71 +1,81 @@
 declare -a FILES
 
 FILES=(
+.bash_profile
+.dotfiles.alias.sh
+.dotfiles.bashrc
+.dotfiles.bashrc.dynamic
+.dotfiles.functions.sh
+.gitconfig
 .tmux.conf
 .vimrc
-.gitconfig
-.bash_profile
-.dotfiles.bashrc
-.dotfiles.functions.sh
-.dotfiles.alias.sh
 )
 
-function dotfiles_install {
+BASHRC_DYNAMIC="${PWD}/.dotfiles.bashrc.dynamic"
+
+BASHRC_START_TAG="# >>> dotfiles start >>>"
+BASHRC_END_TAG="# <<< dotfiles end <<<"
+
+function install_dotfiles {
 	git submodule init
 	git submodule update
 
-	for x in ${FILES[*]}
-	do
-		ln -sf "${PWD}/${x}" "${HOME}/${x}"
+	# Remove old dynamic bashrc
+	[ -x "${BASHRC_DYNAMIC}" ] && rm "${BASHRC_DYNAMIC}"
 
-		echo "Linking ${PWD}/${x} -> ${HOME}/${x}"
+	modify_bashrc
+
+	detect_conda
+
+	for x in "${FILES[@]}"; do
+		local src="${PWD}/${x}"
+		local dst="${HOME}/${x}"
+
+		ln -sf "${src}" "${dst}"
 	done
+}
 
-	[[ ! -f "${HOME}/.vim/autoload/plug.vim" ]] && \
-		mkdir -p ${HOME}/.vim/autoload && \
-		ln -sf "${PWD}/vim-plug/plug.vim" "${HOME}/.vim/autoload/plug.vim"
+function uninstall_dotfiles {
+	for x in "${FILES[@]}"; do
+		local src="${HOME}/${x}"
 
-	vim -E -s -u "${HOME}/.vimrc" +PlugInstall +qall
+		rm "${src}"
+	done
+}
 
-	if [[ -e "${HOME}/.bashrc" ]]
-	then
-		[[ -z "$(cat ${HOME}/.bashrc | grep -e 'source ${HOME}/.dotfiles.bashrc')" ]] && \
-			echo 'source ${HOME}/.dotfiles.bashrc' >> ${HOME}/.bashrc
-	else
-		echo 'source ${HOME}/.dotfiles.bashrc' >> ${HOME}/.bashrc
+function file_contains_text {
+	grep -E "${1}" "${2}"
+}
+
+function modify_bashrc {
+	local bashrc="${HOME}/.bashrc"
+	local cmd_source="source "${HOME}/.dotfiles.bashrc""
+
+	if [ -z "$(file_contains_text "${cmd_source}" "${bashrc}")" ]; then
+		echo "${cmd_source}" >> "${bashrc}"
 	fi
-
-	source .dotfiles.bashrc
-
-	conda init bash
 }
 
-function dotfiles_uninstall {
-	for x in ${FILES[*]}
-	do
-		rm "${HOME}/${x}"
+function any_exist {
+	for x in "${@}"; do
+		if [ -x "${x}" ]; then
+			echo "${x}"
+
+			break
+		fi
 	done
-
-	rm "${HOME}/.vim/autoload/plug.vim"
-
-	sed -i' ' '/^source ${HOME}\/\.dotfiles\.bashrc$/d' ${HOME}/.bashrc
 }
 
-function test_colours {
-	T='gYw'   # The test text
+function detect_conda {
+	local conda_path="$(any_exist "/opt/conda/bin" "${HOME}/conda/bin")"
 
-	echo -e "\n                 40m     41m     42m     43m\
-		44m     45m     46m     47m";
+	if [ ! -z "${conda_path}" ]; then
+		if [ -z "$(echo ${PATH} | grep "${conda_path}")" ]; then
+			export PATH="${conda_path}:${PATH}"
+		fi
 
-	for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' \
-		'1;32m' '  33m' '1;33m' '  34m' '1;34m' '  35m' '1;35m' \
-		'  36m' '1;36m' '  37m' '1;37m';
-do FG=${FGs// /}
-	echo -en " $FGs \033[$FG  $T  "
-	for BG in 40m 41m 42m 43m 44m 45m 46m 47m;
-	do echo -en "$EINS \033[$FG\033[$BG  $T  \033[0m";
-	done
-	echo;
-done
-echo
+		conda init bash
+
+		echo "CONDA_PATH=\"${conda_path}\"" >> "${BASHRC_DYNAMIC}"
+	fi
 }
