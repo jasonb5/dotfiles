@@ -13,17 +13,13 @@ function __prompt {
   PS1="${L1}\n${L2}"
 }
 
-source "${HOME}/.dotfiles.bashrc.dynamic"
-
-if [ -z "$(echo "${PATH}" | grep "${CONDA_PATH}")" ]; then
-  export PATH="${CONDA_PATH}:${PATH}"
-fi
+source "${HOME}/.dotfiles.alias.sh"
 
 BASHRC_USER="${HOME}/.dotfiles.bashrc.user"
 
 # Load user bashrc
-[ -x "${BASHRC_USER}" ] && source "${BASHRC_USER}"
+if [ -e "${BASHRC_USER}" ]; then
+  source "${BASHRC_USER}"
+fi
 
 source "${HOME}/.dotfiles.functions.sh"
-
-source "${HOME}/.dotfiles.alias.sh"
