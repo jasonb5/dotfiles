@@ -23,13 +23,19 @@ function install_dotfiles {
 	# Remove old dynamic bashrc
 	[ -x "${BASHRC_DYNAMIC}" ] && rm "${BASHRC_DYNAMIC}"
 
-	modify_bashrc
+	if [ -z "${NOLOAD}" ]; then
+		modify_bashrc
+	fi
 
 	detect_conda
 
 	for x in "${FILES[@]}"; do
 		local src="${PWD}/${x}"
 		local dst="${HOME}/${x}"
+
+		if [ "${x}" == ".bash_profile" ] && [ ! -z "${NOLOAD}" ]; then
+			continue
+		fi
 
 		ln -sf "${src}" "${dst}"
 	done
