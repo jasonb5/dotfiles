@@ -29,6 +29,8 @@ function install_dotfiles {
 
 	detect_conda
 
+  load_vim
+
 	for x in "${FILES[@]}"; do
 		local src="${PWD}/${x}"
 		local dst="${HOME}/${x}"
@@ -47,6 +49,18 @@ function uninstall_dotfiles {
 
 		rm "${src}"
 	done
+}
+
+function load_vim {
+  local vim_autoload="${HOME}/.vim/autoload"
+
+  if [ ! -e "${vim_autoload}" ]; then
+    mkdir -p "${vim_autoload}"
+  fi
+
+  if [ ! -e "${vim_autoload}/plug.vim" ]; then
+    ln -sf "${PWD}/vim-plug/plug.vim" "${vim_autoload}/plug.vim"
+  fi
 }
 
 function file_contains_text {
