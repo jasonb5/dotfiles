@@ -9,3 +9,8 @@ alias ef="vim ~/.dotfiles.functions.sh"
 alias eg="vim ~/.gitconfig"
 alias et="vim ~/.tmux"
 alias ev="vim ~/.vimrc"
+
+alias sb="source ~/.bashrc"
+
+alias k="kubectl"
+alias ks="kubectl -n kube-system"
