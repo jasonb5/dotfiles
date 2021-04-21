@@ -69,8 +69,11 @@ call plug#begin('~/.vim/plugged')
 " General
 Plug 'jcherven/jummidark.vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'sheerun/vim-polyglot'
 Plug 'editorconfig/editorconfig-vim'
+
+" Syntax
+Plug 'sheerun/vim-polyglot'
+Plug 'ekalinin/Dockerfile.vim' " Not included with vim-polygot
 
 call plug#end()
 
