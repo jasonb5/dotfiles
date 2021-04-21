@@ -65,9 +65,13 @@ endif
 nnoremap <silent> vv <c-w>v</c-w><silent>
 
 call plug#begin('~/.vim/plugged')
+
+" General
 Plug 'jcherven/jummidark.vim'
-Plug 'sheerun/vim-polyglot'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'sheerun/vim-polyglot'
+Plug 'editorconfig/editorconfig-vim'
+
 call plug#end()
 
 colorscheme jummidark
