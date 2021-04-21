@@ -1,3 +1,26 @@
+function keycloak_client_credentials {
+	if [ $# -ne 4 ]; then
+		echo "Usage: keycloak_jwt HOSTNAME REALM CLIENT_ID CLIENT_SECRET"
+		return 1
+	fi
+
+	token_url="http://${1}/auth/realms/${2}/protocol/openid-connect/token"
+
+	echo "${token_url}"
+
+	curl -X POST "${token_url}" \
+		-H "Content-Type: application/x-www-form-urlencoded" \
+		-d "grant_type=client_credentials" \
+		-d "client_id=${3}" \
+		-d "client_secret=${4}" \
+		-d "audience=minio" | python -m json.tool
+}
+
+
+#===============
+# lib functions
+#===============
+
 declare -a FILES
 
 FILES=(
