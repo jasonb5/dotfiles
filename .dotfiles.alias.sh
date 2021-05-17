@@ -7,7 +7,7 @@ alias ebu="vim ~/.dotfiles.bashrc.user"
 alias ebd="vim ~/.dotfiles.bashrc.dynamic"
 alias ef="vim ~/.dotfiles.functions.sh"
 alias eg="vim ~/.gitconfig"
-alias et="vim ~/.tmux"
+alias et="vim ~/.tmux.conf"
 alias ev="vim ~/.vimrc"
 
 alias sb="source ~/.bashrc"
