@@ -48,6 +48,7 @@ let g:syntastic_check_on_wq = 0
 
 let g:tmux_navigator_no_mappings = 1
 
+nnoremap <leader><leader> :bnext<CR>
 nnoremap <leader>n :NERDTreeFocus<CR>
 
 nnoremap <C-r> :source ~/.vimrc<CR>

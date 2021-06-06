@@ -1,3 +1,7 @@
+function write_dev_confs {
+	cp ${DOTFILE_PATH}/templates/pre-commit-config.yaml "${PWD}/.pre-commit-config.yaml"
+}
+
 function keycloak_client_credentials {
 	if [ $# -ne 4 ]; then
 		echo "Usage: keycloak_jwt HOSTNAME REALM CLIENT_ID CLIENT_SECRET"
@@ -43,8 +47,11 @@ function install_dotfiles {
 	git submodule init
 	git submodule update
 
-	# Remove old dynamic bashrc
-	[ -x "${BASHRC_DYNAMIC}" ] && rm "${BASHRC_DYNAMIC}"
+	# create empty dynamic bashrc
+	touch "${BASHRC_DYNAMIC}"
+
+	# store dotfile path
+	echo "${DOTFILE_PATH}" > "${HOME}/.dotfile_path"
 
 	if [ -z "${NOLOAD}" ]; then
 		modify_bashrc

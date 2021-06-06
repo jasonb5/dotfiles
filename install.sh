@@ -1,6 +1,6 @@
 set -x
 
-DOTFILE_PATH="${HOME}/devel/dotfiles"
+export DOTFILE_PATH="${HOME}/devel/dotfiles"
 
 if [ ! -e "${DOTFILE_PATH}" ]
 then

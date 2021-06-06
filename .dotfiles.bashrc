@@ -13,6 +13,8 @@ function __prompt {
   PS1="${L1}\n${L2}"
 }
 
+export DOTFILE_PATH="$(cat ${HOME}/.dotfile_path)"
+
 source "${HOME}/.dotfiles.alias.sh"
 
 BASHRC_USER="${HOME}/.dotfiles.bashrc.user"
