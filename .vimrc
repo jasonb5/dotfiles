@@ -32,48 +32,64 @@ set colorcolumn=+1
 set number
 set numberwidth=5
 
-nnoremap <Leader><Leader> <C-^>
-
 set splitbelow
 set splitright
 
-if exists('$TMUX')
-  function! TmuxOrSplitSwitch(wincmd, tmuxdir)
-    let previous_winnr = winnr()
-    silent! execute "wincmd " . a:wincmd
-    if previous_winnr == winnr()
-      call system("tmux select-pane -" . a:tmuxdir)
-      redraw!
-    endif
-  endfunction
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
-  let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
-  let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
-  let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
+let g:airline#extensions#tabline#enabled = 1
 
-  nnoremap <silent> <C-h> :call TmuxOrSplitSwitch('h', 'L')<cr>
-  nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
-  nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
-  nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
-else
-  map <C-h> <C-w>h
-  map <C-j> <C-w>j
-  map <C-k> <C-w>k
-  map <C-l> <C-w>l
-endif
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
-nnoremap <silent> vv <c-w>v</c-w><silent>
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <leader>n :NERDTreeFocus<CR>
+
+nnoremap <C-r> :source ~/.vimrc<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+
+nnoremap <silent> <C-j> :TmuxNavigateLeft<CR>
+nnoremap <silent> <C-k> :TmuxNavigateDown<CR>
+nnoremap <silent> <C-i> :TmuxNavigateUp<CR>
+nnoremap <silent> <C-l> :TmuxNavigateRight<CR>
+nnoremap <silent> <C-p> :TmuxNavigatePrevious<CR>
+
+function! BuildYCM(info)
+	if a:info.status == 'installed' || a.info.force
+		!./install.py
+	endif
+endfunction
 
 call plug#begin('~/.vim/plugged')
 
 " General
-Plug 'jcherven/jummidark.vim'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'jreybert/vimagit'
+Plug 'airblade/vim-gitgutter'
+
+" Theme
+Plug 'jcherven/jummidark.vim'
+
+" Visual
+Plug 'vim-airline/vim-airline'
+Plug 'preservim/nerdtree'
+Plug 'edkolev/tmuxline.vim'
+Plug 'christoomey/vim-tmux-navigator'
 
 " Syntax
 Plug 'sheerun/vim-polyglot'
 Plug 'ekalinin/Dockerfile.vim' " Not included with vim-polygot
+Plug 'dense-analysis/ale'
+
+" Autocomplete
+Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
 
 call plug#end()
 
