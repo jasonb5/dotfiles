@@ -62,6 +62,12 @@ nnoremap <silent> <C-i> :TmuxNavigateUp<CR>
 nnoremap <silent> <C-l> :TmuxNavigateRight<CR>
 nnoremap <silent> <C-p> :TmuxNavigatePrevious<CR>
 
+nnoremap <silent> t<C-n> :TestNearest<CR>
+nnoremap <silent> t<C-f> :TestFile<CR>
+nnoremap <silent> t<C-s> :TestSuite<CR>
+nnoremap <silent> t<C-l> :TestLast<CR>
+nnoremap <silent> t<C-g> :TestVisit<CR>
+
 function! BuildYCM(info)
 	if a:info.status == 'installed' || a.info.force
 		!./install.py
@@ -74,6 +80,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
+Plug 'vim-test/vim-test'
 
 " Theme
 Plug 'jcherven/jummidark.vim'
