@@ -48,6 +48,8 @@ let g:syntastic_check_on_wq = 0
 
 let g:tmux_navigator_no_mappings = 1
 
+let g:pydocstring_formatter = 'google'
+
 nnoremap <leader><leader> :bnext<CR>
 nnoremap <leader>n :NERDTreeFocus<CR>
 
@@ -68,6 +70,8 @@ nnoremap <silent> t<C-s> :TestSuite<CR>
 nnoremap <silent> t<C-l> :TestLast<CR>
 nnoremap <silent> t<C-g> :TestVisit<CR>
 
+nnoremap <silent> <C-d> :Pydocstring<CR>
+
 function! BuildYCM(info)
 	if a:info.status == 'installed' || a.info.force
 		!./install.py
@@ -81,6 +85,9 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-test/vim-test'
+
+" Python
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
 
 " Theme
 Plug 'jcherven/jummidark.vim'
