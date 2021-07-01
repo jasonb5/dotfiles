@@ -1,3 +1,23 @@
+#! /bin/bash
+
+function install_mambaforge {
+	local tempfile=`mktemp`
+
+	curl -L -k -o "${tempfile}" \
+		https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+
+	bash "${tempfile}" -b -p "${HOME}/conda"
+}
+
+function install_mambaforge_pypy3 {
+	local tempfile=`mktemp`
+
+	curl -L -k -o "${tempfile}" \
+		https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-pypy3-Linux-x86_64.sh
+
+	bash "${tempfile}" -b -p "${HOME}/conda"
+}
+
 function write_dev_confs {
 	cp ${DOTFILE_PATH}/templates/pre-commit-config.yaml "${PWD}/.pre-commit-config.yaml"
 }
