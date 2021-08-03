@@ -14,3 +14,5 @@ alias sb="source ~/.bashrc"
 
 alias k="kubectl"
 alias ks="kubectl -n kube-system"
+
+alias template_helm="cookiecutter ${DOTFILE_PATH}/cookiecutters/helmchart"
