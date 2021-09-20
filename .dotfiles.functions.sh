@@ -1,10 +1,17 @@
 #! /bin/bash
 
+#==============================
+# constants
+#==============================
+VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 
-#===============
-# lib functions
-#===============
+#==============================
+# user functions
+#==============================
 
+#==============================
+# library functions
+#==============================
 declare -a FILES
 
 FILES=(
@@ -12,6 +19,7 @@ FILES=(
 .dotfiles.bashrc
 .dotfiles.functions.sh
 .gitconfig
+.vimrc
 )
 
 log() {
@@ -35,6 +43,11 @@ function install_dotfiles {
 			ln -sf "${src_file}" "${dst_file}"
 		fi
 	done
+
+	if [[ ! -e "${VIM_PLUG_PATH}" ]]; then
+		curl -fLo "${VIM_PLUG_PATH}" --create-dirs \
+			"https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+	fi
 }
 
 function uninstall_dotfiles {
@@ -53,4 +66,8 @@ function uninstall_dotfiles {
 			mv "${installed_file}.bak" "${installed_file}"
 		fi
 	done
+
+	if [[ -e "${VIM_PLUG_PATH}" ]]; then
+		rm -rf "${VIM_PLUG_PATH}"
+	fi
 }
