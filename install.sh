@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 export DOTFILE_PATH="${HOME}/devel/dotfiles"
 
 if [ ! -e "${DOTFILE_PATH}" ]
