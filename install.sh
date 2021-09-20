@@ -12,3 +12,5 @@ cd "${DOTFILE_PATH}"
 source "${PWD}/.dotfiles.functions.sh"
 
 install_dotfiles
+
+echo "${DOTFILE_PATH}" > "${HOME}/.dotfiles"

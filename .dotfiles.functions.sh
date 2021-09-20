@@ -20,6 +20,7 @@ FILES=(
 .dotfiles.functions.sh
 .gitconfig
 .vimrc
+.tmux.conf
 )
 
 log() {
