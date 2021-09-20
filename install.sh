@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -x
 
 export DOTFILE_PATH="${HOME}/devel/dotfiles"
