@@ -1,111 +1,94 @@
-set encoding=utf-8
+set nocompatible
+
+filetype on
+filetype plugin on
+filetype indent on
+
+syntax on
+
+set history=500
+
+set so=7
+set wildmenu
+set ignorecase
+set smartcase
+set hlsearch
+set lazyredraw
+set magic
+set showmatch
+
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
+set encoding=utf8
+
+set nobackup
+set nowb
+set noswapfile
+
+set expandtab
+set smarttab
+set shiftwidth=4
+set tabstop=4
+set lbr
+set tw=500
+set ai
+set si
+set wrap
+
+set laststatus=2
 
 let mapleader = " "
-
-set backspace=2
-set nobackup
-set nowritebackup
-set noswapfile
-set history=50
-set ruler
-set showcmd
-set incsearch
-set laststatus=2
-set autowrite
-set modelines=0
-set nomodeline
-
-if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-	syntax on
-endif
-
-filetype plugin indent on
-
-set tabstop=2
-set shiftwidth=2
-set shiftround
-set expandtab
-
-set textwidth=80
-set colorcolumn=+1
-
-set number
-set numberwidth=5
-
-set splitbelow
-set splitright
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:airline#extensions#tabline#enabled = 1
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-let g:tmux_navigator_no_mappings = 1
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1
 
-let g:pydocstring_formatter = 'google'
+inoremap jj <esc>
 
-nnoremap <leader><leader> :bnext<CR>
-nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <leader>w :w!<cr>
+nnoremap <leader>c :noh<cr>
+nnoremap <leader>r :source ~/.vimrc<cr>
 
-nnoremap <C-r> :source ~/.vimrc<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-f> :NERDTreeFind<CR>
+nnoremap <leader>n :NERDTreeFocus<cr>
+nnoremap <C-n> :NERDTree<cr>
+nnoremap <C-t> :NERDTreeToggle<cr>
+nnoremap <C-f> :NERDTreeFind<cr>
 
-nnoremap <silent> <C-j> :TmuxNavigateLeft<CR>
-nnoremap <silent> <C-k> :TmuxNavigateDown<CR>
-nnoremap <silent> <C-i> :TmuxNavigateUp<CR>
-nnoremap <silent> <C-l> :TmuxNavigateRight<CR>
-nnoremap <silent> <C-p> :TmuxNavigatePrevious<CR>
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
-nnoremap <silent> t<C-n> :TestNearest<CR>
-nnoremap <silent> t<C-f> :TestFile<CR>
-nnoremap <silent> t<C-s> :TestSuite<CR>
-nnoremap <silent> t<C-l> :TestLast<CR>
-nnoremap <silent> t<C-g> :TestVisit<CR>
+map <leader>l :bnext<cr>
+map <leader>h :bprevious<cr>
+map <leader><leader> :tabnext
 
-nnoremap <silent> <C-d> :Pydocstring<CR>
-
-function! BuildYCM(info)
-	if a:info.status == 'installed' || a.info.force
-		!./install.py
-	endif
-endfunction
+map <leader>ss :setlocal spell!<cr>
 
 call plug#begin('~/.vim/plugged')
 
-" General
-Plug 'editorconfig/editorconfig-vim'
-Plug 'jreybert/vimagit'
-Plug 'airblade/vim-gitgutter'
-Plug 'vim-test/vim-test'
+" Colorscheme
+Plug 'joshdick/onedark.vim'
 
-" Python
-Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
-
-" Theme
-Plug 'jcherven/jummidark.vim'
-
-" Visual
-Plug 'vim-airline/vim-airline'
-Plug 'preservim/nerdtree'
-Plug 'edkolev/tmuxline.vim'
-Plug 'christoomey/vim-tmux-navigator'
-
-" Syntax
+" Syntax highlighting
 Plug 'sheerun/vim-polyglot'
-Plug 'ekalinin/Dockerfile.vim' " Not included with vim-polygot
-Plug 'dense-analysis/ale'
 
-" Autocomplete
-Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
+" General
+Plug 'vim-syntastic/syntastic'
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdtree'
+Plug 'vim-airline/vim-airline'
+
+" GO
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
 
 call plug#end()
 
-colorscheme jummidark
+colorscheme onedark

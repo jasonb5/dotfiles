@@ -1,4 +1,4 @@
-set -x
+#!/bin/bash
 
 export DOTFILE_PATH="${HOME}/devel/dotfiles"
 
@@ -12,3 +12,5 @@ cd "${DOTFILE_PATH}"
 source "${PWD}/.dotfiles.functions.sh"
 
 install_dotfiles
+
+echo "${DOTFILE_PATH}" > "${HOME}/.dotfiles"

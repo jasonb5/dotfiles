@@ -1,110 +1,74 @@
 #! /bin/bash
 
-#===============
-# lib functions
-#===============
+#==============================
+# constants
+#==============================
+VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 
+#==============================
+# user functions
+#==============================
+
+#==============================
+# library functions
+#==============================
 declare -a FILES
 
 FILES=(
-.bash_profile
 .dotfiles.alias.sh
 .dotfiles.bashrc
-.dotfiles.bashrc.dynamic
 .dotfiles.functions.sh
 .gitconfig
-.tmux.conf
 .vimrc
+.tmux.conf
 )
 
-BASHRC_DYNAMIC="${PWD}/.dotfiles.bashrc.dynamic"
-
-BASHRC_START_TAG="# >>> dotfiles start >>>"
-BASHRC_END_TAG="# <<< dotfiles end <<<"
+log() {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
 
 function install_dotfiles {
-	git submodule init
-	git submodule update
+	for filename in "${FILES[@]}"; do
+		local dst_file="${HOME}/${filename}"
+		local src_file="${DOTFILE_PATH}/${filename}"
 
-	# create empty dynamic bashrc
-	touch "${BASHRC_DYNAMIC}"
+		if [[ -e "${dst_file}" ]] && [[ ! -L "${dst_file}" ]]; then
+			log "Backing up ${dst_file}"
 
-	# store dotfile path
-	echo "${DOTFILE_PATH}" > "${HOME}/.dotfile_path"
-
-	if [ -z "${NOLOAD}" ]; then
-		modify_bashrc
-	fi
-
-	detect_conda
-
-  load_vim
-
-	for x in "${FILES[@]}"; do
-		local src="${PWD}/${x}"
-		local dst="${HOME}/${x}"
-
-		if [ "${x}" == ".bash_profile" ] && [ ! -z "${NOLOAD}" ]; then
-			continue
+			mv "${dst_file}" "${dst_file}.bak"
 		fi
 
-		ln -sf "${src}" "${dst}"
+		if [[ ! -e "${dst_file}" ]]; then
+			log "Linking ${src_file} -> ${dst_file}"
+
+			ln -sf "${src_file}" "${dst_file}"
+		fi
 	done
+
+	if [[ ! -e "${VIM_PLUG_PATH}" ]]; then
+		curl -fLo "${VIM_PLUG_PATH}" --create-dirs \
+			"https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+	fi
 }
 
 function uninstall_dotfiles {
-	for x in "${FILES[@]}"; do
-		local src="${HOME}/${x}"
+	for filename in "${FILES[@]}"; do
+		local installed_file="${HOME}/${filename}"
 
-		rm "${src}"
-	done
-}
+		if [[ -e "${installed_file}" ]] && [[ -L "${installed_file}" ]]; then
+			log "Unlinking ${installed_file}"
 
-function load_vim {
-  local vim_autoload="${HOME}/.vim/autoload"
-
-  if [ ! -e "${vim_autoload}" ]; then
-    mkdir -p "${vim_autoload}"
-  fi
-
-  if [ ! -e "${vim_autoload}/plug.vim" ]; then
-    ln -sf "${PWD}/vim-plug/plug.vim" "${vim_autoload}/plug.vim"
-  fi
-}
-
-function file_contains_text {
-	grep -E "${1}" "${2}"
-}
-
-function modify_bashrc {
-	local bashrc="${HOME}/.bashrc"
-	local cmd_source="source "${HOME}/.dotfiles.bashrc""
-
-	if [ -z "$(file_contains_text "${cmd_source}" "${bashrc}")" ]; then
-		echo "${cmd_source}" >> "${bashrc}"
-	fi
-}
-
-function any_exist {
-	for x in "${@}"; do
-		if [ -x "${x}" ]; then
-			echo "${x}"
-
-			break
-		fi
-	done
-}
-
-function detect_conda {
-	local conda_path="$(any_exist "/opt/conda/bin" "${HOME}/conda/bin")"
-
-	if [ ! -z "${conda_path}" ]; then
-		if [ -z "$(echo ${PATH} | grep "${conda_path}")" ]; then
-			export PATH="${conda_path}:${PATH}"
+			unlink "${installed_file}"
 		fi
 
-		conda init bash
+		if [[ -e "${installed_file}.bak" ]]; then
+			log "Restoring ${installed_file} backup"
 
-		echo "CONDA_PATH=\"${conda_path}\"" >> "${BASHRC_DYNAMIC}"
+			mv "${installed_file}.bak" "${installed_file}"
+		fi
+	done
+
+	if [[ -e "${VIM_PLUG_PATH}" ]]; then
+		rm -rf "${VIM_PLUG_PATH}"
 	fi
 }
