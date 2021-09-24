@@ -47,19 +47,33 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+let g:go_diagnositics_enabled = 0
+let g:go_metalinter_enabled = []
+let g:go_jump_to_error = 0
 let g:go_fmt_command = "goimports"
-let g:go_auto_type_info = 1
+let g:go_auto_sameids = 0
+
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_generate_tags = 1
 
 inoremap jj <esc>
 
 nnoremap <leader>w :w!<cr>
 nnoremap <leader>c :noh<cr>
-nnoremap <leader>r :source ~/.vimrc<cr>
+nnoremap <leader>rl :source ~/.vimrc<cr>
 
 nnoremap <leader>n :NERDTreeFocus<cr>
 nnoremap <C-n> :NERDTree<cr>
 nnoremap <C-t> :NERDTreeToggle<cr>
 nnoremap <C-f> :NERDTreeFind<cr>
+
+nmap <leader>r <Plug>(coc-rename)
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -68,7 +82,6 @@ map <C-l> <C-W>l
 
 map <leader>l :bnext<cr>
 map <leader>h :bprevious<cr>
-map <leader><leader> :tabnext
 
 map <leader>ss :setlocal spell!<cr>
 
@@ -85,6 +98,9 @@ Plug 'vim-syntastic/syntastic'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
+
+" Completion
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
 " GO
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
