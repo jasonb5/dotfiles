@@ -3,6 +3,8 @@
 #==============================
 # constants
 #==============================
+DOTFILE_START="# >>>>>> DOTFILE_START >>>>>>"
+DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
 VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 
 #==============================
@@ -51,6 +53,14 @@ function install_dotfiles {
 	fi
 
 	echo "${DOTFILE_PATH}" > "${HOME}/.dotfiles"	
+
+	if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
+cat << EOF >> "${HOME}/.bashrc"
+${DOTFILE_START}
+source "${HOME}/.dotfiles.bashrc"
+${DOTFILE_STOP}
+EOF
+	fi
 }
 
 function uninstall_dotfiles {
@@ -76,5 +86,9 @@ function uninstall_dotfiles {
 
 	if [[ -e "${HOME}/.dotfiles" ]]; then
 		rm -rf "${HOME}/,dotfiles"
+	fi
+
+	if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
+		sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
 	fi
 }
