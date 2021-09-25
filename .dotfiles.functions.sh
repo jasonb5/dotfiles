@@ -44,6 +44,7 @@ FILES=(
 .gitconfig
 .vimrc
 .tmux.conf
+.vim/coc-settings.json
 )
 
 log() {
