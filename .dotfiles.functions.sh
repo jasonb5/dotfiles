@@ -18,7 +18,7 @@ declare -a FILES
 
 FILES=(
 .dotfiles.alias.sh
-.dotfiles.bashrc
+.dotfiles.bashrc.sh
 .dotfiles.functions.sh
 .gitconfig
 .vimrc
@@ -57,7 +57,7 @@ function install_dotfiles {
 	if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
 cat << EOF >> "${HOME}/.bashrc"
 ${DOTFILE_START}
-source "${HOME}/.dotfiles.bashrc"
+source "${HOME}/.dotfiles.bashrc.sh"
 ${DOTFILE_STOP}
 EOF
 	fi
