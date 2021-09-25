@@ -11,6 +11,17 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 # user functions
 #==============================
 
+function mambaforge_install {
+	local script_path="${HOME}/Downloads/conda.sh"
+	if [[ ! -e "${script_path}" ]]; then
+		curl -L -o "${script_path}" https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+	fi
+	bash "${script_path}" -b -p "${HOME}/conda"
+	rm "${script_path}"
+	source "${HOME}/conda/etc/profile.d/conda.sh"
+	conda init bash
+}
+
 function remove_snap {
 	snap list | grep -v Name | cut -d" " -f1 | xargs -I% sudo snap remove --purge %
 	snap list | grep -v Name | cut -d" " -f1 | xargs -I% sudo snap remove --purge %
