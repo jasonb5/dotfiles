@@ -13,7 +13,7 @@ function __prompt {
   PS1="${L1}\n${L2}"
 }
 
-export DOTFILE_PATH="$(cat ${HOME}/.dotfile_path)"
+export DOTFILE_PATH="$(cat ${HOME}/.dotfiles)"
 
 source "${HOME}/.dotfiles.alias.sh"
 

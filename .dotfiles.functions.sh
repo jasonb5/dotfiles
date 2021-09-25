@@ -49,6 +49,8 @@ function install_dotfiles {
 		curl -fLo "${VIM_PLUG_PATH}" --create-dirs \
 			"https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 	fi
+
+	echo "${DOTFILE_PATH}" > "${HOME}/.dotfiles"	
 }
 
 function uninstall_dotfiles {
@@ -70,5 +72,9 @@ function uninstall_dotfiles {
 
 	if [[ -e "${VIM_PLUG_PATH}" ]]; then
 		rm -rf "${VIM_PLUG_PATH}"
+	fi
+
+	if [[ -e "${HOME}/.dotfiles" ]]; then
+		rm -rf "${HOME}/,dotfiles"
 	fi
 }
