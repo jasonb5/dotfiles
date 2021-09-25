@@ -11,6 +11,16 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 # user functions
 #==============================
 
+function remove_snap {
+	snap list | grep -v Name | cut -d" " -f1 | xargs -I% sudo snap remove --purge %
+	snap list | grep -v Name | cut -d" " -f1 | xargs -I% sudo snap remove --purge %
+
+	sudo rm -rf /var/cache/snapd
+	sudo apt autoremove -y --purge snapd gnome-software-plugin-snap
+	rm -rf ~/snap
+	sudo apt-mark hold snapd
+}
+
 #==============================
 # library functions
 #==============================
