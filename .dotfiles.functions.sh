@@ -12,7 +12,7 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 #==============================
 
 function mambaforge_install {
-	local script_path="${HOME}/Downloads/conda.sh"
+	local script_path="${HOME}/conda.sh"
 	if [[ ! -e "${script_path}" ]]; then
 		curl -L -o "${script_path}" https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
 	fi
