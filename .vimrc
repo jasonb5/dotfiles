@@ -94,7 +94,6 @@ Plug 'joshdick/onedark.vim'
 Plug 'sheerun/vim-polyglot'
 
 " General
-Plug 'vim-syntastic/syntastic'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
