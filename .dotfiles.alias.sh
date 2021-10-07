@@ -7,4 +7,6 @@ alias ef="vim ~/.dotfiles.functions.sh"
 alias et="vim ~/.tmux.conf"
 alias ev="vim ~/.vimrc"
 
+alias ls="ls -la --color"
+
 alias dotfile="pushd ${DOTFILE_PATH}"
