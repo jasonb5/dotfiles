@@ -5,12 +5,10 @@
     "diagnostic.infoSign": "?",
     "diagnostic.checkCurrentLine": true,
     "coc.preferences.formatOnSaveFiletypes": [
-        "javascript",
-        "html",
+        "py",
+        "yaml",
         "json",
-        "css",
-        "scss",
-        "go"
+        "xml"
     ],
     "coc.preferences.hoverTarget": "float",
     "languageserver": {
@@ -22,5 +20,6 @@
     },
     "go.goplsOptions": {
         "staticcheck": true
-    }
+    },
+    "python.linting.flake8Enabled": true,
 }
