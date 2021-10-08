@@ -1,6 +1,13 @@
 #! /bin/bash
 
 #==============================
+# exports
+#==============================
+
+# prefer buildkit backend
+export DOCKER_BUILDKIT=1
+
+#==============================
 # constants
 #==============================
 DOTFILE_START="# >>>>>> DOTFILE_START >>>>>>"
