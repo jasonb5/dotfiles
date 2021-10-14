@@ -64,12 +64,20 @@ let g:go_highlight_build_constraints = 1
 let g:go_highlight_generate_tags = 1
 
 let g:coc_global_extensions = [
+            \'@yaegassy/coc-ansible',
+            \'coc-cmake',
+            \'coc-css',
+            \'coc-docker',
+            \'coc-go',
+            \'coc-html',
+            \'coc-jedi',
             \'coc-json',
-            \'coc-git',
-            \'coc-json',
-            \'coc-yaml',
+            \'coc-markdownlint',
+            \'coc-sh',
+            \'coc-toml',
+            \'coc-tsserver',
             \'coc-xml',
-            \'coc-sh'
+            \'coc-yaml'
             \]
 
 inoremap jj <esc>
