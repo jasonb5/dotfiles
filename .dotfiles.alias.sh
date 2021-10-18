@@ -10,3 +10,5 @@ alias ev="vim ~/.vimrc"
 alias ls="ls -la --color"
 
 alias dotfile="pushd ${DOTFILE_PATH}"
+
+alias k="kubectl"
