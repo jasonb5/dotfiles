@@ -7,7 +7,12 @@ export PROMPT_COMMAND=__prompt
 function __prompt {
   EXIT="$?"
 
-  L1="${CONDA_PROMPT_MODIFIER:-}${PURPLE}$(whoami)@$(hostname): $(pwd)${CLEAR}"
+  if [[ -n "${PRIVATE_SHELL}" ]]; then
+    L1="${CONDA_PROMPT_MODIFIER:-}${PURPLE}user@$(hostname): $(pwd)${CLEAR}"
+  else
+    L1="${CONDA_PROMPT_MODIFIER:-}${PURPLE}$(whoami)@$(hostname): $(pwd)${CLEAR}"
+  fi
+
   L2="${CYAN}${EXIT} $> ${CLEAR}"
 
   PS1="${L1}\n${L2}"
