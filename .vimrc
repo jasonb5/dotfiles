@@ -80,6 +80,9 @@ let g:coc_global_extensions = [
             \'coc-yaml'
             \]
 
+au FileType xml setl sw=2 ts=2 sts=2 et
+au FileType yaml setl sw=2 ts=2 sts=2 et
+
 inoremap jj <esc>
 
 nnoremap <leader>w :w!<cr>
@@ -103,7 +106,8 @@ map <C-l> <C-W>l
 map <leader>l :bnext<cr>
 map <leader>h :bprevious<cr>
 
-map <leader>ss :setlocal spell!<cr>
+map <leader>sv :vsp<cr>
+map <leader>sh :sp<cr>
 
 call plug#begin('~/.vim/plugged')
 
@@ -120,6 +124,9 @@ Plug 'vim-airline/vim-airline'
 
 " Completion
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+
+" Dockerfile
+Plug 'ekalinin/Dockerfile.vim', { 'for': 'dockerfile' }
 
 " GO
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
