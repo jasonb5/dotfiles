@@ -12,3 +12,5 @@ alias ls="ls -la --color"
 alias dotfile="pushd ${DOTFILE_PATH}"
 
 alias k="kubectl"
+
+alias template_helm="cookiecutter ${DOTFILE_PATH}/templates/helm"

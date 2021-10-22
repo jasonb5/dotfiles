@@ -1,0 +1,19 @@
+{{ "{{-" }} if .Values.ingressRoute.enabled {{ "}}" }}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ "{{" }} include "{{cookiecutter.chart_name}}.fullname" . {{ "}}" }}
+spec:
+  entryPoints:
+    - {{ "{{" }} .Values.ingressRoute.entryPoint {{ "}}" }}
+  routes:
+  - kind: Rule
+    match: Host(``)
+    middlewares:
+    {{ "{{" }} .Values.ingressRoute.middlewares | toYaml | nindent 4 {{ "}}" }}
+    - kind: Service
+      name: {{ "{{" }} include "{{cookiecutter.chart_name}}.fullname" . {{ "}}" }}
+      port: {{ "{{" }} .Values.service.port {{ "}}" }}
+  tls:
+  {{ "{{" }} .Values.ingressRoute.tls | toYaml | nindent 2 {{ "}}" }}
+{{ "{{-" }} end {{ "}}" }}

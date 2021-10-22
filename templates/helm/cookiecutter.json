@@ -1,0 +1,5 @@
+{
+    "chart_name": "example",
+    "description": "A Helm chart for Kubernetes",
+    "app_version": "1.16.0"
+}
