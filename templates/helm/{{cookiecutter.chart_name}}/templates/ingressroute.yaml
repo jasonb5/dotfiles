@@ -11,6 +11,7 @@ spec:
     match: Host(`{{ "{{" }} .Values.ingressRoute.host {{ "}}" }}`)
     middlewares:
     {{ "{{" }} .Values.ingressRoute.middlewares | toYaml | nindent 4 {{ "}}" }}
+    services:
     - kind: Service
       name: {{ "{{" }} include "{{cookiecutter.chart_name}}.fullname" . {{ "}}" }}
       port: {{ "{{" }} .Values.service.port {{ "}}" }}
