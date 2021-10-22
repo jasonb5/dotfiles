@@ -58,6 +58,7 @@ ingress:
 
 ingressRoute:
   enabled: false
+  host: 127.0.0.1
   entryPoint: web
   middlewares: []
   tls:

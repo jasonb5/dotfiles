@@ -8,7 +8,7 @@ spec:
     - {{ "{{" }} .Values.ingressRoute.entryPoint {{ "}}" }}
   routes:
   - kind: Rule
-    match: Host(``)
+    match: Host(`{{ "{{" }} .Values.ingressRoute.host {{ "}}" }}`)
     middlewares:
     {{ "{{" }} .Values.ingressRoute.middlewares | toYaml | nindent 4 {{ "}}" }}
     - kind: Service
