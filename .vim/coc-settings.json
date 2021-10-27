@@ -22,5 +22,6 @@
   },
   "go.goplsOptions": {
     "staticcheck": true
-  }
+  },
+  "pylsp.plugins.flake8.enabled": true,
 }
