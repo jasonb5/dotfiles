@@ -43,8 +43,41 @@ set laststatus=2
 
 let mapleader = " "
 
+let g:go_diagnostics_enabled = 0
+let g:go_metalinter_enabled = []
+let g:go_jump_to_error = 0
+let g:go_fmt_command = "goimports"
+let g:go_auto_sameids = 0
+
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_generate_tags = 1
+
+let g:coc_global_extensions = [
+            \'coc-go',
+            \]
+
 au FileType xml setl sw=2 ts=2 sts=2 et
 au FileType yaml setl sw=2 ts=2 sts=2 et
+
+" Go
+au BufEnter *.go nmap <leader>t <Plug>(go-test)
+au BufEnter *.go nmap <leader>tt <Plug>(go-test-func)
+au BufEnter *.go nmap <leader>i <Plug>(go-info)
+au BufEnter *.go nmap <leader>ii <Plug>(go-implements)
+au BufEnter *.go nmap <leader>ci <Plug>(go-describe)
+au BufEnter *.go nmap <leader>cc <Plug>(go-callers)
+
+" General
+nmap <leader>cr <Plug>(coc-references)
+nmap <C-a> <C-o>
+nmap <C-d> <Plug>(coc-definition)
+nmap <leader>r <Plug>(coc-rename)
 
 inoremap jj <esc>
 
@@ -74,6 +107,9 @@ Plug 'vim-airline/vim-airline'
 
 " Completion
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+
+" Go
+Plug 'fatih/vim-go'
 
 call plug#end()
 
