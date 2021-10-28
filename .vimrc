@@ -63,6 +63,7 @@ let g:go_highlight_generate_tags = 1
 
 let g:coc_global_extensions = [
             \'coc-go',
+            \'@yaegassy/coc-pylsp',
             \]
 
 au FileType xml setl sw=2 ts=2 sts=2 et
