@@ -39,6 +39,9 @@ set si
 set wrap
 set nu
 
+set splitright
+set splitbelow
+
 set laststatus=2
 
 let mapleader = " "
@@ -66,18 +69,16 @@ au FileType xml setl sw=2 ts=2 sts=2 et
 au FileType yaml setl sw=2 ts=2 sts=2 et
 
 " Go
+au BufEnter *.go nmap <leader>r <Plug>(go-run)
+au BufEnter *.go nmap <leader>b <Plug>(go-build)
 au BufEnter *.go nmap <leader>t <Plug>(go-test)
-au BufEnter *.go nmap <leader>tt <Plug>(go-test-func)
-au BufEnter *.go nmap <leader>i <Plug>(go-info)
-au BufEnter *.go nmap <leader>ii <Plug>(go-implements)
-au BufEnter *.go nmap <leader>ci <Plug>(go-describe)
-au BufEnter *.go nmap <leader>cc <Plug>(go-callers)
+au BufEnter *.go nmap <leader>dv <Plug>(go-def-vertical)
 
 " General
 nmap <leader>cr <Plug>(coc-references)
 nmap <C-a> <C-o>
 nmap <C-d> <Plug>(coc-definition)
-nmap <leader>r <Plug>(coc-rename)
+nmap <leader>rn <Plug>(coc-rename)
 
 inoremap jj <esc>
 
