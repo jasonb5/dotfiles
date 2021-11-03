@@ -72,6 +72,10 @@ function install_dotfiles {
 		if [[ ! -e "${dst_file}" ]]; then
 			log "Linking ${src_file} -> ${dst_file}"
 
+			if [[ ! -e "`dirname ${dst_file}`" ]]; then
+				mkdir -p "`dirname ${dst_file}`"
+			fi
+
 			ln -sf "${src_file}" "${dst_file}"
 		fi
 	done
