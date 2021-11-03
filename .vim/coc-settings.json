@@ -20,4 +20,5 @@
     "staticcheck": true
   },
   "pylsp.plugins.flake8.enabled": true,
+  "pydocstring.formatter": "numpy"
 }

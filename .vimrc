@@ -56,8 +56,16 @@ let g:go_highlight_build_constraints = 1
 let g:go_highlight_generate_tags = 1
 
 let g:coc_global_extensions = [
-            \'coc-go',
-            \'@yaegassy/coc-pylsp',
+            \"coc-cmake",
+            \"coc-go",
+            \"coc-json",
+            \"coc-pydocstring",
+            \"@yaegassy/coc-pylsp",
+            \"coc-sh",
+            \"coc-toml",
+            \"coc-tsserver",
+            \"coc-xml",
+            \"coc-yaml",
             \]
 
 au FileType xml setl sw=2 ts=2 sts=2 et
