@@ -39,6 +39,44 @@ function remove_snap {
 	sudo apt-mark hold snapd
 }
 
+function generate_certificates_with_ca {
+	if [[ "${#}" -lt 1 ]]; then
+		echo "missing name"
+		return
+	fi
+
+	[[ ! -e "${PWD}/ca.key" ]] && openssl genrsa -des3 -out ca.key 4096
+	[[ ! -e "${PWD}/ca.crt" ]] && openssl req -x509 -new -nodes -key "${PWD}/ca.key" -sha256 -days 1024 -out "${PWD}/ca.crt"
+
+cat << EOF > "${PWD}/${1}.conf"
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+[req_distinguished_name]
+C = US
+ST = VA
+L = City
+O = YourOrganization
+OU = YourOrganizationUnit
+CN = www.example.com
+[v3_req]
+keyUsage = keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = www.example.com
+DNS.2 = example.com
+DNS.3 = sub.example.com
+DNS.4 = sub2.example.net
+EOF
+
+	vim "${PWD}/${1}.conf"
+
+	openssl req -new -newkey rsa:2048 -nodes -sha256 -keyout "${PWD}/${1}.key" -config "${PWD}/${1}.conf" -out "${PWD}/${1}.csr"
+	openssl x509 -req -in "${PWD}/${1}.csr" -CA "${PWD}/ca.crt" -CAkey "${PWD}/ca.key" -CAcreateserial -out "${PWD}/${1}.crt" -days 365 -sha256
+}
+
 #==============================
 # library functions
 #==============================
