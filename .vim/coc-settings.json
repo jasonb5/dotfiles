@@ -20,5 +20,21 @@
     "staticcheck": true
   },
   "pylsp.plugins.flake8.enabled": true,
-  "pydocstring.formatter": "numpy"
+  "pydocstring.formatter": "numpy",
+  "eslint.autoFixOnSave": true,
+  "eslint.filetypes": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "prettier.disableSuccessMessage": true,
+  "coc.preferences.formatOnTypeFiletypes": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "tsserver.formatOnType": true,
+  "coc.preferences.formatOnType": true
 }

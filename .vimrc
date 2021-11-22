@@ -66,6 +66,8 @@ let g:coc_global_extensions = [
             \"coc-tsserver",
             \"coc-xml",
             \"coc-yaml",
+            \"coc-eslint",
+            \"coc-prettier",
             \]
 
 au FileType xml setl sw=2 ts=2 sts=2 et
@@ -78,10 +80,11 @@ au BufEnter *.go nmap <leader>t <Plug>(go-test)
 au BufEnter *.go nmap <leader>dv <Plug>(go-def-vertical)
 
 " General
-nmap <leader>cr <Plug>(coc-references)
-nmap <C-a> <C-o>
-nmap <C-d> <Plug>(coc-definition)
+nmap <leader>gd <Plug>(coc-definition)
+nmap <leader>gy <Plug>(coc-type-definition)
+nmap <leader>gr <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>do <Plug>(coc-codeaction)
 
 inoremap jj <esc>
 
