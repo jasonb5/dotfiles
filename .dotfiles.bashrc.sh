@@ -18,6 +18,12 @@ function __prompt {
   PS1="${L1}\n${L2}"
 }
 
+if [[ "$(uname)" == "Darwin" ]]; then
+  export TERM="screen-256color"
+else
+  export TERM="tmux-256color"
+fi
+
 export DOTFILE_PATH="$(cat ${HOME}/.dotfiles)"
 
 source "${HOME}/.dotfiles.alias.sh"
