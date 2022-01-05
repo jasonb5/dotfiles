@@ -18,7 +18,11 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 # user functions
 #==============================
 
-function mambaforge_install {
+function dotfile_install_nodesource {
+	curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
+}
+
+function dotfile_install_mambaforge {
 	local script_path="${HOME}/conda.sh"
 	if [[ ! -e "${script_path}" ]]; then
 		curl -L -o "${script_path}" https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
@@ -29,7 +33,7 @@ function mambaforge_install {
 	conda init bash
 }
 
-function remove_snap {
+function dotfile_remove_snap {
 	snap list | grep -v Name | cut -d" " -f1 | xargs -I% sudo snap remove --purge %
 	snap list | grep -v Name | cut -d" " -f1 | xargs -I% sudo snap remove --purge %
 
@@ -39,7 +43,7 @@ function remove_snap {
 	sudo apt-mark hold snapd
 }
 
-function generate_certificates_with_ca {
+function dotfile_generate_certificates {
 	if [[ "${#}" -lt 1 ]]; then
 		echo "missing name"
 		return
