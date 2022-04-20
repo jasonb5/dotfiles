@@ -18,15 +18,8 @@ function __prompt {
   PS1="${L1}\n${L2}"
 }
 
-export DOTFILE_PATH="$(cat ${HOME}/.dotfiles)"
-
-source "${HOME}/.dotfiles.alias.sh"
-
-BASHRC_USER="${HOME}/.dotfiles.bashrc.user"
-
-# Load user bashrc
-if [ -e "${BASHRC_USER}" ]; then
-  source "${BASHRC_USER}"
+if [[ "$(uname)" == "Darwin" ]]; then
+  export TERM="screen-256color"
+else
+  export TERM="tmux-256color"
 fi
-
-source "${HOME}/.dotfiles.functions.sh"

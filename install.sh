@@ -1,16 +1,13 @@
 #!/bin/bash
 
-export DOTFILE_PATH="${HOME}/devel/dotfiles"
+set -x
 
-if [ ! -e "${DOTFILE_PATH}" ]
-then
-	git clone https://github.com/jasonb5/dotfiles ${DOTFILE_PATH}
+dotfile_path="${DOTFILE_PATH:-${HOME}/devel/dotfiles}"
+
+if [[ ! -e "${dotfile_path}" ]]; then
+	git clone https://github.com/jasonb5/dotfiles ${dotfile_path}
 fi
 
-cd "${DOTFILE_PATH}"
+source "${dotfile_path}/library/functions.sh"
 
-source "${PWD}/.dotfiles.functions.sh"
-
-install_dotfiles
-
-echo "${DOTFILE_PATH}" > "${HOME}/.dotfiles"
+dotfiles::install "${dotfile_path}"

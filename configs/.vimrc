@@ -78,11 +78,21 @@ au BufEnter *.go nmap <leader>b <Plug>(go-build)
 au BufEnter *.go nmap <leader>t <Plug>(go-test)
 au BufEnter *.go nmap <leader>dv <Plug>(go-def-vertical)
 
+" Python
+au BufEnter *.py nmap <leader>gd <Plug>(coc-codeaction-line)
+
+au BufEnter *.yaml.j2 set ft=yaml
+
 " General
-nmap <leader>cr <Plug>(coc-references)
-nmap <C-a> <C-o>
-nmap <C-d> <Plug>(coc-definition)
+nmap <leader>gd <Plug>(coc-definition)
+nmap <leader>gy <Plug>(coc-type-definition)
+nmap <leader>gr <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>do <Plug>(coc-codeaction)
+
+nmap <leader>tt :TestNearest<cr>
+nmap <leader>tf :TestFile<cr>
+nmap <leader>tl :TestLast<cr>
 
 inoremap jj <esc>
 
@@ -104,11 +114,13 @@ Plug 'joshdick/onedark.vim'
 
 " Syntax highlighting
 Plug 'sheerun/vim-polyglot'
+Plug 'lepture/vim-jinja'
 
 " General
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
+Plug 'vim-test/vim-test'
 
 " Completion
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
