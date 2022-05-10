@@ -16,13 +16,21 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 #==============================
 
 function dotfiles::install_nodesource() {
-    curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
-    sudo apt-get install -y nodejs
+    curl -fsSL https://deb.nodesource.com/setup_18.x | _sudo bash -
+    _sudo apt-get install -y nodejs
 }
 
 #==============================
 # library functions
 #==============================
+
+function _sudo() {
+    if [[ "${USER}" == "root" ]]; then
+        "${@}"
+    else
+        sudo "${@}"
+    fi
+}
 
 function dotfiles() {
     dotfiles::log "placeholder"
@@ -70,10 +78,10 @@ function dotfiles::install() {
 
 cat << EOF >> "${HOME}/.bashrc"
 ${DOTFILE_START}
-source "${DOTFILE_PATH}/library/alias.sh"
-source "${DOTFILE_PATH}/library/exports.sh"
-source "${DOTFILE_PATH}/library/bashrc.sh"
-source "${DOTFILE_PATH}/library/functions.sh"
+source "${repo_path}/library/alias.sh"
+source "${repo_path}/library/exports.sh"
+source "${repo_path}/library/bashrc.sh"
+source "${repo_path}/library/functions.sh"
 
 if [[ -e "${HOME}/.dotfiles.user.sh" ]]; then
     source "${HOME}/.dotfiles.user.sh"
