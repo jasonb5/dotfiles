@@ -109,18 +109,19 @@ map <leader>sh :sp<cr>
 
 call plug#begin('~/.vim/plugged')
 
+" General
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdtree'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-test/vim-test'
+Plug 'christoomey/vim-tmux-navigator'
+
 " Colorscheme
 Plug 'joshdick/onedark.vim'
 
 " Syntax highlighting
 Plug 'sheerun/vim-polyglot'
 Plug 'lepture/vim-jinja'
-
-" General
-Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/nerdtree'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-test/vim-test'
 
 " Completion
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
