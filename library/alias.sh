@@ -1,8 +1,10 @@
 unalias -a
 
 alias sb="source ~/.bashrc"
-alias et="vim ~/.tmux.conf"
-alias ev="vim ~/.vimrc"
+alias et="vim ${DOTFILE_PATH}/configs/.tmux.conf"
+alias ev="vim ${DOTFILE_PATH}/configs/.vimrc"
+alias eg="vim ${DOTFILE_PATH}/configs/.gitconfig"
+alias ec="vim ${DOTFILE_PATH}/configs/.vim/coc-settings.json"
 
 alias ea="vim ${DOTFILE_PATH}/library/alias.sh"
 alias eb="vim ${DOTFILE_PATH}/library/bashrc.sh"
