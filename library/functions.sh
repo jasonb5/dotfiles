@@ -97,7 +97,7 @@ EOF
 }
 
 function dotfiles::uninstall() {
-	dotfiles::log "Uninstalling dotfiles"
+    dotfiles::log "Uninstalling dotfiles"
 
     for file in "${CONFIGS[@]}"; do
         local user_file="${HOME}/${file}"
