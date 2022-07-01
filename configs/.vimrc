@@ -29,6 +29,8 @@ set wildmode=list:longest
 
 set laststatus=2
 
+set backspace=indent,eol,start
+
 let mapleader = " "
 
 let NERDTreeShowHidden = 1
