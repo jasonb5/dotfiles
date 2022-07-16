@@ -20,6 +20,15 @@ function dotfiles::install_nodesource() {
     _sudo apt-get install -y nodejs
 }
 
+function dotfiles::install_mambaforge() {
+    curl -fsSL -o "${PWD}/conda.sh" https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+    chmod +x conda.sh
+    ./conda.sh -b -u -p "${HOME}/conda"
+    . "${HOME}/conda/etc/profile.d/conda.sh"
+    conda init bash
+    rm conda.sh
+}
+
 #==============================
 # library functions
 #==============================
