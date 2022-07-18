@@ -1,4 +1,4 @@
-setvnocompatible
+set nocompatible
 
 filetype on
 filetype plugin on
@@ -31,6 +31,17 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 " Mappings
 let mapleader = " "
+
+let g:coc_global_extensions = [
+      \'@yaegassy/coc-ansible',
+      \'coc-git',
+      \'coc-yaml',
+      \'coc-json',
+      \'@yaegassy/coc-pylsp',
+      \'coc-sh',
+      \'coc-toml',
+      \'coc-xml',
+      \]
 
 nnoremap <leader>ve :e $MYVIMRC<CR>
 nnoremap <leader>re :source $MYVIMRC<CR>
