@@ -2,4 +2,4 @@
 	email = boutte.jason@gmail.com
 	name = Jason Boutte
 [safe]
-	directory = /src/*
+	directory = *
