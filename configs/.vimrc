@@ -1,4 +1,4 @@
-set nocompatible
+setvnocompatible
 
 filetype on
 filetype plugin on
@@ -31,6 +31,9 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 " Mappings
 let mapleader = " "
+
+nnoremap <leader>ve :e $MYVIMRC<CR>
+nnoremap <leader>re :source $MYVIMRC<CR>
 
 inoremap jj <Esc>
 
