@@ -13,3 +13,10 @@ alias ef="vim ${DOTFILE_PATH}/library/functions.sh"
 
 alias ls="ls --color"
 alias ll="ls -la"
+
+alias tmux="dotfiles::tmux-local"
+
+alias container="dotfiles::container"
+alias cime_container="dotfiles::container jasonb87/cime:latest bash"
+
+alias generate_macaddr="dotfiles::generate_macaddr"
