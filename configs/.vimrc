@@ -43,6 +43,17 @@ let g:coc_global_extensions = [
       \'coc-xml',
       \]
 
+nnoremap <leader>m :bnext<cr>
+nnoremap <leader>n :bprevious<CR>
+
+nnoremap <leader>\ :vsplit<CR>
+nnoremap <leader>- :split<CR>
+
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+
 nnoremap <leader>ve :e $MYVIMRC<CR>
 nnoremap <leader>re :source $MYVIMRC<CR>
 
@@ -52,11 +63,6 @@ nnoremap n nzz
 nnoremap N Nzz
 
 nnoremap Y y$
-
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
@@ -75,18 +81,19 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call ShowDocumentation()<CR>
 
 nmap <leader>rn <Plug>(coc-rename)
-
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
-
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
-
 nmap <leader>ac  <Plug>(coc-codeaction)
-
 nmap <leader>qf  <Plug>(coc-fix-current)
-
 nmap <leader>cl  <Plug>(coc-codelens-action)
+
+" Vim script
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 function! ShowDocumentation()
   if CocAction('hasProvider', 'hover')
@@ -94,12 +101,6 @@ function! ShowDocumentation()
   else
     call feedkeys('K', 'in')
   endif
-endfunction
-
-" Vim script
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 call plug#begin()
