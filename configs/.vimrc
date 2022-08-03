@@ -43,19 +43,29 @@ let g:coc_global_extensions = [
       \'coc-xml',
       \]
 
-nnoremap <leader>m :bnext<cr>
-nnoremap <leader>n :bprevious<CR>
+if getcwd() =~ '.*cime.*'
+  let test#python#pytest#options = '--machine docker'
+endif
 
-nnoremap <leader>\ :vsplit<CR>
-nnoremap <leader>- :split<CR>
+nmap <silent> <leader>t :TestNearest<cr>
+nmap <silent> <leader>T :TestFile<cr>
+nmap <silent> <leader>a :TestSuite<cr>
+nmap <silent> <leader>l :TestLast<cr>
+nmap <silent> <leader>g :TestVisit<cr>
+
+nnoremap <leader>m :bnext<cr>
+nnoremap <leader>n :bprevious<cr>
+
+nnoremap <leader>\ :vsplit<cr>
+nnoremap <leader>- :split<cr>
 
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
-nnoremap <leader>ve :e $MYVIMRC<CR>
-nnoremap <leader>re :source $MYVIMRC<CR>
+nnoremap <leader>ve :e $MYVIMRC<cr>
+nnoremap <leader>re :source $MYVIMRC<cr>
 
 inoremap jj <Esc>
 
@@ -71,14 +81,14 @@ inoremap <silent><expr> <TAB>
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 inoremap <silent><expr> <c-@> coc#refresh()
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+                              \: "\<C-g>u\<cr>\<c-r>=coc#on_enter()\<cr>"
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-nnoremap <silent> K :call ShowDocumentation()<CR>
+nnoremap <silent> K :call ShowDocumentation()<cr>
 
 nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
@@ -106,6 +116,7 @@ endfunction
 call plug#begin()
 " General
 Plug 'editorconfig/editorconfig-vim'
+Plug 'vim-test/vim-test'
 
 " Colorschemes
 Plug 'mangeshrex/everblush.vim'
