@@ -17,9 +17,9 @@ alias ll="ls -la"
 alias tmux="dotfiles::tmux-local"
 
 alias container="dotfiles::container"
-alias cime_container="dotfiles::container jasonb87/cime:latest bash"
+alias cime-container="dotfiles::container jasonb87/cime:latest bash"
 
-alias generate_macaddr="dotfiles::generate_macaddr"
+alias gen-macaddr="dotfiles::generate_macaddr"
 
 alias ssh-nopass="ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
 alias ssh-copy-id-nopass="ssh-copy-id -o PreferredAuthentications=password -o PubkeyAuthentication=no"
