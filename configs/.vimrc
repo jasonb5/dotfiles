@@ -123,4 +123,4 @@ Plug 'sheerun/vim-polyglot'
 " 
 call plug#end()
 
-colorscheme everblush
+silent! colorscheme everblush
