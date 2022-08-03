@@ -25,3 +25,5 @@ alias ssh-nopass="ssh -o PreferredAuthentications=password -o PubkeyAuthenticati
 alias ssh-copy-id-nopass="ssh-copy-id -o PreferredAuthentications=password -o PubkeyAuthentication=no"
 
 alias new-sshkey="dotfiles::generate_new_ssh_key"
+
+alias dev="dotfiles::development_environment"
