@@ -11,52 +11,152 @@ DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
 VIM_PLUG_URL="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 
+DEFAULT_CURL_FLAGS="-fsSL"
+
 #==============================
 # user functions
 #==============================
 
 function dotfiles::development_environment() {
-    dotfiles::install_nodesource
+    dotfiles::install_nodesource_current
 
     vim +PlugInstall +qall
 }
 
-function dotfiles::install_nodesource() {
-    curl -fsSL https://deb.nodesource.com/setup_18.x | _sudo bash -
-    _sudo apt-get install -y nodejs
+function dotfiles::install_nodesource_current() {
+    curl "${DEFAULT_CURL_FLAGS}"  https://deb.nodesource.com/setup_current.x | dotfiles::sudo bash -
+
+    dotfiles::sudo apt-get install -y nodejs
 }
 
 function dotfiles::install_mambaforge() {
-    curl -fsSL -o "${PWD}/conda.sh" https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+    curl "${DEFAULT_CURL_FLAGS}" -o "${PWD}/conda.sh" https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+
+    trap 'rm "${PWD}/conda.sh"' RETURN
+
     chmod +x conda.sh
+
     ./conda.sh -b -u -p "${HOME}/conda"
+
     . "${HOME}/conda/etc/profile.d/conda.sh"
+
     conda init bash
-    rm conda.sh
 }
 
-function dotfiles::tmux-local() {
+function dotfiles::tmux_local() {
     name="$(basename `pwd` | sed -e 's/\.//g')"
 
     /usr/bin/tmux new-session -A -s "${name}"
 }
 
-function dotfiles::tmux-remote() {
+function dotfiles::tmux_remote() {
     name="$(echo ${1} | tr '@.' '-')"
 
     ssh "${1}" -t /usr/bin/tmux new-session -A -s "${name}"
 }
 
-function dotfiles::container() {
-    image="${1}"
-    shift
+function dotfiles::build_container() {
+    while [[ -n "${@}" ]]; do
+        case "${1}" in
+            --target)
+                target="${2}" && shift 2
+                ;;
+            --image)
+                image="${2}" && shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    EXTRA=""
+
+    if [[ -z "${target}" ]]; then
+        EXTRA="--opt target=${target} ${EXTRA}"
+    fi
+
+    dotfiles::sudo ctr \
+        run \
+        -t --rm \
+        --privileged \
+        --net-host \
+        --mount type=bind,src=${PWD},dst=/host,options=rbind:rw \
+        docker.io/moby/buildkit:master \
+        buildkit \
+        /usr/bin/buildctl-daemonless.sh \
+        build \
+        --frontend dockerfile.v0 \
+        --local context=/host \
+        --local dockerfile=/host ${EXTRA} \
+        --output type=docker,dest=/host/output.tar,name=docker.io/${image} \
+        --export-cache type=local,mode=max,dest=/host/cache \
+        --import-cache type=local,src=/host/cache
+
+    dotfiles::sudo ctr \
+        images \
+        import \
+        output.tar
+}
+
+function dotfiles::run_container() {
+    while [[ -n "${@}" ]]; do
+        case "${1}" in
+            --image)
+                image="${2}" && shift 2
+                ;;
+            --mount)
+                mount="${2}" && shift 2
+                ;;
+            --port)
+                port="${2}" && shift 2
+                ;;
+            --args)
+                args="${2}" && shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
     name="$(echo ${image} | sed "s/^.*\///" | tr ":" "-")"
 
-    _sudo ctr run -t --rm \
-        --mount type=bind,src=${PWD},dst=/host,options=rbind:rw \
-        --mount type=bind,src=${HOME}/devel/dotfiles,dst=/root/dotfiles,options=rbind:rw \
-        --net-host "docker.io/${image}" "${name}" \
-        bash -c "cd /root/dotfiles; bash install.sh; ${@}"
+    if [[ -n "$(command -v docker)" ]]; then
+        command="docker run -it --rm"
+
+        if [[ -n "${mount}" ]]; then
+            command="${command} -v ${mount}"
+        fi
+
+        if [[ -n "${port}" ]]; then
+            command="${command} -p ${port}"
+        fi
+
+        command="${command} ${image} ${args}"
+    elif [[ -n "$(command -v ctr; echo $?)" ]]; then
+        if [[ -z "$(dotfiles::sudo ctr images ls | grep ${image})" ]]; then
+            dotfiles::sudo ctr image pull "docker.io/${image}"
+        fi
+
+        if [[ -n "$(dotfiles::sudo ctr c ls | grep ${name})" ]]; then
+            dotfiles::sudo ctr c rm "${name}"
+        fi
+
+        command="ctr run -t --rm"
+
+        if [[ -n "${mount}" ]]; then
+            command="${command} --mount type=bind,$(echo $mount | awk -F: '{print "src="$1",dst="$2}'),options=rbind:rw"
+        fi
+
+        command="${command} --net-host docker.io/${image} ${name} ${args}"
+    else
+        echo "Could not detect `docker` or `ctr` to run container"
+
+        return
+    fi
+
+    dotfiles::sudo bash -c "${command}"
 }
 
 function dotfiles::generate_macaddr() {
@@ -71,7 +171,7 @@ function dotfiles::generate_new_ssh_key() {
 # library functions
 #==============================
 
-function _sudo() {
+function dotfiles::sudo() {
     if [[ "${USER}" == "root" ]]; then
         "${@}"
     else

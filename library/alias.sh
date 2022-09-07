@@ -14,16 +14,18 @@ alias ef="vim ${DOTFILE_PATH}/library/functions.sh"
 alias ls="ls --color"
 alias ll="ls -la"
 
-alias tmux="dotfiles::tmux-local"
-
-alias container="dotfiles::container"
-alias cime-container="dotfiles::container jasonb87/cime:latest bash"
-
-alias gen-macaddr="dotfiles::generate_macaddr"
-
-alias ssh-nopass="ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
-alias ssh-copy-id-nopass="ssh-copy-id -o PreferredAuthentications=password -o PubkeyAuthentication=no"
-
-alias new-sshkey="dotfiles::generate_new_ssh_key"
-
 alias dev="dotfiles::development_environment"
+
+alias build="dotfiles::build_container"
+alias container="dotfiles::run_container"
+alias cime="dotfiles::run_container --image jasonb87/cime:latest --mount ${HOME}/devel:/root/devel --args bash"
+alias jupyterlab="dotfiles::container --image jupyter/minimal-notebook:latest --mount ${HOME}/devel:/home/jovyan/devel --port 8888"
+
+alias install-nodesource-current="dotfiles::install_nodesource_current"
+
+alias tmux="dotfiles::tmux_local"
+alias tmux-remote="dotfiles::tmux_remote"
+
+alias new-mac="dotfiles::generate_macaddr"
+
+alias new-ssh-key="dotfiles::generate_new_ssh_key"
