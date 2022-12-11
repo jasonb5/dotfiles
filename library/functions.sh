@@ -17,6 +17,10 @@ DEFAULT_CURL_FLAGS="-fsSL"
 # user functions
 #==============================
 
+function dotfiles::rand_32() {
+    openssl rand -base64 32
+}
+
 function dotfiles::development_environment() {
     dotfiles::install_nodesource_current
 
@@ -58,11 +62,11 @@ function dotfiles::tmux_remote() {
 function dotfiles::build_container() {
     while [[ -n "${@}" ]]; do
         case "${1}" in
-            --target)
-                target="${2}" && shift 2
-                ;;
             --image)
-                image="${2}" && shift 2
+                local image="${2}" && shift 2
+                ;;
+            --target)
+                local target="${2}" && shift 2
                 ;;
             *)
                 shift
@@ -70,49 +74,35 @@ function dotfiles::build_container() {
         esac
     done
 
-    EXTRA=""
+    [[ -z "${image}" ]] && echo "Missing required --image" && return
 
-    if [[ -z "${target}" ]]; then
-        EXTRA="--opt target=${target} ${EXTRA}"
+    local extra=""
+
+    if [[ -n "${target}" ]]; then
+        extra="--target ${target} ${extra}"
     fi
 
-    dotfiles::sudo ctr \
-        run \
-        -t --rm \
-        --privileged \
-        --net-host \
-        --mount type=bind,src=${PWD},dst=/host,options=rbind:rw \
-        docker.io/moby/buildkit:master \
-        buildkit \
-        /usr/bin/buildctl-daemonless.sh \
+    dotfiles::sudo DOCKER_BUILDKIT=1 docker \
         build \
-        --frontend dockerfile.v0 \
-        --local context=/host \
-        --local dockerfile=/host ${EXTRA} \
-        --output type=docker,dest=/host/output.tar,name=docker.io/${image} \
-        --export-cache type=local,mode=max,dest=/host/cache \
-        --import-cache type=local,src=/host/cache
-
-    dotfiles::sudo ctr \
-        images \
-        import \
-        output.tar
+        ${extra} \
+        -t "${image}" \
+        .
 }
 
 function dotfiles::run_container() {
     while [[ -n "${@}" ]]; do
         case "${1}" in
             --image)
-                image="${2}" && shift 2
+                local image="${2}" && shift 2
                 ;;
-            --mount)
-                mount="${2}" && shift 2
-                ;;
-            --port)
-                port="${2}" && shift 2
+            --entrypoint)
+                local entrypoint="${2}" && shift 2
                 ;;
             --args)
-                args="${2}" && shift 2
+                local args="${2}" && shift 2
+                ;;
+            --extra)
+                local extra="${2}" && shift 2
                 ;;
             *)
                 shift
@@ -120,43 +110,17 @@ function dotfiles::run_container() {
         esac
     done
 
-    name="$(echo ${image} | sed "s/^.*\///" | tr ":" "-")"
+    [[ -z "${image}" ]] && echo "Missing required --image" && return
 
-    if [[ -n "$(command -v docker)" ]]; then
-        command="docker run -it --rm"
+    local cmd="docker run -it --rm"
 
-        if [[ -n "${mount}" ]]; then
-            command="${command} -v ${mount}"
-        fi
-
-        if [[ -n "${port}" ]]; then
-            command="${command} -p ${port}"
-        fi
-
-        command="${command} ${image} ${args}"
-    elif [[ -n "$(command -v ctr; echo $?)" ]]; then
-        if [[ -z "$(dotfiles::sudo ctr images ls | grep ${image})" ]]; then
-            dotfiles::sudo ctr image pull "docker.io/${image}"
-        fi
-
-        if [[ -n "$(dotfiles::sudo ctr c ls | grep ${name})" ]]; then
-            dotfiles::sudo ctr c rm "${name}"
-        fi
-
-        command="ctr run -t --rm"
-
-        if [[ -n "${mount}" ]]; then
-            command="${command} --mount type=bind,$(echo $mount | awk -F: '{print "src="$1",dst="$2}'),options=rbind:rw"
-        fi
-
-        command="${command} --net-host docker.io/${image} ${name} ${args}"
-    else
-        echo "Could not detect `docker` or `ctr` to run container"
-
-        return
+    if [[ -n "${entrypoint}" ]]; then
+        cmd="${cmd} --entrypoint ${entrypoint}"
     fi
 
-    dotfiles::sudo bash -c "${command}"
+    cmd="${cmd} ${extra} ${image} ${args}"
+
+    dotfiles::sudo /bin/bash -c "${cmd}"
 }
 
 function dotfiles::generate_macaddr() {
@@ -187,7 +151,11 @@ function dotfiles::log() {
 	echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&1
 }
 
-function dotfiles::err() {
+function dotfiles::debug() {
+    [[ -n "${DEBUG}" ]] && log "${*}"
+}
+
+function dotfiles::error() {
 	echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
 }
 
