@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+[[ -n "${DEBUG}" ]] && set -x
 
 dotfile_path="${DOTFILE_PATH:-${HOME}/devel/dotfiles}"
 
