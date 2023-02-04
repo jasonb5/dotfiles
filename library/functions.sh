@@ -110,11 +110,6 @@ function dotfiles::install() {
                 ln -sf "${repo_file}" "${user_file}"
         done
 
-        # store path to dotfiles repo for use in exports.sh
-        if [[ ! -e "${HOME}/.dotfiles" ]]; then
-            echo "${repo_path}" >> "${HOME}/.dotfiles"
-        fi
-
         if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]] && [[ -z "${SKIP_BASHRC}" ]]; then
                 dotfiles::log "Appending .bashrc"
 
@@ -160,8 +155,6 @@ function dotfiles::uninstall() {
         done
 
         dotfiles::log "Removing ${HOME}/.dotfiles"
-
-        rm "${HOME}/.dotfiles"
 
         if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
                 dotfiles::log "Removing entry from .bashrc"
