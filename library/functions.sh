@@ -22,6 +22,41 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 # user functions
 #==============================
 
+function dotfiles::container_cime_e3sm() {
+        dotfiles::run_container \
+                --image jasonb87/cime:latest \
+                --flags "-v ${HOME}/devel:/root/devel -w /root/devel/E3SM -e CIME_MODEL=e3sm -e INSTALL_PATH=/root/devel/E3SM" \
+                --args "/bin/bash"
+}
+
+function dotfiles::container_jupyterlab() {
+        dotfiles::run_container \
+                --image jupyter/minimal-notebook \
+                --flags "-p 8888:8888 -v ${HOME}/devel:/home/jovyan/devel -w /home/jovyan/devel"
+}
+
+function dotfiles::run_container() {
+        dotfiles::debug "${@}"
+
+        flags="-it"
+
+        while [[ "${#}" -gt 0 ]]; do
+                dotfiles::debug "${1}"
+
+                case "${1}" in
+                        --image) image="${2}"; shift 2;;
+                        --flags) flags="${flags} ${2}"; shift 2;;
+                        --args) args="${2}"; shift 2;;
+                        *);;
+                esac
+        done
+
+        dotfiles::debug "image = ${image}"
+        dotfiles::debug "flags = ${flags}"
+        dotfiles::debug "args = ${args}"
+
+        docker run ${flags} ${image} ${args}
+}
 
 #==============================
 # library functions
@@ -44,7 +79,7 @@ function dotfiles::log() {
 }
 
 function dotfiles::debug() {
-        [[ -n "${DEBUG}" ]] && log "${*}"
+        [[ -n "${DEBUG}" ]] && dotfiles::log "${*}"
 }
 
 function dotfiles::error() {
@@ -75,22 +110,16 @@ function dotfiles::install() {
                 ln -sf "${repo_file}" "${user_file}"
         done
 
-        # store path to dotfiles repo for use in exports.sh
-        if [[ ! -e "${HOME}/.dotfiles" ]]; then
-            echo "${repo_path}" >> "${HOME}/.dotfiles"
-        fi
-
-        if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
+        if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]] && [[ -z "${SKIP_BASHRC}" ]]; then
                 dotfiles::log "Appending .bashrc"
 
                     cat << EOF >> "${HOME}/.bashrc"
 ${DOTFILE_START}
-export DOTFILE_PATH="${repo_path}"
+export DOTFILE_PATH="\${HOME}/devel/dotfiles"
 
-source "${repo_path}/library/alias.sh"
-source "${repo_path}/library/exports.sh"
-source "${repo_path}/library/bashrc.sh"
-source "${repo_path}/library/functions.sh"
+source "\${DOTFILE_PATH}/library/alias.sh"
+source "\${DOTFILE_PATH}/library/bashrc.sh"
+source "\${DOTFILE_PATH}/library/functions.sh"
 
 if [[ -e "${HOME}/.dotfiles.user.sh" ]]; then
     source "${HOME}/.dotfiles.user.sh"
@@ -125,14 +154,15 @@ function dotfiles::uninstall() {
                 fi
         done
 
-        dotfiles::log "Removing ${HOME}/.dotfiles"
-
-        rm "${HOME}/.dotfiles"
-
         if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
                 dotfiles::log "Removing entry from .bashrc"
 
-                sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+
+                if [[ "$(uname)" == "Darwin" ]]; then
+                        sed -i "" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+                else
+                        sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+                fi
         fi
 
         if [[ -e "${VIM_PLUG_PATH}" ]]; then

@@ -71,7 +71,7 @@ let g:lasttab = 1
 let g:ale_disable_lsp = 1
 let g:coc_global_extensions = [ 
             \'coc-json',
-            \'coc-pyright',
+			\'coc-pyright',
             \]
 
 " Autoread file when changed externally
@@ -121,6 +121,10 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-reference)
+
+nnoremap <silent><nowait> <leader>oi :<C-u>CocCommand pyright.organizeimports<CR>
+nnoremap <silent><nowait> <leader>tt :<C-u>CocCommand pyright.singleTest<CR>
+nnoremap <silent><nowait> <leader>tf :<C-u>CocCommand pyright.fileTest<CR>
 
 nnoremap <silent> K :call ShowDocumentation()<CR>
 

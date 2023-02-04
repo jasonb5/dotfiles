@@ -10,3 +10,8 @@ alias ea="vim ${DOTFILE_PATH}/library/alias.sh"
 alias eb="vim ${DOTFILE_PATH}/library/bashrc.sh"
 alias ee="vim ${DOTFILE_PATH}/library/exports.sh"
 alias ef="vim ${DOTFILE_PATH}/library/functions.sh"
+
+alias container="dotfiles::run_container"
+alias jupyter="dotfiles::container_jupyterlab"
+alias cime_e3sm="dotfiles::container_cime_e3sm"
+alias cime="cime_e3sm"

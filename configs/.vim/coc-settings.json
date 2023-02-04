@@ -1,7 +1,8 @@
 {
-	"python.formatting.provider": "black",
-	"python.linting.mypyEnabled": true,
-	"python.linting.flake8Enabled": true,
-	"pyright.testing.provider": "pytest",
+    "python.formatting.provider": "black",
+    "python.linting.mypyEnabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.pydocstyleEnabled": true,
+    "pyright.testing.provider": "pytest",
     "diagnostic.displayByAle": true
 }
