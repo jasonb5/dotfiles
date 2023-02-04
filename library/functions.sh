@@ -115,7 +115,7 @@ function dotfiles::install() {
             echo "${repo_path}" >> "${HOME}/.dotfiles"
         fi
 
-        if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
+        if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]] && [[ -z "${SKIP_BASHRC}" ]]; then
                 dotfiles::log "Appending .bashrc"
 
                     cat << EOF >> "${HOME}/.bashrc"
