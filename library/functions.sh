@@ -154,8 +154,6 @@ function dotfiles::uninstall() {
                 fi
         done
 
-        dotfiles::log "Removing ${HOME}/.dotfiles"
-
         if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
                 dotfiles::log "Removing entry from .bashrc"
 
