@@ -159,7 +159,12 @@ function dotfiles::uninstall() {
         if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
                 dotfiles::log "Removing entry from .bashrc"
 
-                sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+
+                if [[ "$(uname)" == "Darwin" ]]; then
+                        sed -i "" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+                else
+                        sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+                fi
         fi
 
         if [[ -e "${VIM_PLUG_PATH}" ]]; then
