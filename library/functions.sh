@@ -22,6 +22,41 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 # user functions
 #==============================
 
+function dotfiles::container_cime_e3sm() {
+        dotfiles::run_container \
+                --image jasonb87/cime:latest \
+                --flags "-v ${HOME}/devel:/root/devel -w /root/devel/E3SM -e CIME_MODEL=e3sm -e INSTALL_PATH=/root/devel/E3SM" \
+                --args "/bin/bash"
+}
+
+function dotfiles::container_jupyterlab() {
+        dotfiles::run_container \
+                --image jupyter/minimal-notebook \
+                --flags "-p 8888:8888 -v ${HOME}/devel:/home/jovyan/devel -w /home/jovyan/devel"
+}
+
+function dotfiles::run_container() {
+        dotfiles::debug "${@}"
+
+        flags="-it"
+
+        while [[ "${#}" -gt 0 ]]; do
+                dotfiles::debug "${1}"
+
+                case "${1}" in
+                        --image) image="${2}"; shift 2;;
+                        --flags) flags="${flags} ${2}"; shift 2;;
+                        --args) args="${2}"; shift 2;;
+                        *);;
+                esac
+        done
+
+        dotfiles::debug "image = ${image}"
+        dotfiles::debug "flags = ${flags}"
+        dotfiles::debug "args = ${args}"
+
+        docker run ${flags} ${image} ${args}
+}
 
 #==============================
 # library functions
