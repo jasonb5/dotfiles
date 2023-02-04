@@ -85,12 +85,11 @@ function dotfiles::install() {
 
                     cat << EOF >> "${HOME}/.bashrc"
 ${DOTFILE_START}
-export DOTFILE_PATH="${repo_path}"
+export DOTFILE_PATH="\${HOME}/devel/dotfiles"
 
-source "${repo_path}/library/alias.sh"
-source "${repo_path}/library/exports.sh"
-source "${repo_path}/library/bashrc.sh"
-source "${repo_path}/library/functions.sh"
+source "\${DOTFILE_PATH}/library/alias.sh"
+source "\${DOTFILE_PATH}/library/bashrc.sh"
+source "\${DOTFILE_PATH}/library/functions.sh"
 
 if [[ -e "${HOME}/.dotfiles.user.sh" ]]; then
     source "${HOME}/.dotfiles.user.sh"
