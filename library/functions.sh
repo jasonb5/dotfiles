@@ -44,7 +44,7 @@ function dotfiles::log() {
 }
 
 function dotfiles::debug() {
-        [[ -n "${DEBUG}" ]] && log "${*}"
+        [[ -n "${DEBUG}" ]] && dotfiles::log "${*}"
 }
 
 function dotfiles::error() {
