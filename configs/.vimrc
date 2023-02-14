@@ -106,6 +106,7 @@ map <leader>ss :setlocal spell!<CR>
 
 map <leader>pp :setlocal paste!<CR>
 
+if substitute(system('uname'), '\n', '', '') != "Darwin"
 " Use tab to trigger completion with characters ahead and navigate
 inoremap <silent><expr> <TAB>
 			\ coc#pum#visible() ? coc#pum#next(1) :
@@ -116,6 +117,7 @@ inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 " Make <CR> to accept selection completion item
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
 			\ : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+endif
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
