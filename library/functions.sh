@@ -25,14 +25,14 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 function dotfiles::container_cime_e3sm() {
         dotfiles::run_container \
                 --image jasonb87/cime:latest \
-                --flags "-v ${HOME}/devel:/root/devel -w /root/devel/E3SM -e CIME_MODEL=e3sm -e INSTALL_PATH=/root/devel/E3SM" \
+                --flags "--rm -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel/cime-inputdata:/storage/inputdata -v ${HOME}/devel:/root/devel -w /root/devel/E3SM -e CIME_MODEL=e3sm -e INSTALL_PATH=/root/devel/E3SM" \
                 --args "/bin/bash"
 }
 
 function dotfiles::container_jupyterlab() {
         dotfiles::run_container \
                 --image jupyter/minimal-notebook \
-                --flags "-p 8888:8888 -v ${HOME}/devel:/home/jovyan/devel -w /home/jovyan/devel"
+                --flags "--rm -p 8888:8888 -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel:/home/jovyan/devel -w /home/jovyan/devel"
 }
 
 function dotfiles::run_container() {
