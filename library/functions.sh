@@ -22,17 +22,24 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 # user functions
 #==============================
 
+function dotfiles::container_ubuntu() {
+        dotfiles::run_container \
+                --image ubuntu:latest \
+                --flags "--rm -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel:/root/devel -w /root/devel -e CONTAINER=ubuntu:latest" \
+                --args "/bin/bash"
+}
+
 function dotfiles::container_cime_e3sm() {
         dotfiles::run_container \
                 --image jasonb87/cime:latest \
-                --flags "--rm -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel/cime-inputdata:/storage/inputdata -v ${HOME}/devel:/root/devel -w /root/devel/E3SM -e CIME_MODEL=e3sm -e INSTALL_PATH=/root/devel/E3SM" \
+                --flags "--rm -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel/cime-inputdata:/storage/inputdata -v ${HOME}/devel:/root/devel -w /root/devel/E3SM -e CIME_MODEL=e3sm -e INSTALL_PATH=/root/devel/E3SM -e CONTAINER=jasonb87/cime:latest" \
                 --args "/bin/bash"
 }
 
 function dotfiles::container_jupyterlab() {
         dotfiles::run_container \
-                --image jupyter/minimal-notebook \
-                --flags "--rm -p 8888:8888 -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel:/home/jovyan/devel -w /home/jovyan/devel"
+                --image jupyter/minimal-notebook:latest \
+                --flags "--rm -p 8888:8888 -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel:/home/jovyan/devel -w /home/jovyan/devel -e CONTAINER=jupyter/minimal-notebook:latest"
 }
 
 function dotfiles::run_container() {
@@ -58,12 +65,53 @@ function dotfiles::run_container() {
         docker run ${flags} ${image} ${args}
 }
 
+function dotfiles::dev() {
+        if [[ -z "$(which conda)" ]]; then
+                dotfiles::install_mambaforge
+
+                source "${HOME}/.bashrc"
+        fi
+
+        if [[ -z "$(which vim)" ]]; then
+                mamba install -y vim 
+        fi
+
+        if [[ -z "$(which git)" ]]; then
+                mamba install -y git
+        fi
+
+        if [[ -z "$(which node)" ]]; then
+                dotfiles::install_nodesource
+        fi
+}
+
+function dotfiles::install_mambaforge() {
+        url="https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh"
+        output_path="/tmp/$(basename ${url})"
+
+        curl -sfL -o "${output_path}" "${url}"
+
+        chmod +x "${output_path}"
+
+        "${output_path}" -b -p "${HOME}/conda" -u
+
+        source "${HOME}/conda/etc/profile.d/conda.sh"
+
+        conda init bash
+}
+
+function dotfiles::install_nodesource() {
+        curl -fsSL https://deb.nodesource.com/setup_current.x | dotfiles::sudo bash -
+
+        dotfiles::sudo apt install -y --no-install-recommends nodejs
+}
+
 #==============================
 # library functions
 #==============================
 
 function dotfiles::sudo() {
-        if [[ "${USER}" == "root" ]]; then
+        if [[ "${USER}" == "root" ]] || [[ "$(id -u)" -eq 0 ]]; then
                 "${@}"
         else
                 sudo "${@}"
@@ -88,6 +136,14 @@ function dotfiles::error() {
 
 function dotfiles::install() {
         local repo_path="${1}"
+
+        if [[ -z "$(which curl)" ]]; then
+                dotfiles::log "Installing curl package"
+
+                dotfiles::sudo apt update
+
+                dotfiles::sudo apt install -y --no-install-recommends curl ca-certificates
+        fi
 
         dotfiles::log "Installing dotfiles from ${repo_path}"
 
@@ -132,6 +188,10 @@ EOF
                 dotfiles::log "Downloading vim plug"
 
                 curl -Lo "${VIM_PLUG_PATH}" --create-dirs "${VIM_PLUG_URL}"
+        fi
+
+        if [[ -n "${CONTAINER}" ]]; then
+                dotfiles::dev
         fi
 }
 
