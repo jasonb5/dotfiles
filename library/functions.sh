@@ -22,49 +22,6 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 # user functions
 #==============================
 
-function dotfiles::container_ubuntu() {
-        dotfiles::run_container \
-                --image ubuntu:latest \
-                --flags "--rm -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel:/root/devel -w /root/devel -e CONTAINER=ubuntu:latest" \
-                --args "/bin/bash"
-}
-
-function dotfiles::container_cime_e3sm() {
-        dotfiles::run_container \
-                --image jasonb87/cime:latest \
-                --flags "--rm -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel/cime-inputdata:/storage/inputdata -v ${HOME}/devel:/root/devel -w /root/devel/E3SM -e CIME_MODEL=e3sm -e INSTALL_PATH=/root/devel/E3SM -e CONTAINER=jasonb87/cime:latest" \
-                --args "/bin/bash"
-}
-
-function dotfiles::container_jupyterlab() {
-        dotfiles::run_container \
-                --image jupyter/minimal-notebook:latest \
-                --flags "--rm -p 8888:8888 -v ${HOME}/conda/pkgs:/opt/conda/pkgs -v ${HOME}/devel:/home/jovyan/devel -w /home/jovyan/devel -e CONTAINER=jupyter/minimal-notebook:latest"
-}
-
-function dotfiles::run_container() {
-        dotfiles::debug "${@}"
-
-        flags="-it"
-
-        while [[ "${#}" -gt 0 ]]; do
-                dotfiles::debug "${1}"
-
-                case "${1}" in
-                        --image) image="${2}"; shift 2;;
-                        --flags) flags="${flags} ${2}"; shift 2;;
-                        --args) args="${2}"; shift 2;;
-                        *);;
-                esac
-        done
-
-        dotfiles::debug "image = ${image}"
-        dotfiles::debug "flags = ${flags}"
-        dotfiles::debug "args = ${args}"
-
-        docker run ${flags} ${image} ${args}
-}
-
 function dotfiles::dev() {
         if [[ -z "$(which conda)" ]]; then
                 dotfiles::install_mambaforge
