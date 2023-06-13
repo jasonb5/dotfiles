@@ -18,18 +18,26 @@ function dotfiles::dev() {
                 dotfiles::install_mambaforge
 
                 source "${HOME}/.bashrc"
+        else
+                dotfiles::log "Mamba already installed"
         fi
 
         if [[ -z "$(which vim)" ]]; then
                 mamba install -y vim 
+        else
+                dotfiles::log "Vim already installed"
         fi
 
         if [[ -z "$(which git)" ]]; then
                 mamba install -y git
+        else
+                dotfiles::log "Git already installed"
         fi
 
         if [[ -z "$(which node)" ]]; then
                 dotfiles::install_nodesource
+        else
+                dotfiles::log "Nodejs already installed"
         fi
 }
 
