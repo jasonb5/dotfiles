@@ -8,6 +8,7 @@ call plug#begin()
 "General
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 "Syntax
 Plug 'sheerun/vim-polyglot'
@@ -18,11 +19,94 @@ Plug 'tomasr/molokai'
 
 call plug#end()
 
+set encoding=utf-8
+
+set nobackup
+set nowritebackup
+
+set updatetime=300
+
+set signcolumn=yes
+
 set background=dark
 set t_Co=256
 
-colorscheme sonokai
+set splitright
+set splitbelow
+
+set number
+
+silent! colorscheme sonokai
 
 let mapleader = ','
 
+imap jk <esc>
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
 nnoremap <leader>sv :source $MYVIMRC<CR>
+
+inoremap <silent><expr> <TAB>
+			\ coc#pum#visible() ? coc#pum#next(1) :
+			\ CheckBackspace() ? "\<Tab>" :
+			\ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1] =~# '\s'
+endfunction
+
+if has('nvim')
+	inoremap <silent><expr> <c-space> coc#refresh()
+else
+	inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+nnoremap <silen> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+	if CocAction('hasProvider', 'hover')
+		call CocActionAsync('doHove')
+	else
+		call feedkeys('K', 'in')
+	endif
+endfunction
+
+nmap <leader>rn <Plug>(coc-rename)
+
+xmap <leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
+
+nmap <leader>ac <Plug>(coc-codeaction-cursor)
+nmap <leader>as <Plug>(coc-codeaction-source)
+
+nmap <leader>qf <Plug>(coc-fix-current)
+
+nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
+xmap <silent> <leader>r <Plug>(coc-codeaction-refactor-selected)
+nmap <silent> <leader>r <Plug>(coc-codeaction-refactor-selected)
+
+nmap <leader>cl <Plug>(coc-codelens-action)
+
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<CR>
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<CR>
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<CR>
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<CR>
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<CR>
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
