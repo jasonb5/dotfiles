@@ -2,6 +2,7 @@
 # exports
 #==============================
 
+export GPG_TTY=$(tty)
 export EDITOR=vim
 
 CLEAR="\[\033[0m\]"
