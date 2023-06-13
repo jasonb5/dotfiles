@@ -1,18 +1,9 @@
 #! /bin/bash
 
 #==============================
-# exports
-#==============================
-
-export EDITOR=vim
-
-#==============================
 # constants
 #==============================
 
-declare -a CONFIGS
-
-CONFIGS=( .gitconfig .vim/coc-settings.json .vimrc )
 DOTFILE_START="# >>>>>> DOTFILE_START >>>>>>"
 DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
 VIM_PLUG_URL="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
@@ -75,10 +66,6 @@ function dotfiles::sudo() {
         fi
 }
 
-function dotfiles() {
-        dotfiles::log "placeholder"
-}
-
 function dotfiles::log() {
         echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&1
 }
@@ -104,29 +91,29 @@ function dotfiles::install() {
 
         dotfiles::log "Installing dotfiles from ${repo_path}"
 
-        for file in "${CONFIGS[@]}"; do
-                local user_file="${HOME}/${file}"
-                local repo_file="${repo_path}/configs/${file}"
+	for file in `ls -a "${repo_path}/configs" | grep -vE "\.$|\.\.$"`; do
+		local user_file="${HOME}/${file}"
+		local repo_file="${repo_path}/configs/${file}"
 
-                if [[ -e "${user_file}" ]] && [[ ! -L "${user_file}" ]]; then
-                        dotfiles::log "Backing up ${user_file}"
+		if [[ -e "${user_file}" ]] && [[ ! -L "${user_file}" ]] && [[ ! -e "${user_file}.bak" ]]; then
+			dotfiles::log "Backup up ${user_file}"
 
-                        mv "${user_file}" "${user_file}.bak"
-                fi
+			mv "${user_file}" "${user_file}.bak"
+		fi
 
-                dotfiles::log "Linking ${repo_file} to ${user_file}"
+		dotfiles::log "Linking ${repo_file} -> ${user_file}"
 
-                if [[ ! -e "$(dirname ${user_file})" ]]; then
-                        mkdir -p "$(dirname ${user_file})"
-                fi
+		if [[ ! -e "$(dirname ${user_file})" ]]; then
+			mkdir -p "$(dirname ${user_file})"
+		fi
 
-                ln -sf "${repo_file}" "${user_file}"
-        done
+		ln -sf "${repo_file}" "${user_file}"
+	done
 
         if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]] && [[ -z "${SKIP_BASHRC}" ]]; then
                 dotfiles::log "Appending .bashrc"
 
-                    cat << EOF >> "${HOME}/.bashrc"
+	    	cat << EOF >> "${HOME}/.bashrc"
 ${DOTFILE_START}
 export DOTFILE_PATH="\${HOME}/devel/dotfiles"
 
