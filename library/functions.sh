@@ -107,7 +107,9 @@ function dotfiles::install() {
 			mkdir -p "$(dirname ${user_file})"
 		fi
 
-		ln -sf "${repo_file}" "${user_file}"
+		if [[ ! -e "${user_file}" ]]; then
+			ln -sf "${repo_file}" "${user_file}"
+		fi
 	done
 
         if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]] && [[ -z "${SKIP_BASHRC}" ]]; then
