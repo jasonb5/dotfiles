@@ -75,55 +75,55 @@ function dotfiles::sudo() {
 }
 
 function dotfiles::log() {
-echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&1
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&1
 }
 
 function dotfiles::debug() {
-[[ -n "${DEBUG}" ]] && dotfiles::log "${*}"
+  [[ -n "${DEBUG}" ]] && dotfiles::log "${*}"
 }
 
 function dotfiles::error() {
-echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
 }
 
 function dotfiles::install() {
-local repo_path="${1}"
+  local repo_path="${1}"
 
-if [[ -z "$(which curl)" ]]; then
-  dotfiles::log "Installing curl package"
+  if [[ -z "$(which curl)" ]]; then
+    dotfiles::log "Installing curl package"
 
-  dotfiles::sudo apt update
+    dotfiles::sudo apt update
 
-  dotfiles::sudo apt install -y --no-install-recommends curl ca-certificates
-fi
-
-dotfiles::log "Installing dotfiles from ${repo_path}"
-
-for file in `ls -a "${repo_path}/configs" | grep -vE "\.$|\.\.$"`; do
-  local user_file="${HOME}/${file}"
-  local repo_file="${repo_path}/configs/${file}"
-
-  if [[ -e "${user_file}" ]] && [[ ! -L "${user_file}" ]] && [[ ! -e "${user_file}.bak" ]]; then
-    dotfiles::log "Backup up ${user_file}"
-
-    mv "${user_file}" "${user_file}.bak"
+    dotfiles::sudo apt install -y --no-install-recommends curl ca-certificates
   fi
 
-  dotfiles::log "Linking ${repo_file} -> ${user_file}"
+  dotfiles::log "Installing dotfiles from ${repo_path}"
 
-  if [[ ! -e "$(dirname ${user_file})" ]]; then
-    mkdir -p "$(dirname ${user_file})"
-  fi
+  for file in `ls -a "${repo_path}/configs" | grep -vE "\.$|\.\.$"`; do
+    local user_file="${HOME}/${file}"
+    local repo_file="${repo_path}/configs/${file}"
 
-  if [[ ! -e "${user_file}" ]]; then
-    ln -sf "${repo_file}" "${user_file}"
-  fi
-done
+    if [[ -e "${user_file}" ]] && [[ ! -L "${user_file}" ]] && [[ ! -e "${user_file}.bak" ]]; then
+      dotfiles::log "Backup up ${user_file}"
 
-if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]] && [[ -z "${SKIP_BASHRC}" ]]; then
-  dotfiles::log "Appending .bashrc"
+      mv "${user_file}" "${user_file}.bak"
+    fi
 
-  cat << EOF >> "${HOME}/.bashrc"
+    dotfiles::log "Linking ${repo_file} -> ${user_file}"
+
+    if [[ ! -e "$(dirname ${user_file})" ]]; then
+      mkdir -p "$(dirname ${user_file})"
+    fi
+
+    if [[ ! -e "${user_file}" ]]; then
+      ln -sf "${repo_file}" "${user_file}"
+    fi
+  done
+
+  if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]] && [[ -z "${SKIP_BASHRC}" ]]; then
+    dotfiles::log "Appending .bashrc"
+
+    cat << EOF >> "${HOME}/.bashrc"
 ${DOTFILE_START}
 export DOTFILE_PATH="\${HOME}/devel/dotfiles"
 
@@ -136,52 +136,52 @@ if [[ -e "${HOME}/.dotfiles.user.sh" ]]; then
 fi
 ${DOTFILE_STOP}
 EOF
-fi
+  fi
 
-if [[ ! -e "${VIM_PLUG_PATH}" ]]; then
-  dotfiles::log "Downloading vim plug"
+  if [[ ! -e "${VIM_PLUG_PATH}" ]]; then
+    dotfiles::log "Downloading vim plug"
 
-  curl -Lo "${VIM_PLUG_PATH}" --create-dirs "${VIM_PLUG_URL}"
-fi
+    curl -Lo "${VIM_PLUG_PATH}" --create-dirs "${VIM_PLUG_URL}"
+  fi
 
-if [[ -n "${CONTAINER}" ]]; then
-  dotfiles::dev
-fi
+  if [[ -n "${CONTAINER}" ]]; then
+    dotfiles::dev
+  fi
 }
 
 function dotfiles::uninstall() {
-dotfiles::log "Uninstalling dotfiles"
+  dotfiles::log "Uninstalling dotfiles"
 
-for file in "${CONFIGS[@]}"; do
-  local user_file="${HOME}/${file}"
+  for file in "${CONFIGS[@]}"; do
+    local user_file="${HOME}/${file}"
 
-  if [[ -e "${user_file}" ]] && [[ -L "${user_file}" ]]; then
-    dotfiles::log "Unlinking ${user_file}"
+    if [[ -e "${user_file}" ]] && [[ -L "${user_file}" ]]; then
+      dotfiles::log "Unlinking ${user_file}"
 
-    unlink "${user_file}"
+      unlink "${user_file}"
+    fi
+
+    if [[ -e "${user_file}.bak" ]]; then
+      dotfiles::log "Restoring backup ${user_file}.bak"
+
+      mv "${user_file}.bak" "${user_file}"
+    fi
+  done
+
+  if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
+    dotfiles::log "Removing entry from .bashrc"
+
+
+    if [[ "$(uname)" == "Darwin" ]]; then
+      sed -i "" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+    else
+      sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+    fi
   fi
 
-  if [[ -e "${user_file}.bak" ]]; then
-    dotfiles::log "Restoring backup ${user_file}.bak"
+  if [[ -e "${VIM_PLUG_PATH}" ]]; then
+    dotfiles::log "Removing ${VIM_PLUG_PATH}"
 
-    mv "${user_file}.bak" "${user_file}"
+    rm -rf "${VIM_PLUG_PATH}"
   fi
-done
-
-if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
-  dotfiles::log "Removing entry from .bashrc"
-
-
-  if [[ "$(uname)" == "Darwin" ]]; then
-    sed -i "" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
-  else
-    sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
-  fi
-fi
-
-if [[ -e "${VIM_PLUG_PATH}" ]]; then
-  dotfiles::log "Removing ${VIM_PLUG_PATH}"
-
-  rm -rf "${VIM_PLUG_PATH}"
-fi
 }
