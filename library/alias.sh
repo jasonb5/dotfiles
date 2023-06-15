@@ -12,6 +12,7 @@ alias ee="vim ${DOTFILE_PATH}/library/exports.sh"
 alias ef="vim ${DOTFILE_PATH}/library/functions.sh"
 
 alias dev="dotfiles::dev"
+alias persist="dotfiles::bashrc::install"
 
 alias tmux="TERM=screen-256color-bce tmux -2"
 

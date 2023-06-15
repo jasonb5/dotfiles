@@ -17,3 +17,5 @@ fi
 source "${DOTFILE_PATH}/library/functions.sh"
 
 dotfiles::install
+
+dotfiles::bashrc::temp_install

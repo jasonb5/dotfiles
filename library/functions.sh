@@ -86,7 +86,7 @@ function dotfiles::install() {
 
   dotfiles::symlinks::install
 
-  dotfiles::bashrc::install
+  # dotfiles::bashrc::install
 
   dotfiles::vimplug::install 
 
@@ -129,7 +129,7 @@ function dotfiles::symlinks::install() {
 }
 
 function dotfiles::bashrc::install() {
-  if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]] && [[ -z "${SKIP_BASHRC}" ]]; then
+  if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
     dotfiles::log "Appending .bashrc"
 
     cat << EOF >> "${HOME}/.bashrc"
@@ -202,4 +202,12 @@ function dotfiles::vimplug::remove() {
 
     rm -rf "${VIM_PLUG_PATH}"
   fi
+}
+
+function dotfiles::bashrc::temp_install() {
+  export DOTFILE_PATH="${HOME}/devel/dotfiles"
+
+  source "${DOTFILE_PATH}/library/alias.sh"
+  source "${DOTFILE_PATH}/library/bashrc.sh"
+  source "${DOTFILE_PATH}/library/functions.sh"
 }
