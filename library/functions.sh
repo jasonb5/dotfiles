@@ -13,6 +13,36 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 # user functions
 #==============================
 
+function dotfiles::work::cime() {
+  dotfiles::docker::run \
+    --image jasonb87/cime:latest \
+    --options "-it --rm -v ${HOME}/devel/cime-inputdata:/storage/inputdata -v ${HOME}/devel:/root/devel -w /root/devel/E3SM -e CIME_MODEL=e3sm -e INSTALL_PATH=/root/devel/E3SM" \
+    --command "/bin/bash"
+}
+
+function dotfiles::work::jupyter() {
+  dotfiles::docker::run \
+    --image jupyter/minimal-notebook \
+    --options "-it --rm -p 8888:8888 -v ${HOME}/devel:/home/jovyan/devel -w /home/jovyan/devel"
+}
+
+function dotfiles::docker::run() {
+  local image=""
+  local options=""
+  local command=""
+
+  while [[ "${#}" -gt 0 ]]; do
+    case "${1}" in
+      --image) image="${2}"; shift 2;;
+      --options) options="${2}"; shift 2;;
+      --command) command="${2}"; shift 2;;
+      *);;
+    esac
+  done
+
+  docker run ${options} ${image} ${command} 
+}
+
 function dotfiles::dev() {
   dotfiles::host::check_install "conda" "dotfiles::mambaforge::install" 
 
