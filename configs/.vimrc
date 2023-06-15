@@ -3,6 +3,20 @@ filetype indent on
 
 syntax enable
 
+set background=dark
+set t_Co=256
+set number
+
+set nocompatible
+
+let mapleader = ','
+
+let g:polyglot_disabled = []
+
+let g:coc_global_extensions = [
+			\'coc-sh'
+			\]
+
 call plug#begin()
 
 "General
@@ -19,26 +33,7 @@ Plug 'tomasr/molokai'
 
 call plug#end()
 
-set encoding=utf-8
-
-set nobackup
-set nowritebackup
-
-set updatetime=300
-
-set signcolumn=yes
-
-set background=dark
-set t_Co=256
-
-set splitright
-set splitbelow
-
-set number
-
 silent! colorscheme sonokai
-
-let mapleader = ','
 
 imap jk <esc>
 
