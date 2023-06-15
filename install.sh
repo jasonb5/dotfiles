@@ -2,18 +2,18 @@
 
 [[ -n "${DEBUG}" ]] && set -x
 
-dotfile_path="${DOTFILE_PATH:-${HOME}/devel/dotfiles}"
+export DOTFILE_PATH="${DOTFILE_PATH:-${HOME}/devel/dotfiles}"
 
-if [[ ! -e "${dotfile_path}" ]]; then
-	git clone https://github.com/jasonb5/dotfiles ${dotfile_path}
+if [[ ! -e "${DOTFILE_PATH}" ]]; then
+	git clone https://github.com/jasonb5/dotfiles ${DOTFILE_PATH}
 
-	pushd "${dotfile_path}"
+	pushd "${DOTFILE_PATH}"
 
 	git submodule update --init
 
 	popd
 fi
 
-source "${dotfile_path}/library/functions.sh"
+source "${DOTFILE_PATH}/library/functions.sh"
 
-dotfiles::install "${dotfile_path}"
+dotfiles::install

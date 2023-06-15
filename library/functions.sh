@@ -14,34 +14,27 @@ VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
 #==============================
 
 function dotfiles::dev() {
-  if [[ -z "$(which conda)" ]]; then
-    dotfiles::install_mambaforge
+  dotfiles::host::check_install "conda" "dotfiles::mambaforge::install" 
 
-    source "${HOME}/.bashrc"
-  else
-    dotfiles::log "Mamba already installed"
-  fi
+  dotfiles::host::check_install "vim" "mamba install -y vim"
 
-  if [[ -z "$(which vim)" ]]; then
-    mamba install -y vim 
-  else
-    dotfiles::log "Vim already installed"
-  fi
+  dotfiles::host::check_install "git" "mamba install -y git"
 
-  if [[ -z "$(which git)" ]]; then
-    mamba install -y git
-  else
-    dotfiles::log "Git already installed"
-  fi
+  dotfiles::host::check_install "node" "dotfiles::nodesource::install"
+}
 
-  if [[ -z "$(which node)" ]]; then
-    dotfiles::install_nodesource
+function dotfiles::host::check_install() {
+  local name="${1}"
+  local cmd="${2}"
+
+  if [[ -z "$(which ${name})" ]]; then
+    eval "${cmd}"
   else
-    dotfiles::log "Nodejs already installed"
+    dotfiles::log "${name} has already been installed"
   fi
 }
 
-function dotfiles::install_mambaforge() {
+function dotfiles::mambaforge::install() {
   url="https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh"
   output_path="/tmp/$(basename ${url})"
 
@@ -56,7 +49,7 @@ function dotfiles::install_mambaforge() {
   conda init bash
 }
 
-function dotfiles::install_nodesource() {
+function dotfiles::nodesource::install() {
   curl -fsSL https://deb.nodesource.com/setup_current.x | dotfiles::sudo bash -
 
   dotfiles::sudo apt install -y --no-install-recommends nodejs
@@ -87,8 +80,22 @@ function dotfiles::error() {
 }
 
 function dotfiles::install() {
-  local repo_path="${1}"
+  dotfiles::host::required
 
+  dotfiles::log "Installing dotfiles from ${DOTFILE_PATH}"
+
+  dotfiles::symlinks::install
+
+  dotfiles::bashrc::install
+
+  dotfiles::vimplug::install 
+
+  if [[ -n "${CONTAINER}" ]]; then
+    dotfiles::dev
+  fi
+}
+
+function dotfiles::host::required() {
   if [[ -z "$(which curl)" ]]; then
     dotfiles::log "Installing curl package"
 
@@ -96,12 +103,12 @@ function dotfiles::install() {
 
     dotfiles::sudo apt install -y --no-install-recommends curl ca-certificates
   fi
+}
 
-  dotfiles::log "Installing dotfiles from ${repo_path}"
-
-  for file in `ls -a "${repo_path}/configs" | grep -vE "\.$|\.\.$"`; do
+function dotfiles::symlinks::install() {
+  for file in `ls -a "${DOTFILE_PATH}/configs" | grep -vE "\.$|\.\.$"`; do
     local user_file="${HOME}/${file}"
-    local repo_file="${repo_path}/configs/${file}"
+    local repo_file="${DOTFILE_PATH}/configs/${file}"
 
     if [[ -e "${user_file}" ]] && [[ ! -L "${user_file}" ]] && [[ ! -e "${user_file}.bak" ]]; then
       dotfiles::log "Backup up ${user_file}"
@@ -119,7 +126,9 @@ function dotfiles::install() {
       ln -sf "${repo_file}" "${user_file}"
     fi
   done
+}
 
+function dotfiles::bashrc::install() {
   if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]] && [[ -z "${SKIP_BASHRC}" ]]; then
     dotfiles::log "Appending .bashrc"
 
@@ -137,22 +146,28 @@ fi
 ${DOTFILE_STOP}
 EOF
   fi
+}
 
+function dotfiles::vimplug::install() {
   if [[ ! -e "${VIM_PLUG_PATH}" ]]; then
     dotfiles::log "Downloading vim plug"
 
     curl -Lo "${VIM_PLUG_PATH}" --create-dirs "${VIM_PLUG_URL}"
-  fi
-
-  if [[ -n "${CONTAINER}" ]]; then
-    dotfiles::dev
   fi
 }
 
 function dotfiles::uninstall() {
   dotfiles::log "Uninstalling dotfiles"
 
-  for file in "${CONFIGS[@]}"; do
+  dotfiles::symlinks::remove
+
+  dotfiles::bashrc::remove
+
+  dotfiles::vimplug::remove
+}
+
+function dotfiles::symlinks::remove() {
+  for file in `ls -a "${DOTFILE_PATH}/configs" | grep -vE "\.$|\.\.$"`; do
     local user_file="${HOME}/${file}"
 
     if [[ -e "${user_file}" ]] && [[ -L "${user_file}" ]]; then
@@ -167,10 +182,11 @@ function dotfiles::uninstall() {
       mv "${user_file}.bak" "${user_file}"
     fi
   done
+}
 
+function dotfiles::bashrc::remove() {
   if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
     dotfiles::log "Removing entry from .bashrc"
-
 
     if [[ "$(uname)" == "Darwin" ]]; then
       sed -i "" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
@@ -178,7 +194,9 @@ function dotfiles::uninstall() {
       sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
     fi
   fi
+}
 
+function dotfiles::vimplug::remove() {
   if [[ -e "${VIM_PLUG_PATH}" ]]; then
     dotfiles::log "Removing ${VIM_PLUG_PATH}"
 
