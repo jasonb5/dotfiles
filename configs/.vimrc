@@ -107,4 +107,7 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+nnoremap <leader>b :buffers<CR>:buffers<Space>
+nnoremap <silent> <C-b> :Buffers<CR>
+
 autocmd CursorHold * silent call CocActionAsync('highlight')
