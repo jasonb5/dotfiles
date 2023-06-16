@@ -111,3 +111,5 @@ nnoremap <leader>b :buffers<CR>:buffers<Space>
 nnoremap <silent> <C-b> :Buffers<CR>
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
