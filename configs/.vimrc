@@ -8,6 +8,7 @@ set t_Co=256
 set number
 
 set nocompatible
+set hidden
 
 let mapleader = ','
 
@@ -23,6 +24,8 @@ call plug#begin()
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'junegunn/fzf', {'do': { -> fzf#install() }}
+Plug 'junegunn/fzf.vim'
 
 "Syntax
 Plug 'sheerun/vim-polyglot'
