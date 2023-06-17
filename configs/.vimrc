@@ -1,13 +1,56 @@
+" disable compatibility mode
+set nocompatible
+
+" turn on filetype plugins
 filetype plugin on
+" turn on filetype indent
 filetype indent on
 
+" enable syntax highlighting
 syntax enable
 
+" set background to dark, needed for molokai colorscheme
 set background=dark
-set t_Co=256
-set number
 
-set nocompatible
+set t_Co=256
+" turn on line numbers
+set number
+" shows where you are in statusline
+set ruler
+
+set smartindent
+set autoindent
+" auto reload files when changed on disk
+set autoread
+
+set encoding=utf-8
+
+" ignore case for search
+set ignorecase
+" enable incremental search
+set incsearch
+" highlight search matches
+set hlsearch
+
+" always show statusline
+set laststatus=2
+
+" show trailing whitespaces
+set list
+
+" show context above and below
+set scrolloff=3
+
+" no backup files
+set nobackup
+" no swap files
+set noswapfile
+
+" default split below
+set splitbelow
+" default split right
+set splitright
+
 set hidden
 
 let mapleader = ','
@@ -45,7 +88,7 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>:echom "Reloaded!"<CR>
 
 inoremap <silent><expr> <TAB>
 			\ coc#pum#visible() ? coc#pum#next(1) :
@@ -58,7 +101,7 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
 
 function! CheckBackspace() abort
 	let col = col('.') - 1
-	return !col || getline('.')[col - 1] =~# '\s'
+	return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 if has('nvim')
@@ -109,6 +152,11 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 nnoremap <leader>b :buffers<CR>:buffers<Space>
 nnoremap <silent> <C-b> :Buffers<CR>
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
