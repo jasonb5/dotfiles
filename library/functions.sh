@@ -8,6 +8,13 @@ DOTFILE_START="# >>>>>> DOTFILE_START >>>>>>"
 DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
 VIM_PLUG_URL="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 VIM_PLUG_PATH="${HOME}/.vim/autoload/plug.vim"
+CONFIG_FILES=(
+  .tmux/plugins/tpm
+  .tmux.conf
+  .vim/coc-settings.json
+  .vimrc
+  .gitconfig
+)
 
 #==============================
 # user functions
@@ -45,6 +52,8 @@ function dotfiles::docker::run() {
 
 function dotfiles::dev() {
   dotfiles::host::check_install "conda" "dotfiles::mambaforge::install" 
+
+  dotfiles::host::check_install "tmux" "mamba install -y tmux"
 
   dotfiles::host::check_install "vim" "mamba install -y vim"
 
@@ -136,24 +145,22 @@ function dotfiles::host::required() {
 }
 
 function dotfiles::symlinks::install() {
-  for file in `ls -a "${DOTFILE_PATH}/configs" | grep -vE "\.$|\.\.$"`; do
-    local user_file="${HOME}/${file}"
-    local repo_file="${DOTFILE_PATH}/configs/${file}"
+  for path in "${CONFIG_FILES[@]}"; do
+    local user_file="${HOME}/${path}"
+    local repo_file="${DOTFILE_PATH}/configs/${path}"
 
     if [[ -e "${user_file}" ]] && [[ ! -L "${user_file}" ]] && [[ ! -e "${user_file}.bak" ]]; then
-      dotfiles::log "Backup up ${user_file}"
+      dotfiles::log "Backing up ${user_file}"	
 
       mv "${user_file}" "${user_file}.bak"
     fi
 
-    dotfiles::log "Linking ${repo_file} -> ${user_file}"
-
-    if [[ ! -e "$(dirname ${user_file})" ]]; then
-      mkdir -p "$(dirname ${user_file})"
-    fi
-
     if [[ ! -e "${user_file}" ]]; then
+      dotfiles::log "Linking ${repo_file} -> ${user_file}"
+
       ln -sf "${repo_file}" "${user_file}"
+    else
+      dotfiles::log "Skipping ${repo_file}"
     fi
   done
 }
@@ -197,11 +204,11 @@ function dotfiles::uninstall() {
 }
 
 function dotfiles::symlinks::remove() {
-  for file in `ls -a "${DOTFILE_PATH}/configs" | grep -vE "\.$|\.\.$"`; do
-    local user_file="${HOME}/${file}"
+  for path in "${CONFIG_FILES[@]}"; do
+    local user_file="${HOME}/${path}"
 
     if [[ -e "${user_file}" ]] && [[ -L "${user_file}" ]]; then
-      dotfiles::log "Unlinking ${user_file}"
+      dotfiles::log "Unlinking ${user_file}"	
 
       unlink "${user_file}"
     fi
