@@ -58,7 +58,7 @@ let mapleader = ','
 let g:polyglot_disabled = []
 
 let g:coc_global_extensions = [
-			\'coc-sh'
+			\'coc-sh',
 			\]
 
 call plug#begin()
