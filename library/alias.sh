@@ -19,4 +19,7 @@ alias jupyter="dotfiles::work::jupyter"
 
 alias tmux="TERM=xterm-256color tmux -2"
 
+if [[ "$(uname)" != "Darwin" ]]; then
 alias new-mac=" printf '%02x' $((0x$(od /dev/urandom -N1 -t x1 -An | tr -d ' ') & 0xFE | 0x02)); od /dev/urandom -N5 -t x1 -An | tr ' '  ':'"
+fi
+
