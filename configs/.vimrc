@@ -58,8 +58,31 @@ let mapleader = ','
 let g:polyglot_disabled = []
 
 let g:coc_global_extensions = [
+			\'@yaegassy/coc-ansible',
+			\'coc-cmake', 
+			\'coc-docker',
+			\'coc-eslint',
+			\'coc-fzf-preview',
+			\'coc-git',
+			\'coc-go',
+			\'coc-html',
+			\'coc-json',
+			\'coc-markdownlint',
+			\'coc-markdown-preview-enhanced',
+			\'coc-nav',
+			\'coc-pydocstring',
+			\'coc-pyright',
+			\'coc-rust-analyzer',
 			\'coc-sh',
+			\'coc-toml',
+			\'coc-vimlsp',
+			\'coc-webview',
+			\'coc-xml',
+			\'coc-yaml',
 			\]
+
+" coc-mypy
+" coc-prettier
 
 call plug#begin()
 
