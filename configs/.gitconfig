@@ -1,8 +1,8 @@
 [user]
 	email = boutte.jason@gmail.com
 	name = Jason Boutte
-	# signingkey = 9E44299ED12A67F9!
+	signingkey = 776AC554E8CD9AC6!
 [safe]
 	directory = *
 [commit]
-	# gpgsign = true
+	gpgsign = true
