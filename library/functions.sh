@@ -20,91 +20,35 @@ CONFIG_FILES=(
 # user functions
 #==============================
 
-function dotfiles::work::cime() {
-  dotfiles::docker::run \
-    --image jasonb87/cime:latest \
-    --options "-it --rm -v ${HOME}/devel/cime-inputdata:/storage/inputdata -v ${HOME}/devel:/root/devel -w /root/devel/E3SM -e CIME_MODEL=e3sm -e INSTALL_PATH=/root/devel/E3SM" \
-    --command "/bin/bash"
-}
+#==============================
+# install/uninstall functions
+#==============================
 
-function dotfiles::work::jupyter() {
-  dotfiles::docker::run \
-    --image jupyter/minimal-notebook \
-    --options "-it --rm -p 8888:8888 -v ${HOME}/devel:/home/jovyan/devel -w /home/jovyan/devel"
-}
+function dotfiles::install() {
+  dotfiles::log "Installing dotfiles from ${DOTFILE_PATH}"
 
-function dotfiles::docker::run() {
-  local image=""
-  local options=""
-  local command=""
+  dotfiles::symlinks::install
 
-  while [[ "${#}" -gt 0 ]]; do
-    case "${1}" in
-      --image) image="${2}"; shift 2;;
-      --options) options="${2}"; shift 2;;
-      --command) command="${2}"; shift 2;;
-      *);;
-    esac
-  done
+  dotfiles::vimplug::install 
 
-  docker run ${options} ${image} ${command} 
-}
-
-function dotfiles::dev() {
-  dotfiles::host::check_install "conda" "dotfiles::mambaforge::install" 
-
-  dotfiles::host::check_install "tmux" "mamba install -y tmux"
-
-  dotfiles::host::check_install "vim" "mamba install -y vim"
-
-  dotfiles::host::check_install "git" "mamba install -y git"
-
-  dotfiles::host::check_install "node" "dotfiles::nodesource::install"
-}
-
-function dotfiles::host::check_install() {
-  local name="${1}"
-  local cmd="${2}"
-
-  if [[ -z "$(which ${name})" ]]; then
-    eval "${cmd}"
-  else
-    dotfiles::log "${name} has already been installed"
+  if [[ -n "${CONTAINER}" ]]; then
+    dotfiles::dev
   fi
 }
 
-function dotfiles::mambaforge::install() {
-  url="https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh"
-  output_path="/tmp/$(basename ${url})"
+function dotfiles::uninstall() {
+  dotfiles::log "Uninstalling dotfiles"
 
-  curl -sfL -o "${output_path}" "${url}"
+  dotfiles::symlinks::remove
 
-  chmod +x "${output_path}"
+  dotfiles::bashrc::remove
 
-  "${output_path}" -b -p "${HOME}/conda" -u
-
-  source "${HOME}/conda/etc/profile.d/conda.sh"
-
-  conda init bash
-}
-
-function dotfiles::nodesource::install() {
-  curl -fsSL https://deb.nodesource.com/setup_current.x | dotfiles::sudo bash -
-
-  dotfiles::sudo apt install -y --no-install-recommends nodejs
+  dotfiles::vimplug::remove
 }
 
 #==============================
-# library functions
+# logging functions
 #==============================
-
-function dotfiles::sudo() {
-  if [[ "${USER}" == "root" ]] || [[ "$(id -u)" -eq 0 ]]; then
-    "${@}"
-  else
-    sudo "${@}"
-  fi
-}
 
 function dotfiles::log() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&1
@@ -118,31 +62,21 @@ function dotfiles::error() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
 }
 
-function dotfiles::install() {
-  dotfiles::host::required
+#==============================
+# utility functions
+#==============================
 
-  dotfiles::log "Installing dotfiles from ${DOTFILE_PATH}"
-
-  dotfiles::symlinks::install
-
-  # dotfiles::bashrc::install
-
-  dotfiles::vimplug::install 
-
-  if [[ -n "${CONTAINER}" ]]; then
-    dotfiles::dev
+function dotfiles::utils::sudo() {
+  if [[ "${USER}" == "root" ]] || [[ "$(id -u)" -eq 0 ]]; then
+    "${@}"
+  else
+    sudo "${@}"
   fi
 }
 
-function dotfiles::host::required() {
-  if [[ -z "$(which curl)" ]]; then
-    dotfiles::log "Installing curl package"
-
-    dotfiles::sudo apt update
-
-    dotfiles::sudo apt install -y --no-install-recommends curl ca-certificates
-  fi
-}
+#==============================
+# symlink functions
+#==============================
 
 function dotfiles::symlinks::install() {
   for path in "${CONFIG_FILES[@]}"; do
@@ -158,49 +92,15 @@ function dotfiles::symlinks::install() {
     if [[ ! -e "${user_file}" ]]; then
       dotfiles::log "Linking ${repo_file} -> ${user_file}"
 
+      if [[ ! -e "${user_file%/*}" ]]; then
+        mkdir -p "${user_file%/*}"
+      fi
+
       ln -sf "${repo_file}" "${user_file}"
     else
       dotfiles::log "Skipping ${repo_file}"
     fi
   done
-}
-
-function dotfiles::bashrc::install() {
-  if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
-    dotfiles::log "Appending .bashrc"
-
-    cat << EOF >> "${HOME}/.bashrc"
-${DOTFILE_START}
-export DOTFILE_PATH="\${HOME}/devel/dotfiles"
-
-source "\${DOTFILE_PATH}/library/alias.sh"
-source "\${DOTFILE_PATH}/library/bashrc.sh"
-source "\${DOTFILE_PATH}/library/functions.sh"
-
-if [[ -e "${HOME}/.dotfiles.user.sh" ]]; then
-    source "${HOME}/.dotfiles.user.sh"
-fi
-${DOTFILE_STOP}
-EOF
-  fi
-}
-
-function dotfiles::vimplug::install() {
-  if [[ ! -e "${VIM_PLUG_PATH}" ]]; then
-    dotfiles::log "Downloading vim plug"
-
-    curl -Lo "${VIM_PLUG_PATH}" --create-dirs "${VIM_PLUG_URL}"
-  fi
-}
-
-function dotfiles::uninstall() {
-  dotfiles::log "Uninstalling dotfiles"
-
-  dotfiles::symlinks::remove
-
-  dotfiles::bashrc::remove
-
-  dotfiles::vimplug::remove
 }
 
 function dotfiles::symlinks::remove() {
@@ -221,15 +121,15 @@ function dotfiles::symlinks::remove() {
   done
 }
 
-function dotfiles::bashrc::remove() {
-  if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
-    dotfiles::log "Removing entry from .bashrc"
+#==============================
+# vim-plug functions
+#==============================
 
-    if [[ "$(uname)" == "Darwin" ]]; then
-      sed -i "" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
-    else
-      sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
-    fi
+function dotfiles::vimplug::install() {
+  if [[ ! -e "${VIM_PLUG_PATH}" ]]; then
+    dotfiles::log "Downloading vim plug"
+
+    curl -Lo "${VIM_PLUG_PATH}" --create-dirs "${VIM_PLUG_URL}"
   fi
 }
 
@@ -241,10 +141,46 @@ function dotfiles::vimplug::remove() {
   fi
 }
 
-function dotfiles::bashrc::temp_install() {
+#==============================
+# bashrc functions
+#==============================
+
+function dotfiles::bashrc::temp() {
   export DOTFILE_PATH="${HOME}/devel/dotfiles"
 
   source "${DOTFILE_PATH}/library/alias.sh"
   source "${DOTFILE_PATH}/library/bashrc.sh"
   source "${DOTFILE_PATH}/library/functions.sh"
+}
+
+function dotfiles::bashrc::install() {
+  if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
+    dotfiles::log "Appending ${HOME}/.bashrc"
+
+    cat << EOF >> "${HOME}/.bashrc"
+${DOTFILE_START}
+export DOTFILE_PATH="\${HOME}/devel/dotfiles"
+
+source "\${DOTFILE_PATH}/library/alias.sh"
+source "\${DOTFILE_PATH}/library/bashrc.sh"
+source "\${DOTFILE_PATH}/library/functions.sh"
+
+if [[ -e "${HOME}/.dotfiles.user.sh" ]]; then
+    source "${HOME}/.dotfiles.user.sh"
+fi
+${DOTFILE_STOP}
+EOF
+  fi
+}
+
+function dotfiles::bashrc::remove() {
+  if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
+    dotfiles::log "Removing entry from ${HOME}/.bashrc"
+
+    if [[ "$(uname)" == "Darwin" ]]; then
+      sed -i "" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+    else
+      sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
+    fi
+  fi
 }
