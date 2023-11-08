@@ -11,6 +11,7 @@ alias eb="vim ${DOTFILE_PATH}/library/bashrc.sh"
 alias ee="vim ${DOTFILE_PATH}/library/exports.sh"
 alias ef="vim ${DOTFILE_PATH}/library/functions.sh"
 
+alias dev="dotfiles::dev::install"
 alias persist="dotfiles::bashrc::install"
 
 alias tmux="TERM=xterm-256color tmux -2"

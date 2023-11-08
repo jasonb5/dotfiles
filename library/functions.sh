@@ -20,6 +20,31 @@ CONFIG_FILES=(
 # user functions
 #==============================
 
+function dotfiles::install_miniforge() {
+  local url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
+  local install_dir="${HOME}/conda"
+
+  if [[ ! -e "${install_dir}" ]]; then
+    curl -L -o "/tmp/conda.sh" "${url}"
+
+    chmod +x "/tmp/conda.sh"
+
+    /tmp/conda.sh -b -p "${install_dir}"
+  fi
+
+  source "${install_dir}/etc/profile.d/conda.sh"
+
+  conda init bash
+
+  sb
+}
+
+function dotfiles::dev::install() {
+  dotfiles::install_miniforge
+
+  mamba install -y tmux nodejs
+}
+
 #==============================
 # install/uninstall functions
 #==============================
