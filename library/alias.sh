@@ -14,6 +14,11 @@ alias ef="vim ${DOTFILE_PATH}/library/functions.sh"
 alias dev="dotfiles::dev::install"
 alias persist="dotfiles::bashrc::install"
 
+# Argument can be x x% +x% e.g. 500 120% +5%
+# Default for archlinux
+alias vup="pactl set-sink-volume @DEFAULT_SINK@ ${1}"
+alias vdown="pactl set-sink-volume @DEFAULT_SINK@ ${1}"
+
 alias tmux="TERM=xterm-256color tmux -2"
 
 if [[ "$(uname)" != "Darwin" ]]; then
