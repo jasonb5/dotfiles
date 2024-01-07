@@ -20,6 +20,19 @@ CONFIG_FILES=(
 # user functions
 #==============================
 
+function dotfiles::list_usb() {
+  for sysdevpath in $(find /sys/bus/usb/devices/usb*/ -name dev); do
+      (
+          syspath="${sysdevpath%/dev}"
+          devname="$(udevadm info -q name -p $syspath)"
+          [[ "$devname" == "bus/"* ]] && exit
+          eval "$(udevadm info -q property --export -p $syspath)"
+          [[ -z "$ID_SERIAL" ]] && exit
+          echo "/dev/$devname - $ID_SERIAL"
+      )
+  done
+}
+
 function dotfiles::install_miniforge() {
   local url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
   local install_dir="${HOME}/conda"
@@ -42,7 +55,9 @@ function dotfiles::install_miniforge() {
 function dotfiles::dev::install() {
   dotfiles::install_miniforge
 
-  mamba install -y tmux nodejs
+  dotfiles::utils::sudo pacman -S nodejs
+
+  mamba install -y tmux
 }
 
 #==============================
