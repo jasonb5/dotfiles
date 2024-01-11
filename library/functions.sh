@@ -20,7 +20,9 @@ CONFIG_FILES=(
 # user functions
 #==============================
 
-function dotfiles::list_usb() {
+function dotfiles::user::usb::list() {
+  dotfiles::log "Listing usb devices"
+
   for sysdevpath in $(find /sys/bus/usb/devices/usb*/ -name dev); do
       (
           syspath="${sysdevpath%/dev}"
@@ -33,31 +35,33 @@ function dotfiles::list_usb() {
   done
 }
 
-function dotfiles::install_miniforge() {
+function dotfiles::user::miniforge::install() {
   local url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
   local install_dir="${HOME}/conda"
+
+  dotfiles::log "Installing miniforge to ${install_dir}"
 
   if [[ ! -e "${install_dir}" ]]; then
     curl -L -o "/tmp/conda.sh" "${url}"
 
+    dotfiles::log "Downloaded installer to /tmp/conda.sh"
+
     chmod +x "/tmp/conda.sh"
 
     /tmp/conda.sh -b -p "${install_dir}"
+
+    dotfiles::log "Installed conda to ${install_dir}"
   fi
 
   source "${install_dir}/etc/profile.d/conda.sh"
 
+  dotfiles::log "Sourcing conda.sh"
+
   conda init bash
 
+  dotfiles::log "Executed 'conda init bash'"
+
   sb
-}
-
-function dotfiles::dev::install() {
-  dotfiles::install_miniforge
-
-  dotfiles::utils::sudo pacman -S nodejs
-
-  mamba install -y tmux
 }
 
 #==============================
@@ -67,13 +71,9 @@ function dotfiles::dev::install() {
 function dotfiles::install() {
   dotfiles::log "Installing dotfiles from ${DOTFILE_PATH}"
 
-  dotfiles::symlinks::install
+  dotfiles::symlinks::add
 
   dotfiles::vimplug::install 
-
-  if [[ -n "${CONTAINER}" ]]; then
-    dotfiles::dev
-  fi
 }
 
 function dotfiles::uninstall() {
@@ -84,6 +84,8 @@ function dotfiles::uninstall() {
   dotfiles::bashrc::remove
 
   dotfiles::vimplug::remove
+
+  unset DOTFILE_PATH
 }
 
 #==============================
@@ -118,45 +120,55 @@ function dotfiles::utils::sudo() {
 # symlink functions
 #==============================
 
-function dotfiles::symlinks::install() {
+function dotfiles::symlinks::add() {
+  dotfiles::log "Adding dotfiles symlinks to ${HOME} from `pwd`"
+
   for path in "${CONFIG_FILES[@]}"; do
     local user_file="${HOME}/${path}"
     local repo_file="${DOTFILE_PATH}/configs/${path}"
 
-    if [[ -e "${user_file}" ]] && [[ ! -L "${user_file}" ]] && [[ ! -e "${user_file}.bak" ]]; then
-      dotfiles::log "Backing up ${user_file}"	
+    dotfiles::log "Linking ${repo_file} -> ${user_file}"
 
+    if [[ -e "${user_file}" ]] && [[ ! -L "${user_file}" ]] && [[ ! -e "${user_file}.bak" ]]; then
       mv "${user_file}" "${user_file}.bak"
+
+      dotfiles::log "Backed up ${user_file} -> ${user_file}.bak"
     fi
 
     if [[ ! -e "${user_file}" ]]; then
-      dotfiles::log "Linking ${repo_file} -> ${user_file}"
-
       if [[ ! -e "${user_file%/*}" ]]; then
         mkdir -p "${user_file%/*}"
+
+        dotfiles::log "Creating parent directory ${user_file%/*}"
       fi
 
       ln -sf "${repo_file}" "${user_file}"
+
+      dotfiles::log "Linked ${repo_file} -> ${user_file}"
     else
-      dotfiles::log "Skipping ${repo_file}"
+      dotfiles::log "Skipping ${repo_file}, link already exists"
     fi
   done
 }
 
 function dotfiles::symlinks::remove() {
+  dotfiles::log "Removing dotfiles symlinks from ${HOME}"
+
   for path in "${CONFIG_FILES[@]}"; do
     local user_file="${HOME}/${path}"
 
-    if [[ -e "${user_file}" ]] && [[ -L "${user_file}" ]]; then
-      dotfiles::log "Unlinking ${user_file}"	
+    dotfiles::log "Removing ${user_file}"
 
+    if [[ -e "${user_file}" ]] && [[ -L "${user_file}" ]]; then
       unlink "${user_file}"
+
+      dotfiles::log "Unlinked ${user_file}"
     fi
 
     if [[ -e "${user_file}.bak" ]]; then
-      dotfiles::log "Restoring backup ${user_file}.bak"
-
       mv "${user_file}.bak" "${user_file}"
+
+      dotfiles::log "Restored ${user_file} from ${user_file}.bak"
     fi
   done
 }
@@ -166,18 +178,22 @@ function dotfiles::symlinks::remove() {
 #==============================
 
 function dotfiles::vimplug::install() {
-  if [[ ! -e "${VIM_PLUG_PATH}" ]]; then
-    dotfiles::log "Downloading vim plug"
+  dotfiles::log "Installing vimplug to ${VIM_PLUG_PATH}"
 
+  if [[ ! -e "${VIM_PLUG_PATH}" ]]; then
     curl -Lo "${VIM_PLUG_PATH}" --create-dirs "${VIM_PLUG_URL}"
+
+    dotfiles::log "Installed vimplug to ${VIM_PLUG_PATH} from ${VIM_PLUG_URL}"
   fi
 }
 
-function dotfiles::vimplug::remove() {
-  if [[ -e "${VIM_PLUG_PATH}" ]]; then
-    dotfiles::log "Removing ${VIM_PLUG_PATH}"
+function dotfiles::vimplug::uninstall() {
+  dotfiles::log "Uninstalling vimplug from ${VIM_PLUG_PATH}"
 
+  if [[ -e "${VIM_PLUG_PATH}" ]]; then
     rm -rf "${VIM_PLUG_PATH}"
+
+    dotfiles::log "Removed vimplug from ${VIM_PLUG_PATH}"
   fi
 }
 
@@ -185,7 +201,7 @@ function dotfiles::vimplug::remove() {
 # bashrc functions
 #==============================
 
-function dotfiles::bashrc::temp() {
+function dotfiles::bashrc::load() {
   export DOTFILE_PATH="${HOME}/devel/dotfiles"
 
   source "${DOTFILE_PATH}/library/alias.sh"
@@ -193,10 +209,10 @@ function dotfiles::bashrc::temp() {
   source "${DOTFILE_PATH}/library/functions.sh"
 }
 
-function dotfiles::bashrc::install() {
-  if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
-    dotfiles::log "Appending ${HOME}/.bashrc"
+function dotfiles::bashrc::append() {
+  dotfiles::log "Appending dotfiles bashrc entry"
 
+  if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
     cat << EOF >> "${HOME}/.bashrc"
 ${DOTFILE_START}
 export DOTFILE_PATH="\${HOME}/devel/dotfiles"
@@ -210,17 +226,21 @@ if [[ -e "${HOME}/.dotfiles.user.sh" ]]; then
 fi
 ${DOTFILE_STOP}
 EOF
+
+    dotfiles::log "Appended dotfiles basrc entry"
   fi
 }
 
 function dotfiles::bashrc::remove() {
-  if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
-    dotfiles::log "Removing entry from ${HOME}/.bashrc"
+  dotfiles::log "Removing dotfiles bashrc entry"
 
+  if [[ -n "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
     if [[ "$(uname)" == "Darwin" ]]; then
       sed -i "" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
     else
       sed -i"" "/${DOTFILE_START}/,/${DOTFILE_STOP}/d" "${HOME}/.bashrc"
     fi
+
+    dotfiles::log "Found and removed dotfiles bashrc entry"
   fi
 }

@@ -18,4 +18,4 @@ source "${DOTFILE_PATH}/library/functions.sh"
 
 dotfiles::install
 
-dotfiles::bashrc::temp
+dotfiles::bashrc::load
