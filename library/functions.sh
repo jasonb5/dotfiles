@@ -20,6 +20,32 @@ CONFIG_FILES=(
 # user functions
 #==============================
 
+function dotfiles::user::docker::run() {
+  name="${1}"
+  shift
+  background="${1}"
+  shift
+  args="${@}"
+
+  existing=$(docker ps -a -f name="${name}" -q)
+
+  if [[ -n "${existing}" ]]; then
+    if [[ "${background}" == "true" ]]; then
+      docker start "${existing}"
+    else
+      docker exec -it "${existing}" /bin/bash
+    fi
+  else
+    if [[ "${background}" == "true" ]]; then
+      run_args="-d --name ${name}"
+    else
+      run_args="-it --name ${name}"
+    fi
+
+    docker run ${run_args} ${args}
+  fi
+}
+
 function dotfiles::user::usb::list() {
   dotfiles::log "Listing usb devices"
 
