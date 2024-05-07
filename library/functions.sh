@@ -7,6 +7,7 @@
 DOTFILE_START="# >>>>>> DOTFILE_START >>>>>>"
 DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
 CONFIG_FILES=(
+  .vimrc
   .gitconfig
 )
 
@@ -44,11 +45,15 @@ function dotfiles::install() {
 
   dotfiles::symlinks::add
 
+  dotfiles::vimplug::install
+
   dotfiles::load
 }
 
 function dotfiles::uninstall() {
   dotfiles::log "Uninstalling dotfiles"
+
+  dotfiles::vimplug::uninstall
 
   dotfiles::symlinks::remove
 
@@ -71,6 +76,19 @@ function dotfiles::debug() {
 
 function dotfiles::error() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+#==============================
+# vim-plug functions
+#==============================
+
+function dotfiles::vimplug::install() {
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim    
+}
+
+function dotfiles::vimplug::uninstall() {
+  rm -rf ~/.vim/autoload/plug.vim
 }
 
 #==============================
