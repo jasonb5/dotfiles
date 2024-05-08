@@ -8,6 +8,7 @@ alias eb="vim ${DOTFILE_PATH}/library/bashrc.sh"
 alias ef="vim ${DOTFILE_PATH}/library/functions.sh"
 
 alias ev="vim ${DOTFILE_PATH}/configs/.vimrc"
+alias et="vim ${DOTFILE_PATH}/configs/.tmux.conf"
 
 alias load="dotfiles::load"
 alias persist="dotfiles::bashrc::append"

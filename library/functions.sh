@@ -9,6 +9,7 @@ DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
 CONFIG_FILES=(
   .vimrc
   .gitconfig
+  .tmux.conf
 )
 
 #==============================
