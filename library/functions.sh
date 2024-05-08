@@ -10,6 +10,7 @@ CONFIG_FILES=(
   .vimrc
   .gitconfig
   .tmux.conf
+  .tmux/plugins/tpm
 )
 
 #==============================
