@@ -21,9 +21,9 @@ set encoding=utf-8
 set formatoptions=tcqrnl
 set hidden
 set smartindent
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 set expandtab
 set noshiftround
 set expandtab
@@ -51,6 +51,8 @@ vnoremap < <gv
 call plug#begin()
 
 Plug 'sainnhe/everforest'
+
+Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 
