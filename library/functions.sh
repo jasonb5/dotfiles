@@ -39,6 +39,14 @@ export PROMPT_COMMAND='EXIT="$?";
 # user functions
 #==============================
 
+function dotfiles::user::miniforge3() {
+  url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
+  filepath="/tmp/miniforge.sh"
+  curl -Lo "${filepath}" "${url}"
+  chmod +x "${filepath}"
+  "${filepath}" -b -p "${HOME}/devel/conda" -u
+}
+
 #==============================
 # install/uninstall functions
 #==============================
