@@ -183,9 +183,7 @@ export DOTFILE_PATH="\${HOME}/devel/dotfiles"
 source "\${DOTFILE_PATH}/library/alias.sh"
 source "\${DOTFILE_PATH}/library/functions.sh"
 
-if [[ -e "${HOME}/.dotfiles.user.sh" ]]; then
-    source "${HOME}/.dotfiles.user.sh"
-fi
+dotfiles::bashrc::machine::load
 ${DOTFILE_STOP}
 EOF
 
@@ -205,4 +203,24 @@ function dotfiles::bashrc::remove() {
 
     dotfiles::log "Found and removed dotfiles bashrc entry"
   fi
+}
+
+function dotfiles::bashrc::machine::load() {
+  hostname="$(dotfiles::utils::hostname)"
+
+  dotfiles::log "Searching machine specific bashrc for \"${hostname}\""
+
+  # Load version controlled machine specific
+  while IFS='' read -r -d '' filepath; do
+    filename="$(basename ${filepath})"
+
+    if [[ "$(echo ${hostname} | grep ${filename})" == "${hostname}" ]]; then
+      dotfiles::log "Found match ${filepath}"
+
+      source "${filepath}"
+    fi
+  done < <(find ${DOTFILE_PATH}/machine -maxdepth 1 -type f -print0)
+
+  # Load non-version controllered machine specific
+  [[ -e "${HOME}/.bashrc.user" ]] && source "${HOME}/.bashrc.user"
 }
