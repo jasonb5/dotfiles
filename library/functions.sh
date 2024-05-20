@@ -39,21 +39,6 @@ export PROMPT_COMMAND='EXIT="$?";
 # user functions
 #==============================
 
-function dotfiles::user::usb_list() {
-  dotfiles::log "Listing usb devices"
-
-  for sysdevpath in $(find /sys/bus/usb/devices/usb*/ -name dev); do
-      (
-          syspath="${sysdevpath%/dev}"
-          devname="$(udevadm info -q name -p $syspath)"
-          [[ "$devname" == "bus/"* ]] && exit
-          eval "$(udevadm info -q property --export -p $syspath)"
-          [[ -z "$ID_SERIAL" ]] && exit
-          echo "/dev/$devname - $ID_SERIAL"
-      )
-  done
-}
-
 #==============================
 # install/uninstall functions
 #==============================
@@ -196,7 +181,6 @@ ${DOTFILE_START}
 export DOTFILE_PATH="\${HOME}/devel/dotfiles"
 
 source "\${DOTFILE_PATH}/library/alias.sh"
-source "\${DOTFILE_PATH}/library/bashrc.sh"
 source "\${DOTFILE_PATH}/library/functions.sh"
 
 if [[ -e "${HOME}/.dotfiles.user.sh" ]]; then
