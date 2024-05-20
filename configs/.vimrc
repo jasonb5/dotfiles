@@ -36,18 +36,6 @@ set background=dark
 let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 
-imap JJ <esc>
-
-inoremap ( ()<esc>hli
-inoremap { {}<esc>hli
-inoremap [ []<esc>hli
-inoremap ' ''<esc>hli
-inoremap " ""<esc>hli
-inoremap ` ``<esc>hli
-
-vnoremap > >gv
-vnoremap < <gv
-
 call plug#begin()
 
 Plug 'sainnhe/everforest'
