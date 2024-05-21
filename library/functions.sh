@@ -191,6 +191,8 @@ export DOTFILE_PATH="\${HOME}/devel/dotfiles"
 source "\${DOTFILE_PATH}/library/alias.sh"
 source "\${DOTFILE_PATH}/library/functions.sh"
 
+dotfiles::bashrc::fix_path
+
 dotfiles::bashrc::machine::load
 ${DOTFILE_STOP}
 EOF
@@ -231,4 +233,12 @@ function dotfiles::bashrc::machine::load() {
 
   # Load non-version controllered machine specific
   [[ -e "${HOME}/.bashrc.user" ]] && source "${HOME}/.bashrc.user"
+}
+
+function dotfiles::bashrc::fix_path() {
+  if [[ -z "${DOTFILE_LOADED}" ]]; then
+    export PATH="${HOME}/.bin:${PATH}"
+
+    export DOTFILE_LOADED="true"
+  fi
 }
