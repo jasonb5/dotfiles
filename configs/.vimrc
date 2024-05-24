@@ -81,6 +81,9 @@ inoremap jf <esc>
 
 nnoremap <leader>ev :edit $MYVIMRC<cr>
 
+map <leader>l :bnext<cr>
+map <leader>h :bprevious<cr>
+
 set termguicolors
 set background=dark
 
