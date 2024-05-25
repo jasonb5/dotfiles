@@ -1,16 +1,3 @@
-call plug#begin()
-
-Plug 'joshdick/onedark.vim'
-
-Plug 'sheerun/vim-polyglot'
-
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
-
-call plug#end()
-
 set nocompatible
 
 filetype plugin indent on
@@ -83,6 +70,9 @@ set nolinebreak
 set breakindent
 set breakindentopt=min:40
 
+set termguicolors
+set background=dark
+
 if has('multi_byte') && &encoding ==# 'utf-8'
   let &listchars = 'tab:▸ ,extends:❯,precedes:❮,nbsp:±,trail:⣿'
   let &fillchars = 'vert: ,diff: '  " ▚
@@ -108,7 +98,7 @@ inoremap jf <esc>
 
 nnoremap <leader>ev :edit $MYVIMRC<cr>
 nnoremap <leader>ec :edit ~/.vim/coc-settings.json<cr>
-nnoremap <leader>r :source $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
 
 nmap <leader>- :split<cr>
 nmap <leader>\ :vsplit<cr>
@@ -120,11 +110,6 @@ nnoremap <leader>l <C-w>l
 
 nnoremap <leader>b :Buffers<CR>
 
-set termguicolors
-set background=dark
-
-colorscheme onedark
-
 let g:coc_global_extensions = [
       \ '@yaegassy/coc-ansible',
       \ 'coc-cmake',
@@ -134,7 +119,7 @@ let g:coc_global_extensions = [
       \ 'coc-json',
       \ 'coc-xml',
       \ 'coc-yaml',
-      \ '@yaegassy/coc-ruff'
+      \ '@yaegassy/coc-pylsp',
       \ ]
 
 " Coc configuration
@@ -185,8 +170,26 @@ nmap <leader>as <Plug>(coc-codeaction-source)
 nmap <leader>qf <Plug>(coc-fix-current)
 
 nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
-xmap <silent> <leader>rs <Plug>(coc-codeaction-refactor-selected)
-nmap <silent> <leader>rs <Plug>(coc-codeaction-refactor-selected)
+xmap <silent> <leader>r <Plug>(coc-codeaction-refactor-selected)
+nmap <silent> <leader>r <Plug>(coc-codeaction-refactor-selected)
 
 nmap <leader>cl <Plug>(coc-codelens-action)
+
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+call plug#begin()
+
+Plug 'joshdick/onedark.vim'
+
+Plug 'sheerun/vim-polyglot'
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+
+call plug#end()
+
+colorscheme onedark
+
 " vim: sw=2 sts=2 tw=0
