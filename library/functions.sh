@@ -12,6 +12,7 @@ CONFIG_FILES=(
   .tmux.conf
   .tmux.remote.conf
   .tmux/plugins/tpm
+  .font
 )
 
 #==============================
