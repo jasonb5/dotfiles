@@ -175,8 +175,6 @@ nmap <silent> <leader>r <Plug>(coc-codeaction-refactor-selected)
 
 nmap <leader>cl <Plug>(coc-codelens-action)
 
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
 call plug#begin()
 
 Plug 'joshdick/onedark.vim'
@@ -187,6 +185,10 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+
+Plug 'vim-airline/vim-airline'
+
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
