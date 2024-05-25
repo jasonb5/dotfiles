@@ -8,6 +8,7 @@ DOTFILE_START="# >>>>>> DOTFILE_START >>>>>>"
 DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
 CONFIG_FILES=(
   .vimrc
+  .vim/coc-settings.json
   .gitconfig
   .tmux.conf
   .tmux.remote.conf
