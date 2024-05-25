@@ -16,8 +16,14 @@ CONFIG_FILES=(
 
 #==============================
 # Exports
+#==============================
+
 export GPG_TTY=$(tty)
 export EDITOR=vim
+export TERM=xterm-256color
+
+#==============================
+# Prompt
 #==============================
 
 CLEAR="\[\033[0m\]"
@@ -44,7 +50,7 @@ function dotfiles::user::miniforge3() {
   filepath="/tmp/miniforge.sh"
   curl -Lo "${filepath}" "${url}"
   chmod +x "${filepath}"
-  "${filepath}" -b -p "${HOME}/devel/conda" -u
+  "${filepath}" -b -p "${HOME}/conda" -u
 }
 
 #==============================
@@ -218,14 +224,14 @@ function dotfiles::bashrc::remove() {
 function dotfiles::bashrc::machine::load() {
   hostname="$(dotfiles::utils::hostname)"
 
-  dotfiles::log "Searching machine specific bashrc for \"${hostname}\""
+  dotfiles::debug "Searching machine specific bashrc for \"${hostname}\""
 
   # Load version controlled machine specific
   while IFS='' read -r -d '' filepath; do
     filename="$(basename ${filepath})"
 
     if [[ "$(echo ${hostname} | grep ${filename})" == "${hostname}" ]]; then
-      dotfiles::log "Found match ${filepath}"
+      dotfiles::debug "Found match ${filepath}"
 
       source "${filepath}"
     fi
