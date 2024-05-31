@@ -13,7 +13,7 @@ CONFIG_FILES=(
   .tmux.conf
   .tmux.remote.conf
   .tmux/plugins/tpm
-  .font
+  .fonts
 )
 
 #==============================
@@ -22,7 +22,7 @@ CONFIG_FILES=(
 
 export GPG_TTY=$(tty)
 export EDITOR=vim
-export TERM=xterm-256color
+# export TERM=xterm-256color
 
 #==============================
 # Prompt
