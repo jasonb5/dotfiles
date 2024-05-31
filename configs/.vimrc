@@ -177,7 +177,7 @@ nmap <leader>cl <Plug>(coc-codelens-action)
 
 call plug#begin()
 
-Plug 'joshdick/onedark.vim'
+Plug 'dracula/vim', {'as': 'dracula'}
 
 Plug 'sheerun/vim-polyglot'
 
@@ -192,6 +192,6 @@ Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
-colorscheme onedark
+colorscheme dracula
 
 " vim: sw=2 sts=2 tw=0
