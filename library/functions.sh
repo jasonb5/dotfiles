@@ -1,28 +1,6 @@
 #! /bin/bash
 
 #==============================
-# constants
-#==============================
-
-DOTFILE_START="# >>>>>> DOTFILE_START >>>>>>"
-DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
-
-declare -a CONFIG_FILES
-
-CONFIG_FILES=(
-  .vimrc
-  .vim/coc-settings.json
-  .gitconfig
-  .tmux.conf
-  .tmux.remote.conf
-  .tmux/plugins/tpm
-)
-
-if [[ "$(dotfiles::utils::hostname)" == "ganymede" ]]; then
-  CONFIG_FILES+=(.gitconfig.gpg)
-fi
-
-#==============================
 # Exports
 #==============================
 
@@ -31,12 +9,11 @@ export EDITOR=vim
 export TERM=xterm-256color
 
 #==============================
-# Prompt
+# constants
 #==============================
 
-CLEAR="\[\033[0m\]"
-PURPLE="\[\033[35m\]"
-CYAN="\[\033[36m\]"
+DOTFILE_START="# >>>>>> DOTFILE_START >>>>>>"
+DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
 
 WHITE="\e[0m"
 GRAY="\e[37m"
@@ -50,16 +27,32 @@ RED="\e[31m"
 PINK=""
 YELLOW="\e[33m"
 
-export PROMPT_COMMAND='EXIT="$?";
+declare -a CONFIG_FILES
+
+CONFIG_FILES=(
+  .vimrc
+  .vim/coc-settings.json
+  .gitconfig
+  .tmux.conf
+  .tmux.remote.conf
+  .tmux/plugins/tpm
+)
+
+#==============================
+# Prompt
+#==============================
+
+export PROMPT_COMMAND='RET=$?; \
+  PS1="${CYAN}\w\n${GREEN}$(__user)${WHITE}@${PURPLE}\H${WHITE} $> "
+'
+
+function __user() {
   if [[ -n "${PRIVATE}" ]]; then
-    L1="${CONDA_PROMPT_MODIFIER:-}${CYAN}user@${PURPLE}$(dotfiles::utils::hostname): $(pwd)${WHITE}";
+    echo "user"
   else
-    L1="${CONDA_PROMPT_MODIFIER:-}${CYAN}$(whoami)@${PURPLE}$(dotfiles::utils::hostname): $(pwd)${WHITE}";
+    echo "\u"
   fi
-
-  L2="${CYAN}${EXIT} $> ${CLEAR}";
-
-  PS1="${L1}\n${L2}";'
+}
 
 #==============================
 # user functions
@@ -67,7 +60,7 @@ export PROMPT_COMMAND='EXIT="$?";
 
 function dotfiles::user::miniforge3() {
   url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
-  filepath="/tmp/miniforge.sh"
+  filepath="/tmp/miniforge3.sh"
   curl -Lo "${filepath}" "${url}"
   chmod +x "${filepath}"
   "${filepath}" -b -p "${HOME}/conda" -u
@@ -76,11 +69,6 @@ function dotfiles::user::miniforge3() {
 #==============================
 # install/uninstall functions
 #==============================
-
-function dotfiles::load() {
-  source "${DOTFILE_PATH}/library/alias.sh"
-  source "${DOTFILE_PATH}/library/functions.sh"
-}
 
 function dotfiles::install() {
   dotfiles::log "Installing dotfiles from ${DOTFILE_PATH}"
@@ -152,6 +140,10 @@ function dotfiles::utils::hostname() {
 function dotfiles::symlinks::add() {
   dotfiles::log "Adding dotfiles symlinks to ${HOME} from `pwd`"
 
+  if [[ "$(dotfiles::utils::hostname)" == "ganymede" ]]; then
+    CONFIG_FILES+=(.gitconfig.gpg)
+  fi
+
   for path in "${CONFIG_FILES[@]}"; do
     local user_file="${HOME}/${path}"
     local repo_file="${DOTFILE_PATH}/configs/${path}"
@@ -217,9 +209,7 @@ export DOTFILE_PATH="\${HOME}/devel/dotfiles"
 source "\${DOTFILE_PATH}/library/alias.sh"
 source "\${DOTFILE_PATH}/library/functions.sh"
 
-dotfiles::bashrc::fix_path
-
-dotfiles::bashrc::machine::load
+dotfiles::bashrc::load
 ${DOTFILE_STOP}
 EOF
 
@@ -241,6 +231,16 @@ function dotfiles::bashrc::remove() {
   fi
 }
 
+function dotfiles::bashrc::load() {
+  if [[ -z "${DOTFILE_LOADED}" ]]; then
+    export PATH="${HOME}/.bin:${PATH}"
+
+    export DOTFILE_LOADED="true"
+  fi
+
+  dotfiles::bashrc::machine::load
+}
+
 function dotfiles::bashrc::machine::load() {
   hostname="$(dotfiles::utils::hostname)"
 
@@ -259,12 +259,4 @@ function dotfiles::bashrc::machine::load() {
 
   # Load non-version controllered machine specific
   [[ -e "${HOME}/.bashrc.user" ]] && source "${HOME}/.bashrc.user"
-}
-
-function dotfiles::bashrc::fix_path() {
-  if [[ -z "${DOTFILE_LOADED}" ]]; then
-    export PATH="${HOME}/.bin:${PATH}"
-
-    export DOTFILE_LOADED="true"
-  fi
 }
