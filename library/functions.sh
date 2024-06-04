@@ -32,11 +32,23 @@ CLEAR="\[\033[0m\]"
 PURPLE="\[\033[35m\]"
 CYAN="\[\033[36m\]"
 
+WHITE="\e[0m"
+GRAY="\e[37m"
+DARK_GRAY="\e[90m"
+LIGHT_PURPLE="\e[95m"
+PURPLE="\e[35m"
+CYAN="\e[36m"
+GREEN="\e[32m"
+ORANGE=""
+RED="\e[31m"
+PINK=""
+YELLOW="\e[33m"
+
 export PROMPT_COMMAND='EXIT="$?";
   if [[ -n "${PRIVATE}" ]]; then
-    L1="${CONDA_PROMPT_MODIFIER:-}${PURPLE}user@$(dotfiles::utils::hostname): $(pwd)${CLEAR}";
+    L1="${CONDA_PROMPT_MODIFIER:-}${CYAN}user@${PURPLE}$(dotfiles::utils::hostname): $(pwd)${WHITE}";
   else
-    L1="${CONDA_PROMPT_MODIFIER:-}${PURPLE}$(whoami)@$(dotfiles::utils::hostname): $(pwd)${CLEAR}";
+    L1="${CONDA_PROMPT_MODIFIER:-}${CYAN}$(whoami)@${PURPLE}$(dotfiles::utils::hostname): $(pwd)${WHITE}";
   fi
 
   L2="${CYAN}${EXIT} $> ${CLEAR}";
