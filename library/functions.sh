@@ -6,6 +6,9 @@
 
 DOTFILE_START="# >>>>>> DOTFILE_START >>>>>>"
 DOTFILE_STOP="# <<<<<< DOTFILE_STOP <<<<<<"
+
+declare -a CONFIG_FILES
+
 CONFIG_FILES=(
   .vimrc
   .vim/coc-settings.json
@@ -14,6 +17,10 @@ CONFIG_FILES=(
   .tmux.remote.conf
   .tmux/plugins/tpm
 )
+
+if [[ "$(dotfiles::utils::hostname)" == "ganymede" ]]; then
+  CONFIG_FILES+=(.gitconfig.gpg)
+fi
 
 #==============================
 # Exports
