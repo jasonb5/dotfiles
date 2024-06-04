@@ -1,8 +1,7 @@
 [user]
 	email = boutte.jason@gmail.com
 	name = Jason Boutte
-	signingkey = 3C6C8B0AA95CCC83!
 [safe]
 	directory = *
-[commit]
-	gpgsign = true
+[include]
+	path = ~/.gitconfig.gpg
