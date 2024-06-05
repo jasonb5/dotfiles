@@ -9,6 +9,8 @@ alias ef="vim ${DOTFILE_PATH}/library/functions.sh"
 alias ev="vim ${DOTFILE_PATH}/configs/.vimrc"
 alias et="vim ${DOTFILE_PATH}/configs/.tmux.conf"
 
+# alias ssh="dotfiles::user::ssh"
+
 alias miniforge3="dotfiles::user::miniforge3"
 
 alias dotfile-reload="dotfile-unload && dotfile-load"
