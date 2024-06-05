@@ -30,12 +30,11 @@ YELLOW="\e[33m"
 declare -a CONFIG_FILES
 
 CONFIG_FILES=(
-  .vimrc
-  .vim/coc-settings.json
-  .gitconfig
-  .tmux.conf
-  .tmux.remote.conf
-  .tmux/plugins/tpm
+	.vimrc
+	.vim/coc-settings.json
+	.gitconfig
+	.tmux.conf
+	.tmux/plugins/tpm
 )
 
 #==============================
