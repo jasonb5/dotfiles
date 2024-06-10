@@ -274,9 +274,10 @@ function dotfiles::bashrc::machine::load() {
 
 	# Load version controlled machine specific
 	while IFS='' read -r -d '' filepath; do
+		dotfiles::debug "Checking ${filepath}"
 		filename="$(basename ${filepath})"
 
-		if [[ "$(echo ${hostname} | grep ${filename})" == "${hostname}" ]]; then
+		if [[ -n "$(echo ${filepath} | grep ${hostname})" ]]; then
 			dotfiles::debug "Found match ${filepath}"
 
 			source "${filepath}"
