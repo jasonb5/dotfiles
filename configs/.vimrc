@@ -52,7 +52,7 @@ let g:ale_linters = {
 let g:ale_fixers = {
 			\ '*': ['trim_whitespace'],
 			\ 'python': ['ruff',],
-			\ 'go': ['gopls', 'goimports', 'gofmt', 'gotype', 'govet'],
+			\ 'go': ['gopls', 'goimports', 'gofmt'],
 			\ }
 
 let g:ale_warn_about_trailing_whitespaces = 0
@@ -64,7 +64,7 @@ let test#strategy = 'dispatch'
 
 augroup LspSetup
 	au!
-	au User LspAttached set completopt-=noselect
+	au User LspAttached set completeopt-=noselect
 augroup END
 
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
