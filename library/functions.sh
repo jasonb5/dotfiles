@@ -99,7 +99,9 @@ function dotfiles::install() {
 
 	dotfiles::vimplug::install
 
-	dotfiles::load
+	dotfiles::bashrc::load
+
+	source "${DOTFILE_PATH}/library/alias.sh"
 }
 
 function dotfiles::uninstall() {
