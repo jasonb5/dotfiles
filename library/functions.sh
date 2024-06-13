@@ -231,14 +231,14 @@ function dotfiles::bashrc::append() {
 
 	if [[ -z "$(grep "${DOTFILE_START}" "${HOME}/.bashrc")" ]]; then
 		cat << EOF >> "${HOME}/.bashrc"
-	${DOTFILE_START}
-	export DOTFILE_PATH="\${HOME}/devel/dotfiles"
+${DOTFILE_START}
+export DOTFILE_PATH="\${HOME}/devel/dotfiles"
 
-	source "\${DOTFILE_PATH}/library/alias.sh"
-	source "\${DOTFILE_PATH}/library/functions.sh"
+source "\${DOTFILE_PATH}/library/functions.sh"
+source "\${DOTFILE_PATH}/library/alias.sh"
 
-	dotfiles::bashrc::load
-	${DOTFILE_STOP}
+dotfiles::bashrc::load
+${DOTFILE_STOP}
 EOF
 
 		dotfiles::log "Appended dotfiles basrc entry"
