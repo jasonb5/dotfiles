@@ -1,4 +1,5 @@
 " https://medium.com/@devsjc/from-jetbrains-to-vim-a-modern-vim-configuration-and-plugin-set-d58472a7d53d
+" https://codeinthehole.com/tips/writing-markdown-in-vim/
 unlet! skip_default_vims
 source $VIMRUNTIME/defaults.vim
 
@@ -60,6 +61,20 @@ let g:ale_lsp_show_message_severity = 'information'
 let g:ale_echo_msg_format = '[%linter%] [%severity%:%code%] %s'
 let g:ale_linter_aliases = {"Containerfile": "dockerfile"}
 
+let g:polyglot_disabled = ['markdown']
+
+let g:vim_markdown_folding_disabled = 0
+let g:vim_markdown_folding_style_pythonic = 1
+let g:vim_markdown_no_default_key_mapping = 1
+let g:vim_markdown_toc_autofit = 1
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_auto_insert_bullets = 0
+let g:vim_markdown_fenced_languages = ['php', 'py=python', 'js=javascript', 'bash=sh', 'viml=vim']
+let g:vim_markdown_toml_frontmatter = 1
+let g:vim_markdown_json_frontmatter = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_strikethrough = 1
+
 let test#strategy = 'dispatch'
 
 augroup LspSetup
@@ -113,6 +128,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'janko-m/vim-test'
 Plug 'tpope/vim-dispatch'
 Plug 'sheerun/vim-polyglot'
+Plug 'godlygeek/tabular'
+Plug 'preservim/vim-markdown'
 
 call plug#end()
 
