@@ -32,8 +32,12 @@ CONFIG_FILES=(
 	.vimrc
 	.vim/coc-settings.json
 	.gitconfig
+	.gitconfig.personal
+	.gitconfig.work
 	.tmux.conf
 	.tmux/plugins/tpm
+	.gnupg/gpg.conf
+	.ssh/config
 )
 
 #==============================

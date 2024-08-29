@@ -13,7 +13,20 @@ alias eu="vim ~/.bashrc.user"
 
 alias miniforge3="dotfiles::user::miniforge3"
 
-alias dotfile-reload="dotfile-unload && dotfile-load"
-alias dotfile-load="dotfiles::bashrc::append && source ${HOME}/.bashrc"
-alias dotfile-unload="dotfiles::bashrc::remove && source ${HOME}/.bashrc"
-alias dotfile-uninstall="dotfiles::uninstall"
+alias dotfile-install="dotfiles::bashrc::append && source ${HOME}/.bashrc"
+alias dotfile-uninstall="dotfiles::bashrc::remove && dotfiles::uninstall && source ${HOME}/.bashrc"
+
+# https://musigma.blog/2021/05/09/gpg-ssh-ed25519.html
+# https://benjamintoll.com/2023/09/06/on-creating-a-signing-subkey/
+# https://markentier.tech/posts/2021/02/github-with-multiple-profiles-gpg-ssh-keys/
+alias gpg-newkey="gpg --full-generate-key --expert"
+alias gpg-fingerprints="gpg --fingerprint --with-colons | grep fpr"
+alias gpg-newsign="gpg --quick-add-key $KEYFP ed25519 sign 1y"
+alias gpg-newencr="gpg --quick-add-key $KEYFP cv25519 encr 1y"
+alias gpg-newauth="gpg --quick-add-key $KEYFP ed25519 auth 1y"
+alias gpg-ls="gpg -K"
+alias gpg-ls-keygrip="gpg --with-keygrip --list-key"
+alias gpg-ls-secret="gpg --list-secret-keys --keyid-format SHORT"
+alias gpg-ls-secret-long="gpg --list-secret-keys --keyid-format LONG"
+
+alias ssh-new="ssh-keygen -t ed25519 -C $1"

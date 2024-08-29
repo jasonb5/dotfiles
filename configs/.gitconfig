@@ -1,7 +1,21 @@
+[init]
+	defaultBranch = main
+
+[commit]
+	gpgsign = true
+
 [user]
-	email = boutte.jason@gmail.com
 	name = Jason Boutte
+	useConfigOnly = true
+
 [safe]
 	directory = *
+
 [include]
-	path = ~/.gitconfig.gpg
+	path = ~/.gitconfig.personal
+
+[includeIf "gitdir:~/devel/personal/"]
+	path = ~/.gitconfig.personal
+
+[includeIf "gitdir:~/devel/work/"]
+	path = ~/.gitconfig.work

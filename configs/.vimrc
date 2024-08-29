@@ -25,14 +25,14 @@ let lspOptions = #{
 			\ useQuickfixForLocations: v:true,
 			\ }
 
-autocmd VimEnter * call LspOptionsSet(lspOptions)
+autocmd User LspSetup call LspOptionsSet(lspOptions)
 
 let lspServers = [
 			\ #{ name: 'gopls', filetype: ['go', 'gomod'], path: 'gopls', args: ['serve'] },
 			\ #{ name: 'pylsp', filetype: ['py', 'python'], path: 'pylsp', args: [] },
 			\]
 
-autocmd VimEnter * call LspAddServer(lspServers)
+autocmd User LspSetup call LspAddServer(lspServers)
 
 let g:ale_disable_lsp = 1
 let g:ale_set_signs = 1

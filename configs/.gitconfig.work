@@ -1,0 +1,6 @@
+[user]
+	email = boutte3@llnl.gov
+	signingKey = 
+
+[url "git@github.com-work"]
+	insteadOf = git@github.com
