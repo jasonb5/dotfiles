@@ -172,10 +172,6 @@ function dotfiles::utils::hostname() {
 function dotfiles::symlinks::add() {
 	dotfiles::log "Adding dotfiles symlinks to ${HOME} from `pwd`"
 
-	if [[ "$(dotfiles::utils::hostname)" == "ganymede" ]]; then
-		CONFIG_FILES+=(.gitconfig.gpg)
-	fi
-
 	for path in "${CONFIG_FILES[@]}"; do
 		local user_file="${HOME}/${path}"
 		local repo_file="${DOTFILE_PATH}/configs/${path}"
