@@ -30,3 +30,4 @@ alias gpg-ls-secret="gpg --list-secret-keys --keyid-format SHORT"
 alias gpg-ls-secret-long="gpg --list-secret-keys --keyid-format LONG"
 
 alias ssh-new="ssh-keygen -t ed25519 -C $1"
+alias ssh-pass="ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
