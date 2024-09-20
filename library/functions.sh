@@ -92,6 +92,87 @@ function dotfiles::user::miniforge3() {
 	"${filepath}" -b -p "${HOME}/conda" -u
 }
 
+function dotfiles::user::env::exists() {
+  if [[ -n "${!1}" ]]; then
+		>&2 echo "Using ${1} = ${!1}"
+		return "1"
+	fi
+
+	>&2 echo "Please export ${1}"
+	return "0"
+}
+
+function dotfiles::user::gpg::quick() {
+	dotfiles::user::env::exists GNUPGHOME && return
+
+	mkdir -p "${GNUPGHOME}"
+
+	find "${GNUPGHOME}" -type f -exec chmod 0600 {} \;
+	find "${GNUPGHOME}" -type d -exec chmod 0700 {} \;
+
+	gpg2 --quick-generate-key "${1}" ed25519 cert 5y
+}
+
+function dotfiles::user::gpg::list() {
+	dotfiles::user::env::exists GNUPGHOME && return
+
+	gpg2 --list-keys --keyid-format short
+}
+
+function dotfiles::user::gpg::quick-add() {
+	dotfiles::user::gpg::list
+
+	read -p 'Enter fingerprint: ' fpr
+
+	gpg2 --quick-add-key "${fpr}" "${@}"
+}
+
+function dotfiles::user::gpg::gen-revoke() {
+	dotfiles::user::env::exists GNUPGHOME && return
+
+	gpg2 --generate-revocation "${1}" > "${GNUPGHOME}/${1}-revocation-certificate"
+}
+
+function dotfiles::user::gpg::clean() {
+	read -p 'Have you backed up your keys (y/n): ' confirm1
+
+	[[ "${confirm1}" != "y" ]] && return
+
+	read -p 'Are you sure you want to remove your primary key (y/n): ' confirm2
+
+	[[ "${confirm2}" != "y" ]] && return
+
+	dotfiles::user::gpg::list
+
+	read -p 'Enter the primary key id: ' keyid
+
+	gpg --with-keygrip --list-key "${keyid}"
+
+	read -p 'Enter the primary keygrip: ' keygrip
+
+	rm -rf "${GNUPGHOME}/private-keys-v1.d/${keygrip}.key"
+
+	rm -rf "${GNUPGHOME}/secring.gpg"
+}
+
+function dotfiles::user::gpg::export() {
+	dotfiles::user::gpg::list
+
+	read -p 'Enter keys to export (add exclamation at the end of each key): ' keys
+
+	gpg2 --export-secret-subkeys --armor ${keys} | gpg2 --armor --symmetric --output "${1}"
+}
+
+function dotfiles::user::gpg::import() {
+	dotfiles::user::gpg::list
+
+	gpg2 --decrypt "${1}" | gpg2 --import
+}
+
+function dotfiles::user::ssh::new() {
+	ssh-keygen -t ed25519 -C "${1}"
+}
+
 #==============================
 # install/uninstall functions
 #==============================
