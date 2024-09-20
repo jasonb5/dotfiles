@@ -105,6 +105,8 @@ function dotfiles::user::env::exists() {
 function dotfiles::user::gpg::quick() {
 	dotfiles::user::env::exists GNUPGHOME && return
 
+	[[ "${#}" -eq "0" ]] && echo "${FUNCNAME} name <email> (comment)" && return
+
 	mkdir -p "${GNUPGHOME}"
 
 	find "${GNUPGHOME}" -type f -exec chmod 0600 {} \;
@@ -119,6 +121,12 @@ function dotfiles::user::gpg::list() {
 	gpg2 --list-keys --keyid-format short
 }
 
+function dotfiles::user::gpg::list-long() {
+	dotfiles::user::env::exists GNUPGHOME && return
+
+	gpg2 --list-keys --keyid-format long
+}
+
 function dotfiles::user::gpg::quick-add() {
 	dotfiles::user::gpg::list
 
@@ -129,6 +137,8 @@ function dotfiles::user::gpg::quick-add() {
 
 function dotfiles::user::gpg::gen-revoke() {
 	dotfiles::user::env::exists GNUPGHOME && return
+
+	[[ "${#}" -eq "0" ]] && echo "${FUNCNAME} keyid"
 
 	gpg2 --generate-revocation "${1}" > "${GNUPGHOME}/${1}-revocation-certificate"
 }

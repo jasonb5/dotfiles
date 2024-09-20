@@ -22,6 +22,7 @@ alias df-uninstall="dotfiles::bashrc::remove && dotfiles::uninstall && source ${
 # https://insight.o-o.studio/article/setting-up-gpg.html
 alias gpg-quick="dotfiles::user::gpg::quick"
 alias gpg-list="dotfiles::user::gpg::list"
+alias gpg-list-long="dotfiles::user::gpg::list-long"
 alias gpg-quick-add="dotfiles::user::gpg::quick-add"
 alias gpg-gen-revoke="dotfiles::user::gpg::gen-revoke"
 alias gpg-clean="dotfiles::user::gpg::clean"

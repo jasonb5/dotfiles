@@ -1,3 +1,4 @@
+source "${DOTFILE_PATH}/machine/common.sh"
 source "${DOTFILE_PATH}/library/docker.sh"
 
 alias jupyter="dotfiles::docker::run jupyter -d -p 8888:8888 --gpus=all --runtime=nvidia -v ~/:/home/jovyan/host quay.io/jupyter/minimal-notebook:lab-4.2.1"
