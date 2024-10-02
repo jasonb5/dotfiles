@@ -60,123 +60,12 @@ export PROMPT_COMMAND='RET=$?; \
 # user functions
 #==============================
 
-function dotfiles::user::ssh() {
-	local do_tmux=''
-	if [ -n "$TMUX" ] && [ "$(tmux list-panes -F 'P')" = 'P' ]; then
-		do_tmux='yeah boy'
-	fi
-	if [ -n "$do_tmux" ]; then
-		local prefix="$(tmux display -p '#{prefix}')"
-		local status_mode="$(tmux display -p '#{status}')"
-		tmux set status off
-		tmux set key-table nested
-		tmux set prefix None
-	fi
-	command ssh "$@"
-	local ret=$?
-	echo
-	echo -e "Back on $(dotfiles::utils::hostname) as $(whoami)"
-	if [ -n "$do_tmux" ]; then
-		tmux set status
-		tmux set key-table root
-		tmux set prefix "$prefix"
-	fi
-	echo "$ret"
-}
-
 function dotfiles::user::miniforge3() {
 	local url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
 	local filepath="/tmp/miniforge3.sh"
 	curl -Lo "${filepath}" "${url}"
 	chmod +x "${filepath}"
 	"${filepath}" -b -p "${HOME}/conda" -u
-}
-
-function dotfiles::user::env::exists() {
-  if [[ -n "${!1}" ]]; then
-		>&2 echo "Using ${1} = ${!1}"
-		return "1"
-	fi
-
-	>&2 echo "Please export ${1}"
-	return "0"
-}
-
-function dotfiles::user::gpg::quick() {
-	dotfiles::user::env::exists GNUPGHOME && return
-
-	[[ "${#}" -eq "0" ]] && echo "${FUNCNAME} name <email> (comment)" && return
-
-	mkdir -p "${GNUPGHOME}"
-
-	find "${GNUPGHOME}" -type f -exec chmod 0600 {} \;
-	find "${GNUPGHOME}" -type d -exec chmod 0700 {} \;
-
-	gpg2 --quick-generate-key "${1}" ed25519 cert 5y
-}
-
-function dotfiles::user::gpg::list() {
-	dotfiles::user::env::exists GNUPGHOME && return
-
-	gpg2 --list-keys --keyid-format short
-}
-
-function dotfiles::user::gpg::list-long() {
-	dotfiles::user::env::exists GNUPGHOME && return
-
-	gpg2 --list-keys --keyid-format long
-}
-
-function dotfiles::user::gpg::quick-add() {
-	dotfiles::user::gpg::list
-
-	read -p 'Enter fingerprint: ' fpr
-
-	gpg2 --quick-add-key "${fpr}" "${@}"
-}
-
-function dotfiles::user::gpg::gen-revoke() {
-	dotfiles::user::env::exists GNUPGHOME && return
-
-	[[ "${#}" -eq "0" ]] && echo "${FUNCNAME} keyid"
-
-	gpg2 --generate-revocation "${1}" > "${GNUPGHOME}/${1}-revocation-certificate"
-}
-
-function dotfiles::user::gpg::clean() {
-	read -p 'Have you backed up your keys (y/n): ' confirm1
-
-	[[ "${confirm1}" != "y" ]] && return
-
-	read -p 'Are you sure you want to remove your primary key (y/n): ' confirm2
-
-	[[ "${confirm2}" != "y" ]] && return
-
-	dotfiles::user::gpg::list
-
-	read -p 'Enter the primary key id: ' keyid
-
-	gpg --with-keygrip --list-key "${keyid}"
-
-	read -p 'Enter the primary keygrip: ' keygrip
-
-	rm -rf "${GNUPGHOME}/private-keys-v1.d/${keygrip}.key"
-
-	rm -rf "${GNUPGHOME}/secring.gpg"
-}
-
-function dotfiles::user::gpg::export() {
-	dotfiles::user::gpg::list
-
-	read -p 'Enter keys to export (add exclamation at the end of each key): ' keys
-
-	gpg2 --export-secret-subkeys --armor ${keys} | gpg2 --armor --symmetric --output "${1}"
-}
-
-function dotfiles::user::gpg::import() {
-	dotfiles::user::gpg::list
-
-	gpg2 --decrypt "${1}" | gpg2 --import
 }
 
 function dotfiles::user::ssh::new() {
@@ -247,6 +136,26 @@ function dotfiles::vimplug::uninstall() {
 #==============================
 # utility functions
 #==============================
+
+function dotfiles::utils::is-linux() {
+	[[ "$(uname)" == "Linux" ]] && return 0
+
+	return 1
+}
+
+function dotfiles::utils::is-darwin() {
+	[[ "$(uname)" == "Darwin" ]] && return 0
+
+	return 1
+}
+
+function dotfiles::utils::is-installed() {
+	if command -v "${1}" >/dev/null 2>&1; then
+		return 0
+	fi
+
+	return 1
+}
 
 function dotfiles::utils::hostname() {
 	if [[ -z "${HOSTNAME}" ]]; then

@@ -1,13 +1,14 @@
 source "${DOTFILE_PATH}/machine/common.sh"
 source "${DOTFILE_PATH}/library/container.sh"
 
+
 function _jupyter() {
 	dotfiles::container::run "-p 8888:8888 -v ~/:/home/jovyan/host quay.io/jupyter/datascience-notebook"
 }
 alias jupyter="_jupyter"
 
 function _localai() {
-	dotfiles::container::run-daemon "localai" "-p 8080:8080 ~/models:/build/models --gpus=all localai/localai:latest-aio-gpu-nvidia-cuda-12"
+	dotfiles::container::run-daemon "localai" "-p 8080:8080 ~/models:/build/models --gpus=all localai/localai:latest-aio-cpu"
 }
 alias localai="_localai"
 

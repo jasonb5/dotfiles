@@ -9,8 +9,6 @@ alias et="vim ${DOTFILE_PATH}/configs/.tmux.conf"
 alias em="vim ${DOTFILE_PATH}/machine/$(dotfiles::utils::hostname).sh"
 alias eu="vim ~/.bashrc.user"
 
-# alias ssh="dotfiles::user::ssh"
-
 alias miniforge3="dotfiles::user::miniforge3"
 
 alias df-install="dotfiles::bashrc::append && source ${HOME}/.bashrc"
@@ -20,14 +18,7 @@ alias df-uninstall="dotfiles::bashrc::remove && dotfiles::uninstall && source ${
 # https://benjamintoll.com/2023/09/06/on-creating-a-signing-subkey/
 # https://markentier.tech/posts/2021/02/github-with-multiple-profiles-gpg-ssh-keys/
 # https://insight.o-o.studio/article/setting-up-gpg.html
-alias gpg-quick="dotfiles::user::gpg::quick"
-alias gpg-list="dotfiles::user::gpg::list"
-alias gpg-list-long="dotfiles::user::gpg::list-long"
-alias gpg-quick-add="dotfiles::user::gpg::quick-add"
-alias gpg-gen-revoke="dotfiles::user::gpg::gen-revoke"
-alias gpg-clean="dotfiles::user::gpg::clean"
-alias gpg-export="dotfiles::user::gpg::export"
-alias gpg-import="dotfiles::user::gpg::import"
 
+alias scp-pass="scp -o PreferredAuthentications=password -o PubkeyAuthentication=no"
 alias ssh-pass="ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
 alias ssh-new="dotfiles::user::ssh::new"
