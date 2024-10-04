@@ -30,7 +30,6 @@ declare -a CONFIG_FILES
 
 CONFIG_FILES=(
 	.vimrc
-	.vim/coc-settings.json
 	.gitconfig
 	.gitconfig.personal
 	.gitconfig.work
