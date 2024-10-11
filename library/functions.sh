@@ -71,6 +71,42 @@ function dotfiles::user::ssh::new() {
 	ssh-keygen -t ed25519 -C "${1}"
 }
 
+function dotfiles::user::windows11-usb() {
+    [[ "${#}" -ne "2" ]] && echo "Usage: device image" && return
+
+    local device="${1}"
+    local image="${2}"
+    
+    sudo wipefs -a "${device}"
+    
+    sudo parted "${device}" --script "mklabel gpt mkpart BOOT fat32 0% 1GiB mkpart INSTALL ntfs 1GiB 10GiB"
+
+    sudo mkfs.vfat -n BOOT "${device}1"
+    sudo mkfs.ntfs --quick -L INSTALL "${device}2"
+
+    local temp="$(mktemp -d)"
+    local iso="${temp}/iso"
+    local vfat="${temp}/vfat"
+    local ntfs="${temp}/ntfs"
+
+    sudo mkdir "${iso}" "${vfat}" "${ntfs}"
+
+    sudo mount "${image}" "${iso}"
+    sudo mount "${device}1" "${vfat}"
+    sudo mount "${device}2" "${ntfs}"
+
+    sudo rsync -r --progress --exclude sources --delete-before "${iso}/" "${vfat}"
+    sudo cp "${iso}/sources/boot.wim" "${vfat}/sources/"
+
+    sudo rsync -r --progress --delete-before "${iso}/" "${ntfs}/"
+
+    sudo umount "${iso}" "${vfat}" "${ntfs}"
+
+    sudo sync
+
+    sudo rm -rf "${temp}"
+}
+
 #==============================
 # install/uninstall functions
 #==============================
