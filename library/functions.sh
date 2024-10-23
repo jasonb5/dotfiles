@@ -60,11 +60,34 @@ export PROMPT_COMMAND='RET=$?; \
 #==============================
 
 function dotfiles::user::miniforge3() {
-	local url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
+    local url
+    if dotfiles::utils::is-linux; then
+        url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
+    else
+        url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh"
+    fi
 	local filepath="/tmp/miniforge3.sh"
-	curl -Lo "${filepath}" "${url}"
+    [[ ! -e "${filepath}" ]] &&  curl -Lo "${filepath}" "${url}"
 	chmod +x "${filepath}"
 	"${filepath}" -b -p "${HOME}/conda" -u
+    echo "${HOME}/conda"
+}
+
+function dotfiles::user::dev() {
+    local conda="$(dotfiles::user::miniforge3)"
+
+    source "${conda}/etc/profile.d/conda.sh"
+
+    conda activate
+
+    conda init bash
+
+    mamba create -n dev -y vim \
+        pynvim \
+        black prospector python-language-server \
+        rstcheck
+
+    conda activate dev
 }
 
 function dotfiles::user::ssh::new() {

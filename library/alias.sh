@@ -10,6 +10,7 @@ alias em="vim ${DOTFILE_PATH}/machine/$(dotfiles::utils::hostname).sh"
 alias eu="vim ~/.bashrc.user"
 
 alias miniforge3="dotfiles::user::miniforge3"
+alias dev="dotfiles::user::dev"
 alias windows11-usb="dotfiles::user::windows11-usb"
 
 alias df-install="dotfiles::bashrc::append && source ${HOME}/.bashrc"
