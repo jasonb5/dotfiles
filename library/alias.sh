@@ -15,6 +15,4 @@ alias windows11-usb="dotfiles::user::windows11-usb"
 alias df-install="dotfiles::bashrc::append && source ${HOME}/.bashrc"
 alias df-uninstall="dotfiles::bashrc::remove && dotfiles::uninstall && source ${HOME}/.bashrc"
 
-alias scp-pass="scp -o PreferredAuthentications=password -o PubkeyAuthentication=no"
-alias ssh-pass="ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
 alias ssh-new="dotfiles::user::ssh::new"
