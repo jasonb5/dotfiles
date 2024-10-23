@@ -90,6 +90,11 @@ let g:lightline = {
             \ },
             \ }
 
+autocmd BufReadPost *
+            \ if line("'\"") > 1 && line("'\"") <= line("$") |
+            \   exe "normal! g'\"" |
+            \ endif
+
 nnoremap <leader>f :ALEFix<CR>
 nnoremap <leader>s :ALEFixSuggest<CR>
 nnoremap <leader>d :ALEGoToDefinition<CR>
