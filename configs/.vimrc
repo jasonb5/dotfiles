@@ -21,6 +21,8 @@ Plug 'roxma/vim-hug-neovim-rpc'
 
 Plug 'dracula/vim', { 'as': 'dracula' }
 
+Plug 'habamax/vim-rst'
+
 call plug#end()
 
 let mapleader = " "
@@ -46,12 +48,15 @@ colorscheme dracula
 
 syntax on
 
+filetype plugin indent on
+
 let g:ale_completion_enabled = 1
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_completion_delay = 500
 let g:ale_hover_to_floating_preview = 1
 let g:ale_linters = {
             \ 'python': ['pylsp', 'prospector', ],
+            \ 'rst': ['rstcheck', ],
             \ }
 let g:ale_fixers = {
             \ 'python': ['black'],
@@ -94,6 +99,9 @@ autocmd BufReadPost *
             \ if line("'\"") > 1 && line("'\"") <= line("$") |
             \   exe "normal! g'\"" |
             \ endif
+
+autocmd  FileType rst setlocal smartindent
+autocmd  FileType rst setlocal indentexpr=
 
 nnoremap <leader>f :ALEFix<CR>
 nnoremap <leader>s :ALEFixSuggest<CR>
