@@ -30,6 +30,7 @@ declare -a CONFIG_FILES
 
 CONFIG_FILES=(
 	.condarc
+	.yarnrc.yml
 	.vimrc
 	.gitconfig
 	.gitconfig.personal
