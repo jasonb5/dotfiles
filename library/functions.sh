@@ -36,6 +36,7 @@ CONFIG_FILES=(
 	.gitconfig
 	.gitconfig.personal
 	.gitconfig.work
+	.gitconfig.nosign
 	.tmux.conf
 	.tmux/plugins/tpm
 	.gnupg/gpg.conf
