@@ -29,6 +29,7 @@ YELLOW="\e[33m"
 declare -a CONFIG_FILES
 
 CONFIG_FILES=(
+	.condarc
 	.vimrc
 	.gitconfig
 	.gitconfig.personal

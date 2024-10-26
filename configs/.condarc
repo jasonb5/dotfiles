@@ -1,0 +1,13 @@
+auto_update_conda: True
+add_pip_as_python_dependency: True
+create_default_packages:
+    - vim
+    - pip
+    - ipython
+    - ruff
+    - nodejs
+    - yarn
+update_dependencies: True
+pkgs_dir:
+    - ~/Documents/conda/pkgs
+default_threads: 4
