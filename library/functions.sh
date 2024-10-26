@@ -32,6 +32,7 @@ CONFIG_FILES=(
 	.condarc
 	.yarnrc.yml
 	.vimrc
+	.vim/coc-settings.json
 	.gitconfig
 	.gitconfig.personal
 	.gitconfig.work

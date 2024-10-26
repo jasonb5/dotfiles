@@ -1,0 +1,10 @@
+{
+    "suggest.timeout": 5000,
+    "suggest.enablePreselect": true,
+    "diagnostic.displayByAle": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.formatting.provider": "none",
+    "python.linting.enabled": false,
+}
