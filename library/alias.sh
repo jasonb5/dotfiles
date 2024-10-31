@@ -1,5 +1,6 @@
 unalias -a
 
+alias di="source ${DOTFILE_PATH}/install.sh"
 alias sb="source ~/.bashrc"
 alias eg="vim ${DOTFILE_PATH}/configs/.gitconfig"
 alias ea="vim ${DOTFILE_PATH}/library/alias.sh"
@@ -17,3 +18,5 @@ alias df-install="dotfiles::bashrc::append && source ${HOME}/.bashrc"
 alias df-uninstall="dotfiles::bashrc::remove && dotfiles::uninstall && source ${HOME}/.bashrc"
 
 alias ssh-new="dotfiles::user::ssh::new"
+
+alias kubectl="minikube kubectl --"

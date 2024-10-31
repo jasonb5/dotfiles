@@ -1,12 +1,14 @@
 auto_update_conda: True
 add_pip_as_python_dependency: True
 create_default_packages:
+    - tbump
     - vim
     - pip
     - ipython
     - ruff
     - nodejs
     - yarn
+    - pynvim
 update_dependencies: True
 pkgs_dir:
     - ~/Documents/conda/pkgs

@@ -65,15 +65,24 @@ export PROMPT_COMMAND='RET=$?; \
 
 function dotfiles::user::miniforge3() {
     local url
+
     if dotfiles::utils::is-linux; then
         url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
     else
         url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh"
     fi
+
+    local condapath="${HOME}/conda"
 	local filepath="/tmp/miniforge3.sh"
-    [[ ! -e "${filepath}" ]] &&  curl -Lo "${filepath}" "${url}"
-	chmod +x "${filepath}"
-	"${filepath}" -b -p "${HOME}/conda" -u
+
+    if [[ ! -e "${condapath}" ]]; then
+        [[ ! -e "${filepath}" ]] &&  curl -Lo "${filepath}" "${url}"
+
+        chmod +x "${filepath}"
+
+        "${filepath}" -b -p "${HOME}/conda" -u
+    fi
+
     echo "${HOME}/conda"
 }
 
@@ -86,12 +95,11 @@ function dotfiles::user::dev() {
 
     conda init bash
 
-    mamba create -n dev -y vim \
-        pynvim \
-        black prospector python-language-server \
-        rstcheck
+    mamba create -n dev -y python=3.10
 
     conda activate dev
+
+    sudo apt-get install -y --no-install-recommends watchman
 }
 
 function dotfiles::user::ssh::new() {
@@ -103,9 +111,9 @@ function dotfiles::user::windows11-usb() {
 
     local device="${1}"
     local image="${2}"
-    
+
     sudo wipefs -a "${device}"
-    
+
     sudo parted "${device}" --script "mklabel gpt mkpart BOOT fat32 0% 1GiB mkpart INSTALL ntfs 1GiB 10GiB"
 
     sudo mkfs.vfat -n BOOT "${device}1"
@@ -186,7 +194,7 @@ function dotfiles::vimplug::install() {
 	dotfiles::log "Installing vimplug to ~/.vim/autoload/plug.vim"
 
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-		https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim    
+		https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 }
 
 function dotfiles::vimplug::uninstall() {
