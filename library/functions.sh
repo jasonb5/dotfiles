@@ -72,18 +72,18 @@ function dotfiles::user::miniforge3() {
         url="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh"
     fi
 
-    local condapath="${HOME}/conda"
-	local filepath="/tmp/miniforge3.sh"
+    local condapath="${INSTALLPATH:-${HOME}/conda}"
+    local filepath="${TMPDIR:-/tmp}/miniforge3.sh"
 
-    if [[ ! -e "${condapath}" ]]; then
+    if [[ ! -e "${condapath}" ]] || [[ "${UPGRADE:-false}" == "true" ]]; then
         [[ ! -e "${filepath}" ]] &&  curl -Lo "${filepath}" "${url}"
 
         chmod +x "${filepath}"
 
-        "${filepath}" -b -p "${HOME}/conda" -u
+        "${filepath}" -b -p "${condapath}" -u
     fi
 
-    echo "${HOME}/conda"
+    echo "${condapath}"
 }
 
 function dotfiles::user::dev() {
