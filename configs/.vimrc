@@ -150,3 +150,8 @@ nnoremap <leader>tv :TestVisit<CR>
 " Resumes last place in file
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
+" Set indentation for Vue files
+autocmd FileType vue setlocal shiftwidth=2 softtabstop=2 expandtab
+
+" Set indentation for Javascript files
+autocmd FileType js,javascript setlocal shiftwidth=2 softtabstop=2 expandtab
