@@ -99,7 +99,9 @@ function dotfiles::user::dev() {
 
     conda activate dev
 
-    sudo apt-get install -y --no-install-recommends watchman
+    if dotfiles::utils::is-installed "apt-get"; then
+        sudo apt-get install -y --no-install-recommends watchman
+    fi
 }
 
 function dotfiles::user::ssh::new() {
