@@ -153,8 +153,6 @@ function dotfiles::install() {
 
 	dotfiles::symlinks::add
 
-	dotfiles::vimplug::install
-
 	dotfiles::bashrc::load
 
 	source "${DOTFILE_PATH}/library/alias.sh"
@@ -162,8 +160,6 @@ function dotfiles::install() {
 
 function dotfiles::uninstall() {
 	dotfiles::log "Uninstalling dotfiles"
-
-	dotfiles::vimplug::uninstall
 
 	dotfiles::symlinks::remove
 
@@ -186,23 +182,6 @@ function dotfiles::debug() {
 
 function dotfiles::error() {
 	echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
-}
-
-#==============================
-# vim-plug functions
-#==============================
-
-function dotfiles::vimplug::install() {
-	dotfiles::log "Installing vimplug to ~/.vim/autoload/plug.vim"
-
-	curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-		https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-}
-
-function dotfiles::vimplug::uninstall() {
-	dotfiles::log "Uninstalling vimplug from ~/.vim/autoload/plug.vim"
-
-	rm -rf ~/.vim/autoload/plug.vim
 }
 
 #==============================
