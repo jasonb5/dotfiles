@@ -2,7 +2,7 @@
 
 [[ -n "${DEBUG}" ]] && set -x
 
-export DOTFILE_PATH="${HOME}/devel/dotfiles"
+export DOTFILE_PATH="${HOME}/devel/personal/dotfiles"
 
 if [[ ! -e "${DOTFILE_PATH}" ]]; then
 	git clone https://github.com/jasonb5/dotfiles ${DOTFILE_PATH}

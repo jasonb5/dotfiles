@@ -11,7 +11,7 @@
 [safe]
 	directory = *
 
-[include]
+[includeIf "gitdir:~/devel/personal/"]
 	path = ~/.gitconfig.personal
 
 [includeIf "gitdir:~/devel/nosign/"]
