@@ -39,6 +39,9 @@ set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 
+set number
+set relativenumber
+
 set backspace=indent,eol,start
 
 let mapleader = " "
