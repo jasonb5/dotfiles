@@ -17,8 +17,5 @@
 [includeIf "gitdir:~/devel/nosign/"]
 	path = ~/.gitconfig.nosign
 
-[includeIf "gitdir:~/devel/personal/"]
-	path = ~/.gitconfig.personal
-
 [includeIf "gitdir:~/devel/work/"]
 	path = ~/.gitconfig.work
