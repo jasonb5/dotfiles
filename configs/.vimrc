@@ -20,8 +20,8 @@ Plug 'honza/vim-snippets'
 
 Plug 'sheerun/vim-polyglot'
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() }, 'on': 'FZF' }
+Plug 'junegunn/fzf.vim', { 'on': 'FZF' }
 
 Plug 'airblade/vim-rooter'
 
@@ -44,9 +44,16 @@ set softtabstop=4
 set tabstop=4
 
 set number
-set relativenumber
 
 set backspace=indent,eol,start
+
+set noswapfile
+set nobackup
+set nowritebackup
+
+set lazyredraw
+
+set updatetime=300
 
 let mapleader = " "
 
@@ -75,7 +82,7 @@ let g:ale_fixers = {
     \ 'javascript': ['prettier'],
     \ }
 
-let g:ale_lint_on_text_changed = 'always'
+let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_save = 1
 
 let g:coc_global_extensions = [
@@ -111,6 +118,9 @@ endfunction
 
 let g:coc_snippet_next = '<tab>'
 let g:coc_snippet_prev = '<s-tab>'
+
+nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <leader>ev :e $MYVIMRC<CR>
 
 nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
@@ -163,3 +173,5 @@ autocmd FileType vue setlocal shiftwidth=2 softtabstop=2 expandtab
 
 " Set indentation for Javascript files
 autocmd FileType js,javascript setlocal shiftwidth=2 softtabstop=2 expandtab
+
+autocmd BufReadPre * if getfsize(expand("%")) > 1000000 | setlocal syntax=off | endif

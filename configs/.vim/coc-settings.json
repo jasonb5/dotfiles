@@ -1,2 +1,5 @@
 {
+    "suggest.maxCompleteItemCount": 20,
+    "diagnostic.displayByAle": true,
+    "diagnostic.enable": false,
 }
