@@ -87,20 +87,25 @@ function dotfiles::user::miniforge3() {
 }
 
 function dotfiles::user::dev() {
-    local conda="$(dotfiles::user::miniforge3)"
+    if [[ -n "${CONDA_DEFAULT_ENV}" ]] || [[ "${UPGRADE:-false}" == "true" ]]; then
+        local conda="$(dotfiles::user::miniforge3)"
 
-    source "${conda}/etc/profile.d/conda.sh"
+        source "${conda}/etc/profile.d/conda.sh"
 
-    conda activate
+        conda activate
 
-    conda init bash
+        conda init bash
 
-    mamba create -n dev -y python=3.10
+        if [[ "${CONDA_DEFAULT_ENV}" != "dev" ]]; then
+            # packages are handled by .condarc
+            mamba create -n dev -y python=3.10
 
-    conda activate dev
+            conda activate dev
+        fi
 
-    if dotfiles::utils::is-installed "apt-get"; then
-        sudo apt-get install -y --no-install-recommends watchman
+        if dotfiles::utils::is-installed "apt-get"; then
+            sudo apt-get install -y --no-install-recommends watchman xclip
+        fi
     fi
 }
 
@@ -318,6 +323,10 @@ function dotfiles::bashrc::load() {
 	fi
 
 	dotfiles::bashrc::machine::load
+
+    if [[ -n "${CONDA_DEFAULT_ENV}" ]] && [[ "${CONDA_DEFAULT_ENV}" != "dev" ]]; then
+        conda activate dev
+    fi
 }
 
 function dotfiles::bashrc::machine::load() {
