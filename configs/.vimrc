@@ -31,6 +31,8 @@ Plug 'vim-test/vim-test'
 
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 
+Plug 'christoomey/vim-tmux-navigator'
+
 call plug#end()
 
 silent! colorscheme dracula
