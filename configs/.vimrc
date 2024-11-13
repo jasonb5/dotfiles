@@ -29,6 +29,8 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'vim-test/vim-test'
 
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
+
 call plug#end()
 
 silent! colorscheme dracula
@@ -88,6 +90,8 @@ let g:coc_global_extensions = [
     \ 'coc-tsserver',
     \ ]
 
+let g:pydocstring_formatter = 'google'
+
 nnoremap <leader>sv :source $MYVIMRC<CR>
 nnoremap <leader>ev :e $MYVIMRC<CR>
 
@@ -146,6 +150,8 @@ nnoremap <leader>tf :TestFile<CR>
 nnoremap <leader>ts :TestSuite<CR>
 nnoremap <leader>tl :TestLast<CR>
 nnoremap <leader>tv :TestVisit<CR>
+
+nnoremap <leader>gd :Pydocstring<CR>
 
 " Resumes last place in file
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
