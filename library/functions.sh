@@ -105,7 +105,7 @@ function dotfiles::user::dev() {
 }
 
 function dotfiles::user::ssh::new() {
-	ssh-keygen -t ed25519 -C "${1}"
+	ssh-keygen -t ed25519 -C "${USER}@${HOSTNAME}"
 }
 
 function dotfiles::user::windows11-usb() {
