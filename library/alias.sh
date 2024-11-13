@@ -14,6 +14,8 @@ alias miniforge3="dotfiles::user::miniforge3"
 alias dev="dotfiles::user::dev"
 alias windows11-usb="dotfiles::user::windows11-usb"
 
+alias colors="dotfiles::user::colors"
+
 alias df-install="dotfiles::bashrc::append && source ${HOME}/.bashrc"
 alias df-uninstall="dotfiles::bashrc::remove && dotfiles::uninstall && source ${HOME}/.bashrc"
 

@@ -6,6 +6,7 @@
 
 export GPG_TTY=$(tty)
 export EDITOR=vim
+export TERM=${TERM:-xterm-256color}
 
 #==============================
 # constants
@@ -147,6 +148,14 @@ function dotfiles::user::windows11-usb() {
     sudo sync
 
     sudo rm -rf "${temp}"
+}
+
+function dotfiles::user::colors() {
+    for i in {0..255}; do
+      printf "\e[48;5;${i}m %3d \e[0m" $i
+      [ $((($i + 1) % 16)) -eq 0 ] && printf "\n"
+    done
+
 }
 
 #==============================
