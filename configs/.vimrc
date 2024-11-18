@@ -174,4 +174,8 @@ autocmd FileType vue setlocal shiftwidth=2 softtabstop=2 expandtab
 " Set indentation for Javascript files
 autocmd FileType js,javascript setlocal shiftwidth=2 softtabstop=2 expandtab
 
+" Disable syntax on large files
 autocmd BufReadPre * if getfsize(expand("%")) > 1000000 | setlocal syntax=off | endif
+
+" Disable folding on large files
+autocmd BufReadPre * if getfsize(expand("%")) > 1000000 | setlocal nofoldenable | endif
