@@ -20,8 +20,8 @@ Plug 'honza/vim-snippets'
 
 Plug 'sheerun/vim-polyglot'
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() }, 'on': 'FZF' }
-Plug 'junegunn/fzf.vim', { 'on': 'FZF' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() }, 'on': 'Buffers' }
+Plug 'junegunn/fzf.vim', { 'on': 'Buffers' }
 
 Plug 'airblade/vim-rooter'
 
