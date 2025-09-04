@@ -1,0 +1,6 @@
+[user]
+	name = Jason Boutte
+	email = boutte.jason@gmail.com
+
+[commit]
+	gpgSign = false
