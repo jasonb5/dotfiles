@@ -1,0 +1,15 @@
+[core]
+	autocrlf = input
+	editor = vim
+
+[includeIf "gitdir:~/devel/personal/"]
+	path = ~/.gitconfig.personal
+
+[includeIf "gitdir:~/devel/personal/*nosign/"]
+	path = ~/.gitconfig.nosign
+
+[includeIf "gitdir:~/devel/work/"]
+	path = ~/.gitconfig.work
+
+[includeIf "gitdir:~/devel/work/*nosign/"]
+	path = ~/.gitconfig.nosign

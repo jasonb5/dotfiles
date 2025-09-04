@@ -1,0 +1,6 @@
+[user]
+	name = Jason Boutte
+	email = boutte3@llnl.gov
+
+[commit]
+	gpgSign = false
