@@ -39,6 +39,8 @@ installer::bootstrap() {
 installer::install() {
   info "Installing dotfiles"
 
+  source "${DOTFILE_PATH}/library/00_init.sh"
+
   if [[ -e "${DOTFILE_MANIFEST}" ]]; then
     debug "Removing old manifest file"
 
@@ -86,6 +88,8 @@ source <(cat ~/devel/personal/dotfiles/library/*.sh)
 ##### DOTFILE STOP  #####
 EOF
   fi
+
+  source "${DOTFILE_PATH}//library/10_functions.sh"
 }
 
 installer::uninstall() {
