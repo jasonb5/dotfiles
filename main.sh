@@ -87,7 +87,7 @@ installer::uninstall() {
     unlink "${file}"
 
     if [[ -e "${file}.bck" ]]; then
-      debug "Restoring backup "${file}""
+      debug "Restoring backup \"${file}\""
 
       mv "${file}.bck" "${file}"
     fi
