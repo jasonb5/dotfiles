@@ -4,3 +4,6 @@
 
 [commit]
 	gpgSign = false
+
+[url "git@github-work.com"]
+	insteadOf = git@github.com
