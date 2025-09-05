@@ -67,7 +67,7 @@ installer::install() {
     if [[ -e "${link}" ]] && [[ ! -L "${link}" ]]; then
       debug "Found existing ${link}, creating backup"
 
-      mv "${link}" "${link}.bck"
+      mv "${link}" "${link}.bak"
     fi
 
     ln -sfr "${file}" "${link}"
@@ -86,10 +86,10 @@ installer::uninstall() {
 
     unlink "${file}"
 
-    if [[ -e "${file}.bck" ]]; then
+    if [[ -e "${file}.bak" ]]; then
       debug "Restoring backup \"${file}\""
 
-      mv "${file}.bck" "${file}"
+      mv "${file}.bak" "${file}"
     fi
   done < "${DOTFILE_MANIFEST}"
 
