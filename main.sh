@@ -84,6 +84,9 @@ installer::install() {
 
 tee -a ~/.bashrc << EOF >>/dev/null
 ##### DOTFILE START #####
+export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfile)"
+export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
+
 source <(cat ~/devel/personal/dotfiles/library/*.sh)
 ##### DOTFILE STOP  #####
 EOF
