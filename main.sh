@@ -74,6 +74,18 @@ installer::install() {
 
     echo "${link}" >> ~/.dotfiles.manifest
   done
+
+  read -r -p "Modify ~/.bashrc to load dotfiles? (y/n) " autoload
+
+  if [[ "${autoload}" == "y" ]]; then
+    info "Appending ~/.bashrc"
+
+tee -a ~/.bashrc << EOF >>/dev/null
+##### DOTFILE START #####
+source <(cat ~/devel/personal/dotfiles/library/*.sh)
+##### DOTFILE STOP  #####
+EOF
+  fi
 }
 
 installer::uninstall() {
@@ -81,19 +93,25 @@ installer::uninstall() {
 
   local file
 
-  while IFS= read -r file; do
-    info "Unlink ${file}"
+  if [[ -e "${DOTFILE_MANIFEST}" ]]; then
+    while IFS= read -r file; do
+      info "Unlink ${file}"
 
-    unlink "${file}"
+      unlink "${file}"
 
-    if [[ -e "${file}.bak" ]]; then
-      debug "Restoring backup \"${file}\""
+      if [[ -e "${file}.bak" ]]; then
+        debug "Restoring backup \"${file}\""
 
-      mv "${file}.bak" "${file}"
-    fi
-  done < "${DOTFILE_MANIFEST}"
+        mv "${file}.bak" "${file}"
+      fi
+    done < "${DOTFILE_MANIFEST}"
 
-  rm "${DOTFILE_MANIFEST}"
+    rm "${DOTFILE_MANIFEST}"
+  fi
+
+  info "Cleaning up ~/.bashrc"
+
+  sed -i "/##### DOTFILE START #####/,/##### DOTFILE STOP  #####/d" ~/.bashrc
 }
 
 main() {
