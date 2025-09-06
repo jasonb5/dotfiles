@@ -12,4 +12,5 @@ info "Installing required packages"
 sudo pacman -Sy \
   hyprlock \
   hypridle \
-  hyprpolkitagent
+  hyprpolkitagent \
+  waybar
