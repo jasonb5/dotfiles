@@ -13,4 +13,5 @@ sudo pacman -Sy \
   hyprlock \
   hypridle \
   hyprpolkitagent \
-  waybar
+  waybar \
+  ttf-jetbrains-mono
