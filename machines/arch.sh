@@ -14,4 +14,7 @@ sudo pacman -Sy \
   hypridle \
   hyprpolkitagent \
   waybar \
-  ttf-jetbrains-mono
+  playerctl \
+  ttf-jetbrains-mono \
+  wofi \
+  rofimoji
