@@ -34,6 +34,11 @@ installer::bootstrap() {
 
   # shellcheck source=main.sh
   . "${DOTFILE_MAIN}" install
+
+  # shellcheck disable=SC1091
+  source "${DOTFILE_PATH}/library/10_functions.sh"
+
+  dotfile::load_machine_files
 }
 
 installer::install() {
@@ -92,11 +97,6 @@ source <(cat ~/devel/personal/dotfiles/library/*.sh)
 ##### DOTFILE STOP  #####
 EOF
   fi
-
-  # shellcheck disable=SC1091
-  source "${DOTFILE_PATH}/library/10_functions.sh"
-
-  dotfile::load_machine_files
 }
 
 installer::uninstall() {
