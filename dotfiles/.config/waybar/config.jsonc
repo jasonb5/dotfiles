@@ -1,2 +1,66 @@
 {
+	"layer": "top",
+	"position": "top",
+	"spacing": 0,
+	"margin": "8px 8px 0 8px",
+	"modules-left": [
+		"custom/arch",
+		"hyprland/workspaces"
+	],
+	"modules-center": [
+		"clock",
+		"mpris"
+	],
+	"modules-right": [
+		"cpu",
+		"temperature",
+		"privacy",
+		"idle_inhibitor",
+		"group/backlight",
+		"bluetooth",
+		"network",
+		"group/pulseaudio",
+		"battery"
+
+	],
+	"reload_style_on_change": true,
+	"group/backlight": {
+		"orientation": "inherit",
+		"modules": ["backlight", "backlight/slider"],
+		"drawer": {
+
+		}
+	},
+	"group/pulseaudio": {
+		"orientation": "inherit",
+		"modules": ["pulseaudio", "pulseaudio/slider"],
+		"drawer": {
+
+		}
+	},
+	"custom/arch": {
+		"format": "  Arch"
+	},
+	"hyprland/workspaces": {
+		"persistent-workspaces": {
+			"*": 5
+		}	
+	},
+	"clock": {
+		"interval": 1,
+		"format": "{:%H:%M}",
+		"format-alt": "{:%A %B %d, %Y}",
+		"tooltip-format": "<tt><small>{calendar}</small></tt>",
+		"calendar": {
+			"weeks-pos": "right",
+			"format": {
+				"months": "<span color='#ffead3'><b>{}</b></span>",
+				"days": "<span color='#ecc6d9'><b>{}</b></span>",
+				"weeks": "<span color='#99ffdd'><b>{}</b></span>",
+				"weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+				"today": "<span color='#ff6699'><b><u>{}</u></b></span>"
+			}
+		}
+	}
 }
+
