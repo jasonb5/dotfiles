@@ -23,3 +23,10 @@ sudo pacman -Sy --noconfirm \
   wl-clipboard \
   cliphist
 
+curl -o- https://fnm.vercel.app/install | bash
+
+fnm install 22
+
+info "Node: $(node --version) Npm: $(npm -v)"
+
+npm install -g @google/gemini-cli
