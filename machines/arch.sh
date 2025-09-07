@@ -15,6 +15,7 @@ sudo pacman -Sy \
   hyprpolkitagent \
   waybar \
   playerctl \
+  nerd-fonts \
   ttf-jetbrains-mono \
   wofi \
   rofimoji
