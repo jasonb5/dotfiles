@@ -18,4 +18,5 @@ sudo pacman -Sy \
   nerd-fonts \
   ttf-jetbrains-mono \
   wofi \
-  rofimoji
+  rofimoji \
+  fastfetch
