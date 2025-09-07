@@ -19,4 +19,7 @@ sudo pacman -Sy --noconfirm \
   ttf-jetbrains-mono \
   wofi \
   rofimoji \
-  fastfetch
+  fastfetch \
+  wl-clipboard \
+  cliphist
+
