@@ -9,7 +9,7 @@ sudo pacman -Syu
 
 info "Installing required packages"
 
-sudo pacman -Sy \
+sudo pacman -Sy --noconfirm \
   hyprlock \
   hypridle \
   hyprpolkitagent \
