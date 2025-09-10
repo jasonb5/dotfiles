@@ -32,20 +32,66 @@ installer::bootstrap() {
     git clone --filter=blob:none "${DOTFILE_REPO}" "${DOTFILE_PATH}"
   fi
 
+  source "${DOTFILE_PATH}/library/10_functions.sh"
+
+  installer::ask_and_run "Would you like to run the pre-boostrrap scripts? (y/n) " "y" "n" "installer::bootstrap_pre"
+
   # shellcheck source=main.sh
   . "${DOTFILE_MAIN}" install
 
-  # shellcheck disable=SC1091
-  source "${DOTFILE_PATH}/library/10_functions.sh"
+  installer::ask_and_run "Would you like to run the post-boostrap scripts? (y/n) " "y" "n" "installer::bootstrap_post"
+}
 
-  dotfile::load_machine_files
+installer::bootstrap_pre() {
+  info "Running pre-bootstrap files"
+
+  installer::source_run "$(kernel_file)" "bootstrap_pre"
+  installer::source_run "$(os_file)" "bootstrap_pre"
+  installer::source_run "$(hostname_file)" "bootstrap_pre"
+}
+
+installer::bootstrap_post() {
+  info "Running post-bootstrap files"
+    
+  installer::source_run "$(kernel_file)" "bootstrap_post"
+  installer::source_run "$(os_file)" "bootstrap_post"
+  installer::source_run "$(hostname_file)" "bootstrap_post"
+}
+
+installer::source_run() {
+  local file="${1}"
+  local func="${2}"
+
+  if [[ -n "${file}" ]] && [[ -e "${file}" ]]; then
+    source "${file}"
+
+    "${func}"
+  fi
+}
+
+installer::ask_and_run() {
+  local query="${1}"
+  local accept="${2}"
+  local decline="${3}"
+  local func="${4}"
+  local timeout="${5:-4}"
+  local answer
+
+  read -r -p "${query}" -t "${timeout}" answer
+
+  if (( $? > 128 )); then
+    answer="${decline}"
+  fi
+
+  debug "Answer: ${answer} Return: $?"
+
+  if [[ "${answer}" == "${accept}" ]]; then
+    "${func}"
+  fi
 }
 
 installer::install() {
   info "Installing dotfiles"
-
-  # shellcheck disable=SC1091
-  source "${DOTFILE_PATH}/library/00_init.sh"
 
   if [[ -e "${DOTFILE_MANIFEST}" ]]; then
     debug "Removing old manifest file"
@@ -90,7 +136,7 @@ installer::install() {
 
 tee -a ~/.bashrc << EOF >>/dev/null
 ##### DOTFILE START #####
-export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfile)"
+export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfiles)"
 export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 
 source <(cat ~/devel/personal/dotfiles/library/*.sh)
