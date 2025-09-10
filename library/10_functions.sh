@@ -1,50 +1,30 @@
 #!/bin/bash
 # vim: set shiftwidth=2 tabstop=2 softtabstop=2 et:
 
-dotfile::load_machine_files() {
-  local kernel
-  kernel="$(uname -s)"
-  local hostname
-  hostname="$(uname -n)"
+safe_source() {
+  local file="${1}"
 
-  # shellcheck source=machines/linux.sh
-  local kernel_file="${DOTFILE_PATH}/machines/${kernel}.sh"
-  # shellcheck source=machines/lo.sh
-  local hostname_file="${DOTFILE_PATH}/machines/${hostname}.sh"
+  if [[ -n "${file}" ]] && [[ -e "${file}" ]]; then
+    info "Sourcing \"${file}\""
 
-  if [[ -e "${kernel_file}" ]]; then
-    info "Loading kernel file ${kernel_file}"
+    source "${file}"
+  fi
+}
 
-    # shellcheck disable=SC1090
-    source "${kernel_file}"
+kernel_file() {
+  echo "${DOTFILE_PATH}/machines/$(uname -s | tr '[:upper:]' '[:lower:]').sh"
+}
+
+os_file() {
+  if [[ -e "/etc/os-release" ]]; then
+    echo "${DOTFILE_PATH}/machines/$(cat /etc/os-release | grep '^ID' | cut -d'=' -f2).sh"
   else
-    debug "Skipping kernel file"
+    echo ""
   fi
+}
 
-  if [[ "${kernel,,}" == "linux" ]]; then
-    local os
-    os="$(cat /etc/os-release | grep "^ID" | cut -d"=" -f2)"
-    # shellcheck source=machines/arch.sh
-    local os_file="${DOTFILE_PATH}/machines/${os}.sh"
-
-    if [[ -e "${os_file}" ]]; then
-      info "Loading os file ${os_file}"
-
-      # shellcheck disable=SC1090
-      source "${os_file}"
-    else
-      debug "Skipping os file"
-    fi
-  fi
-
-  if [[ -e "${hostname_file}" ]]; then
-    info "Loading hostname file ${hostname_file}"
-
-    # shellcheck disable=SC1090
-    source "${hostname_file}"
-  else
-    debug "Skipping hostname file"
-  fi
+hostname_file() {
+  echo "${DOTFILE_PATH}/machines/${HOSTNAME:-"$(uname -n)"}.sh"
 }
 
 log_date() {
@@ -52,13 +32,13 @@ log_date() {
 }
 
 error() {
-  echo "[$(log_date)]: $*" >&2
+  echo "[$(log_date)][ERR]: $*" >&2
 }
 
 debug() {
-  [[ -z "${DEBUG}" ]] && [[ "${DEBUG}" == "true" ]] && info "${*}"
+  [[ -n "${DEBUG}" ]] && [[ "${DEBUG}" == "true" ]] && echo "[$(log_date)][DEBUG]: $*" >&1
 }
 
 info() {
-  echo "[$(log_date)]: $*" >&1
+  echo "[$(log_date)][INFO]: $*" >&1
 }

@@ -1,32 +1,74 @@
 #!/bin/bash
 # vim: set shiftwidth=2 tabstop=2 softtabstop=2 et:
 
-info "Running arch bootstrap"
+update_system() {
+  info "Updating system packages"
 
-info "Updating system packages"
+  sudo pacman -Syu
+}
 
-sudo pacman -Syu
+install_packages() {
+  info "Installing required packages"
 
-info "Installing required packages"
+  sudo pacman -Sy --noconfirm \
+    hyprlock \
+    hypridle \
+    hyprpolkitagent \
+    waybar \
+    playerctl \
+    nerd-fonts \
+    ttf-jetbrains-mono \
+    wofi \
+    rofimoji \
+    fastfetch \
+    wl-clipboard \
+    cliphist
+}
 
-sudo pacman -Sy --noconfirm \
-  hyprlock \
-  hypridle \
-  hyprpolkitagent \
-  waybar \
-  playerctl \
-  nerd-fonts \
-  ttf-jetbrains-mono \
-  wofi \
-  rofimoji \
-  fastfetch \
-  wl-clipboard \
-  cliphist
+install_other() {
+  info "Install fnm and nodejs"
 
-curl -o- https://fnm.vercel.app/install | bash
+  curl -o- https://fnm.vercel.app/install | bash
 
-fnm install 22
+  fnm install 22
 
-info "Node: $(node --version) Npm: $(npm -v)"
+  info "Node: $(node --version) Npm: $(npm -v)"
 
-npm install -g @google/gemini-cli
+  info "Installing Gemini CLI"
+
+  npm install -g @google/gemini-cli
+}
+
+generate_hypr_host_file() {
+  local scale="1.0"
+  local hypr_host_file
+  hypr_host_file="$(realpath ~/.config/hypr/config/host.conf)"
+
+  if [[ ! -e "${hypr_host_file}" ]]; then
+    info "Generating hyprland host.conf"
+
+    if [[ "${HOSTNAME}" == "lo" ]]; then
+      scale="1.2"
+    fi
+
+    debug "Setting hyprland scale to ${scale}"
+
+tee -a "${hypr_host_file}" << EOF >>/dev/null
+\$monitorScale = ${scale}
+EOF
+
+    if [[ -v $(grep "${hypr_host_file}" "${DOTFILE_MANIFEST}") ]]; then
+      echo "${hypr_host_file}" | tee -a "${DOTFILE_MANIFEST}"
+    fi
+  fi
+}
+
+bootstrap_pre() {
+  generate_hypr_host_file
+}
+
+bootstrap_post() {
+  update_system
+  install_packages
+  install_other
+}
