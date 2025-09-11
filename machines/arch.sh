@@ -1,6 +1,29 @@
 #!/bin/bash
 # vim: set shiftwidth=2 tabstop=2 softtabstop=2 et:
 
+install_aur() {
+  local temp_dir
+  local package="${1}"
+
+  temp_dir="$(mktemp -d)"
+
+  pushd "${temp_dir}"
+
+  git clone --depth 1 "https://aur.archlinux.org/${package}.git/" .
+
+  makepkg -seo # sync deps, no extract, no build
+
+  vim PKGBUILD
+
+  read -p "Would you like to continue installing ${name}? (y/n) " answer
+
+  if [[ "${answer}" == "y" ]]; then
+    makepkg -i
+  fi
+
+  popd
+}
+
 update_system() {
   info "Updating system packages"
 
