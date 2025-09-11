@@ -129,12 +129,13 @@ installer::install() {
     echo "${link}" >> ~/.dotfiles.manifest
   done
 
-  read -r -p "Modify ~/.bashrc to load dotfiles? (y/n) " autoload
+  if [[ -z "$(grep "##### DOTFILE START #####" ~/.bashrc)" ]]; then
+    read -r -p "Modify ~/.bashrc to load dotfiles? (y/n) " autoload
 
-  if [[ "${autoload}" == "y" ]]; then
-    info "Appending ~/.bashrc"
+    if [[ "${autoload}" == "y" ]]; then
+      info "Appending ~/.bashrc"
 
-tee -a ~/.bashrc << EOF >>/dev/null
+      tee -a ~/.bashrc << EOF >>/dev/null
 ##### DOTFILE START #####
 export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfiles)"
 export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
@@ -142,6 +143,7 @@ export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 source <(cat ~/devel/personal/dotfiles/library/*.sh)
 ##### DOTFILE STOP  #####
 EOF
+    fi
   fi
 }
 
