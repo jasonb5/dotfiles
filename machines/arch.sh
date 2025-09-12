@@ -39,7 +39,7 @@ install_packages() {
     hyprpolkitagent \
     waybar \
     playerctl \
-    nerd-fonts \
+    ttf-fire-coda \
     ttf-jetbrains-mono \
     wofi \
     rofimoji \
