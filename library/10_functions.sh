@@ -1,6 +1,12 @@
 #!/bin/bash
 # vim: set shiftwidth=2 tabstop=2 softtabstop=2 et:
 
+command_exists() {
+  command -v "${1}" > /dev/null 2>&1
+
+  return $?
+}
+
 safe_source() {
   local file="${1}"
 
