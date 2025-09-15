@@ -49,17 +49,21 @@ install_packages() {
 }
 
 install_other() {
-  info "Install fnm and nodejs"
+  if ! command_exists node; then
+    info "Install fnm and nodejs"
 
-  curl -o- https://fnm.vercel.app/install | bash
+    curl -o- https://fnm.vercel.app/install | bash
 
-  fnm install 22
+    fnm install 22
+  fi
 
   info "Node: $(node --version) Npm: $(npm -v)"
 
-  info "Installing Gemini CLI"
+  if ! command_exists gemini-cli; then
+    info "Installing Gemini CLI"
 
-  npm install -g @google/gemini-cli
+    npm install -g @google/gemini-cli
+  fi
 }
 
 generate_hypr_host_file() {
