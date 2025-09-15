@@ -2,24 +2,23 @@
 # vim: set shiftwidth=2 tabstop=2 softtabstop=2 et:
 
 install_aur() {
-  local temp_dir
+  local tempdir
   local package="${1}"
+  local review="${2}"
 
-  temp_dir="$(mktemp -d)"
+  tempdir="$(mktemp -d)"
 
-  pushd "${temp_dir}"
+  git clone --depth 1 "https://aur.archlinux.org/${package}.git" "${tempdir}"
 
-  git clone --depth 1 "https://aur.archlinux.org/${package}.git/" .
+  pushd "${tempdir}"
 
-  makepkg -seo # sync deps, no extract, no build
+  if [[ "${review}" == "true" ]]; then
+    makepkg -o --printsrcinfo --verifysource
 
-  vim PKGBUILD
-
-  read -p "Would you like to continue installing ${name}? (y/n) " answer
-
-  if [[ "${answer}" == "y" ]]; then
-    makepkg -i
+    vim PKGBUILD
   fi
+  
+  makepkg -si
 
   popd
 }
@@ -30,10 +29,24 @@ update_system() {
   sudo pacman -Syu
 }
 
+check_missing_aur_packages() {
+  local required_packages=("swww" "waytrogen")
+  local missing=""
+
+  for pkg in "${required_packages[@]}"; do 
+    if ! command_exists "${pkg}"; then
+      missing+="${pkg}, "
+    fi
+  done
+
+  info "${missing:0:(( ${#missing} - 2 ))}"
+}
+
 install_packages() {
   info "Installing required packages"
 
   sudo pacman -Sy --noconfirm \
+    base-devel \
     hyprlock \
     hypridle \
     hyprpolkitagent \
