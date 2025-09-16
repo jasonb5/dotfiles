@@ -30,7 +30,7 @@ update_system() {
 }
 
 check_missing_aur_packages() {
-  local required_packages=("swww" "waytrogen")
+  local required_packages=("swww" "waytrogen" "wallust") 
   local missing=""
 
   for pkg in "${required_packages[@]}"; do 
@@ -39,7 +39,11 @@ check_missing_aur_packages() {
     fi
   done
 
-  info "${missing:0:(( ${#missing} - 2 ))}"
+  if (( ${#missing} > 0 )); then
+    info "${missing:0:(( ${#missing} - 2 ))}"
+  else
+    info "No missing aur packages"
+  fi
 }
 
 install_packages() {
