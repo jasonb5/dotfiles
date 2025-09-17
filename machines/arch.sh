@@ -59,6 +59,7 @@ install_packages() {
     playerctl \
     ttf-fire-coda \
     ttf-jetbrains-mono \
+    woff2-font-awesome \
     wofi \
     rofimoji \
     fastfetch \
