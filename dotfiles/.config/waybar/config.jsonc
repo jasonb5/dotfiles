@@ -1,65 +1,110 @@
 {
 	"layer": "top",
 	"position": "top",
-	"spacing": 0,
 	"modules-left": [
-		"custom/arch",
-		"hyprland/workspaces"
+		"custom/notification",
+		"clock",
+		"custom/pacman"
 	],
 	"modules-center": [
-		"clock",
-		"mpris"
+		"hyprland/workspaces"
 	],
 	"modules-right": [
 		"cpu",
+		"memory",
 		"temperature",
-		"privacy",
-		"idle_inhibitor",
-		"group/backlight",
 		"bluetooth",
 		"network",
-		"group/pulseaudio",
 		"battery"
-
 	],
+	"margin": "8px 0px 0px 0px",
 	"reload_style_on_change": true,
-	"group/backlight": {
-		"orientation": "inherit",
-		"modules": ["backlight", "backlight/slider"],
-		"drawer": {
-
+	"custom/notification": {
+		"tooltip": false,
+		"format": "",
+		"on-click": "swaync-client -t -sw",
+		"escape": true
+	},
+	"clock": {
+		"format": "{:%I:%M:%S %p} ",
+		"interval": 1,   
+		"tooltip-format": "<tt>{calendar}</tt>",
+		"calendar": {
+			"format": {
+				"today": "<span color='#fAfBfC'><b>{}</b></span>"
+			}
+		},
+		"actions": {
+			"on-click-right": "shift_down",
+			"on-click": "shift_up"
 		}
 	},
-	"group/pulseaudio": {
-		"orientation": "inherit",
-		"modules": ["pulseaudio", "pulseaudio/slider"],
-		"drawer": {
-
-		}
-	},
-	"custom/arch": {
-		"format": "  Arch"
+	"custom/pacman": {
+		"format": "󰅢 {}",
+		"interval": 30,   
+		"exec": "checkupdates | wc -l",
+		"exec-if": "exit 0",
+		"on-click": "kitty sh -c 'yay -Syu; echo Done - Press enter to exit; read'; pkill -SIGRTMIN+8 waybar",
+		"signal": 8,
+		"tooltip": false
 	},
 	"hyprland/workspaces": {
 		"persistent-workspaces": {
 			"*": 5
-		}	
-	},
-	"clock": {
-		"interval": 1,
-		"format": "{:%H:%M}",
-		"format-alt": "{:%A %B %d, %Y}",
-		"tooltip-format": "<tt><small>{calendar}</small></tt>",
-		"calendar": {
-			"weeks-pos": "right",
-			"format": {
-				"months": "<span color='#ffead3'><b>{}</b></span>",
-				"days": "<span color='#ecc6d9'><b>{}</b></span>",
-				"weeks": "<span color='#99ffdd'><b>{}</b></span>",
-				"weekdays": "<span color='#ffcc66'><b>{}</b></span>",
-				"today": "<span color='#ff6699'><b><u>{}</u></b></span>"
-			}
 		}
+	},
+	"cpu": {
+		"format": "󰻠",
+		"tooltip": true
+	},
+	"memory": {
+		"format": ""
+	},
+	"temperature": {
+		"critical-threshold": 80,
+		"format": ""
+	},
+    "bluetooth": {
+		"format-on": "󰂯",
+		"format-off": "BT-off",
+		"format-disabled": "󰂲",
+		"format-connected-battery": "{device_battery_percentage}% 󰂯",
+		"format-no-controller": "",
+		"format-alt": "{device_alias} 󰂯",
+		"tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+		"tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+		"tooltip-format-enumerate-connected": "{device_alias}\n{device_address}",
+		"tooltip-format-enumerate-connected-battery": "{device_alias}\n{device_address}\n{device_battery_percentage}%",
+		"on-click-right": "blueman-manager"
+	}, 
+	"network": {
+		"format-wifi": "",
+		"format-ethernet":"🖧",
+		"format-disconnected": "",
+		"tooltip-format-disconnected": "Error",
+		"tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+		"tooltip-format-ethernet": "{ifname} 🖧 ",
+		"on-click": "kitty nmtui"
+	},
+    "battery": {
+		"interval":30,
+		"states": {
+			"good": 95,
+			"warning": 30,
+			"critical": 20
+		},
+		"format": "{capacity}% {icon}",
+		"format-charging": "{capacity}% 󰂄",
+		"format-plugged": "{capacity}% 󰂄 ",
+		"format-alt": "{time} {icon}",
+		"format-icons": [
+			"󰁻",
+			"󰁼",
+			"󰁾",
+			"󰂀",
+			"󰂂",
+			"󰁹"
+		]
 	}
 }
 
