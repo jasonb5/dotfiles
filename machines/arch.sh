@@ -51,6 +51,7 @@ install_packages() {
 
   sudo pacman -Sy --noconfirm \
     base-devel \
+    pacman-contrib \
     hyprlock \
     hypridle \
     hyprpolkitagent \
