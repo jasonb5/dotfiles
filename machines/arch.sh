@@ -57,7 +57,7 @@ install_packages() {
     hyprpolkitagent \
     waybar \
     playerctl \
-    ttf-fire-coda \
+    ttf-fira-code \
     ttf-jetbrains-mono \
     woff2-font-awesome \
     wofi \
