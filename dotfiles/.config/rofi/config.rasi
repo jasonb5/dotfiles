@@ -1,0 +1,61 @@
+@import "colors"
+
+configuration {
+    modes: "window,drun,combi,filebrowser,emoji";
+    font: "Fira Code 14";
+    show-icons: true;
+    combi-modes: "window,drun,emoji";
+    combi-hide-mode-prefix: true; 
+}
+
+* {
+    transparent: rgba(0, 0, 0, 0);
+    background: rgba(0, 0, 0, 0.6);
+    border: rgba(0, 0, 0, 0);
+}
+
+window {
+    transparency: "real";
+    border: @transparent;
+    border-radius: 10px;
+    width: calc(50%);
+}
+
+prompt {
+    text-color: @color5;
+}
+
+textbox-prompt-colon {
+    text-color: @color5;
+}
+
+textbox-num-sep {
+    text-color: @color3;
+}
+
+num-filtered-rows, num-rows {
+    text-color: @color5;
+}
+
+entry {
+    placeholder-color: @color3;
+}
+
+scrollbar {
+    handle-color: @color5;
+}
+
+element normal.normal {
+    background-color: @transparent;
+    text-color: @color7;
+}
+
+element selected.normal {
+    background-color: @color3;
+    text-color: @color7;
+}
+
+element alternate.normal {
+    background-color: @transparent;
+    text-color: @color7;
+}
