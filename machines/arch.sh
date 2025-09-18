@@ -30,7 +30,7 @@ update_system() {
 }
 
 check_missing_aur_packages() {
-  local required_packages=("swww" "waytrogen" "wallust") 
+  local required_packages=("swww" "waytrogen" "wallust", "rofi-nerdy") 
   local missing=""
 
   for pkg in "${required_packages[@]}"; do 
@@ -61,8 +61,8 @@ install_packages() {
     ttf-fira-code \
     ttf-jetbrains-mono \
     woff2-font-awesome \
-    wofi \
-    rofimoji \
+    rofi \
+    rofi-emoji \
     fastfetch \
     wl-clipboard \
     cliphist

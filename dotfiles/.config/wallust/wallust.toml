@@ -7,3 +7,4 @@ kitty = { template = "kitty.conf", target = "~/.config/kitty/colors.conf" }
 waybar = { template = "waybar.css", target = "~/.config/waybar/colors.css" }
 hyprland = { template = "hyprland.conf", target = "~/.config/hypr/config/colors.conf" }
 vscode = { template = "settings.json", target = "~/.config/VSCodium/User/settings.json" }
+rofi = { template = "rofi.rasi", target = "~/.config/rofi/colors.rasi" }
