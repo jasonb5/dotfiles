@@ -57,6 +57,7 @@ install_packages() {
     hyprpolkitagent \
     waybar \
     playerctl \
+    brightnessctl \
     ttf-fira-code \
     ttf-jetbrains-mono \
     woff2-font-awesome \
