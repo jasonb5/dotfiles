@@ -65,7 +65,8 @@ install_packages() {
     rofi-emoji \
     fastfetch \
     wl-clipboard \
-    cliphist
+    cliphist \
+    dunst
 }
 
 install_other() {
