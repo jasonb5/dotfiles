@@ -61,6 +61,7 @@ install_packages() {
     ttf-fira-code \
     ttf-jetbrains-mono \
     woff2-font-awesome \
+    nerd-fonts \
     rofi \
     rofi-emoji \
     fastfetch \
