@@ -1,61 +1,85 @@
 @import "colors"
 
-configuration {
-    modes: "window,drun,combi,filebrowser,emoji";
-    font: "Fira Code 14";
-    show-icons: true;
-    combi-modes: "window,drun,emoji";
-    combi-hide-mode-prefix: true; 
-}
-
-* {
-    transparent: rgba(0, 0, 0, 0);
-    background: rgba(0, 0, 0, 0.6);
-    border: rgba(0, 0, 0, 0);
-}
-
 window {
+    font: "Fira Code Light 9";
     transparency: "real";
-    border: @transparent;
+    width: 25%;
+    padding: 10px;
+    border: 0px;
     border-radius: 10px;
-    width: calc(50%);
+    background-color: @bg;
+
+    children: [ "mainbox-wrapper" ];
 }
 
-prompt {
-    text-color: @color5;
+mainbox-wrapper {
+    orientation: horizontal;
+    children: [ "mainbox" ];
 }
 
-textbox-prompt-colon {
-    text-color: @color5;
+icon-current-entry {
+    expand: true;
 }
 
-textbox-num-sep {
-    text-color: @color3;
+element normal.normal,
+element normal.urgent,
+element normal.active,
+element selected.normal,
+element selected.urgent,
+element selected.active,
+element alternate.normal,
+element alternate.urgent,
+element alternate.active {
+    background-color: @bg;
 }
 
-num-filtered-rows, num-rows {
-    text-color: @color5;
+element selected.active,
+element selected.normal {
+    background-color: @color4;
+    border-radius: 10px;
 }
 
-entry {
-    placeholder-color: @color3;
+element {
+    padding: 2px 4px 2px 4px;
 }
 
 scrollbar {
-    handle-color: @color5;
+    handle-color: @fg;
+    handle-rounded-corners: true;
 }
 
-element normal.normal {
-    background-color: @transparent;
-    text-color: @color7;
+message,
+listview {
+    border-color: @fg;
 }
 
-element selected.normal {
-    background-color: @color3;
-    text-color: @color7;
+listview { border: 2px dash 0px dash 0px dash 0px dash; }
+message { 
+    padding: 4px 0px 4px 0px;
+    border: 2px dash 0px dash 0px dash 0px dash; 
 }
 
-element alternate.normal {
-    background-color: @transparent;
-    text-color: @color7;
+prompt,
+entry,
+textbox,
+element-text {
+    text-color: @fg;
+}
+
+@media ( enabled: env(PREVIEW, false)) {
+    window { width: 60%; }
+
+    mainbox-wrapper {
+        width: 80%;
+        children: [ "icon-current-entry", "mainbox" ]; 
+    }
+
+    icon-current-entry {
+        expand: true;
+        size: 75%;
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+        height: 100%;
+    }
 }
