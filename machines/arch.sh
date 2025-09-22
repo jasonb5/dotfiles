@@ -51,6 +51,9 @@ install_packages() {
 
   sudo pacman -Sy --noconfirm \
     base-devel \
+    unzip \
+    git \
+    less \
     pacman-contrib \
     hyprlock \
     hypridle \
