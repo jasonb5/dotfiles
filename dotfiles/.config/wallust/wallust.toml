@@ -1,6 +1,7 @@
-backend = "fastresize"
-color_space = "lch"
+backend = "kmeans"
+color_space = "labmixed"
 palette = "dark16"
+threshold = 11
 
 [templates]
 kitty = { template = "kitty.conf", target = "~/.config/kitty/colors.conf" }
