@@ -70,7 +70,8 @@ install_packages() {
     fastfetch \
     wl-clipboard \
     cliphist \
-    dunst
+    dunst \
+    wtype
 }
 
 install_other() {
