@@ -85,7 +85,7 @@ install_other() {
 
   info "Node: $(node --version) Npm: $(npm -v)"
 
-  if ! command_exists gemini-cli; then
+  if ! command_exists gemini; then
     info "Installing Gemini CLI"
 
     npm install -g @google/gemini-cli
