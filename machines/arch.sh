@@ -71,7 +71,9 @@ install_packages() {
     wl-clipboard \
     cliphist \
     dunst \
-    wtype
+    wtype \
+    tmux \
+    fzf
 }
 
 install_other() {
@@ -89,6 +91,12 @@ install_other() {
     info "Installing Gemini CLI"
 
     npm install -g @google/gemini-cli
+  fi
+
+  if [[ ! -e ~/.tmux ]];  then
+    info "Installing tmux tpm"
+
+    git clone --filter=blob:none https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   fi
 }
 
