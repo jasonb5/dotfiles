@@ -73,7 +73,8 @@ install_packages() {
     dunst \
     wtype \
     tmux \
-    fzf
+    fzf \
+    neovim
 }
 
 install_other() {
