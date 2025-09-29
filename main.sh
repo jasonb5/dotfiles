@@ -1,6 +1,4 @@
-#!/bin/bash
-# vim: set shiftwidth=2 tabstop=2 softtabstop=2 et:
-
+#!/usr/bin/env bash
 
 DOTFILE_PATH="$(realpath ~/devel/personal/dotfiles)"
 readonly DOTFILE_PATH
@@ -11,131 +9,185 @@ readonly DOTFILE_REPO="https://github.com/jasonb5/dotfiles"
 readonly DOTFILE_RAW_REPO="https://raw.githubusercontent.com/jasonb5/dotfiles/refs/heads/main"
 
 bootstrap_logging() {
-  local local_file="${DOTFILE_PATH}/library/10_functions.sh"
-  local remote_file="${DOTFILE_RAW_REPO}/library/10_functions.sh"
+    local local_file="${DOTFILE_PATH}/library/10_functions.sh"
+    local remote_file="${DOTFILE_RAW_REPO}/library/10_functions.sh"
 
-  if [[ -e "${local_file}" ]]; then
-    cat "${local_file}"
-  else
-    curl -L "${remote_file}"
-  fi
+    if [[ -e "${local_file}" ]]; then
+        cat "${local_file}"
+    else
+        curl -L "${remote_file}"
+    fi
 }
 
 eval "$(bootstrap_logging)"
 
-installer::bootstrap() {
-  info "Bootstrapping dotfiles"
-
-  if [[ ! -e "${DOTFILE_PATH}" ]]; then
-    info "Cloning dotfiles to ${DOTFILE_PATH}"
-
-    git clone --filter=blob:none "${DOTFILE_REPO}" "${DOTFILE_PATH}"
-  fi
-
-  source "${DOTFILE_PATH}/library/10_functions.sh"
-
-  installer::ask_and_run "Would you like to run the pre-boostrrap scripts? (y/n) " "y" "n" "installer::bootstrap_pre"
-
-  # shellcheck source=main.sh
-  . "${DOTFILE_MAIN}" install
-
-  installer::ask_and_run "Would you like to run the post-boostrap scripts? (y/n) " "y" "n" "installer::bootstrap_post"
+installer::os() {
+    echo "$(uname -s | tr '[[:upper:]]' '[[:lower:]]')"
 }
 
-installer::bootstrap_pre() {
-  info "Running pre-bootstrap files"
-
-  installer::source_run "$(kernel_file)" "bootstrap_pre"
-  installer::source_run "$(os_file)" "bootstrap_pre"
-  installer::source_run "$(hostname_file)" "bootstrap_pre"
+installer::distribution() {
+    echo "$(echo $(lsb_release -i ) | sed 's/.*: //' | tr '[[:upper:]]' '[[:lower:]]')"
 }
 
-installer::bootstrap_post() {
-  info "Running post-bootstrap files"
-    
-  installer::source_run "$(kernel_file)" "bootstrap_post"
-  installer::source_run "$(os_file)" "bootstrap_post"
-  installer::source_run "$(hostname_file)" "bootstrap_post"
+installer::hostname() {
+    echo "$(uname -n | tr '[[:upper:]]' '[[:lower:]]')"
 }
 
-installer::source_run() {
-  local file="${1}"
-  local func="${2}"
+installer::source_and_run() {
+    local file="${1}"
+    local function_name="${2}"
 
-  if [[ -n "${file}" ]] && [[ -e "${file}" ]]; then
+    if [[ ! -e "${file}" ]]; then
+        debug "Skipping '${file}', does not exist"
+
+        return
+    fi
+
+    debug "Loading '${file}'"
+
     source "${file}"
 
-    "${func}"
-  fi
+    if ! declare -f ${function_name} &>/dev/null; then
+        debug "Skipping '${function_name}', does not exist"
+        
+        return
+    fi
+
+    debug "Running '${function_name}'"
+
+    "${function_name}"
+
+    debug "Clearing '${function_name}'"
+
+    unset "${function_name}"
 }
 
-installer::ask_and_run() {
-  local query="${1}"
-  local accept="${2}"
-  local decline="${3}"
-  local func="${4}"
-  local timeout="${5:-4}"
-  local answer
+installer::run_host_function() {
+    local os
+    local distribution
+    local hostname
+    local response
+    local read_code
+    local function_name="${1}"
 
-  read -r -p "${query}" -t "${timeout}" answer
+    read -p "Would you like to skip '${function_name}'? (y/n) " -s -t 4 "response"
 
-  if (( $? > 128 )); then
-    answer="${decline}"
-  fi
+    read_code="$?"
 
-  debug "Answer: ${answer} Return: $?"
+    echo ""
 
-  if [[ "${answer}" == "${accept}" ]]; then
-    "${func}"
-  fi
+    if [[ ${read_code} -gt 128 ]]; then
+        debug "User input timed out"
+
+        response="y"
+    fi
+
+    if [[ "${response}" != "n" ]]; then
+        debug "Skipping running '${function_name}', got response '${response}'"
+
+        return
+    fi
+
+    os="$(installer::os)"
+    distribution="$(installer::distribution)"
+    hostname="$(installer::hostname)"
+
+    installer::source_and_run "${DOTFILE_PATH}/library/99_hosts/${os}.sh" "${function_name}"
+    installer::source_and_run "${DOTFILE_PATH}/library/99_hosts/${os}-${distribution}.sh" "${function_name}"
+    installer::source_and_run "${DOTFILE_PATH}/library/99_hosts/${os}-${distribution}-${hostname}.sh" "${function_name}"
+}
+
+installer::bootstrap() {
+    info "Bootstrapping dotfiles"
+
+    if [[ ! -e "${DOTFILE_PATH}" ]]; then
+        info "Cloning dotfiles to ${DOTFILE_PATH}"
+
+        git clone --filter=blob:none "${DOTFILE_REPO}" "${DOTFILE_PATH}"
+    fi
+
+    installer::run_host_function "bootstrap_pre"
+
+    source "${DOTFILE_MAIN}" install
+
+    installer::run_host_function "bootstrap_post"
+}
+
+installer::link() {
+    if [[ -e "${DOTFILE_MANIFEST}" ]]; then
+        installer::unlink
+
+        touch "${DOTFILE_MANIFEST}"
+    fi
+
+    installer::run_host_function "link_pre"
+
+    local file
+
+    find "${DOTFILE_PATH}/dotfiles" -type f -print0 | while IFS= read -r -d '' file; do
+        local relative="${file##"${DOTFILE_PATH}/dotfiles/"}"
+        local link
+        link="$(realpath ~)/${relative}"
+        local link_parent="${link%%"$(basename "${link}")"}"
+
+        if [[ ! -e "${link_parent}" ]]; then
+            debug "Creating link parent directory"
+
+            mkdir -p "${link_parent}"
+        fi
+
+        info "Linking ${file} -> ${link}"
+
+        if [[ -e "${link}" ]] && [[ ! -L "${link}" ]]; then
+            debug "Found existing ${link}, creating backup"
+
+            mv "${link}" "${link}.bak"
+        fi
+
+        ln -sfr "${file}" "${link}"
+
+        echo "${link}" >> ~/.dotfiles.manifest
+    done
+
+    installer::run_host_function "link_post"
+}
+
+installer::unlink() {
+    local file
+
+    if [[ -e "${DOTFILE_MANIFEST}" ]]; then
+        info "Unlinking dotfiles"
+
+        while IFS= read -r file; do
+            info "Unlink ${file}"
+
+            unlink "${file}"
+
+            if [[ -e "${file}.bak" ]]; then
+                debug "Restoring backup \"${file}\""
+
+                mv "${file}.bak" "${file}"
+            fi
+        done < "${DOTFILE_MANIFEST}"
+
+        info "Removing dotfiles manifest"
+
+        rm "${DOTFILE_MANIFEST}"
+    fi
 }
 
 installer::install() {
-  info "Installing dotfiles"
+    info "Installing dotfiles"
 
-  if [[ -e "${DOTFILE_MANIFEST}" ]]; then
-    debug "Removing old manifest file"
+    installer::link
 
-    rm "${DOTFILE_MANIFEST}"
+    if [[ -z "$(grep "##### DOTFILE START #####" ~/.bashrc)" ]]; then
+        read -r -p "Modify ~/.bashrc to load dotfiles? (y/n) " autoload
 
-    touch "${DOTFILE_MANIFEST}"
-  fi
+        if [[ "${autoload}" == "y" ]]; then
+            info "Appending ~/.bashrc"
 
-  local file
-
-  find "${DOTFILE_PATH}/dotfiles" -type f -print0 \
-    | while IFS= read -r -d '' file; do
-    local relative="${file##"${DOTFILE_PATH}/dotfiles/"}"
-    local link
-    link="$(realpath ~)/${relative}"
-    local link_parent="${link%%"$(basename "${link}")"}"
-
-    if [[ ! -e "${link_parent}" ]]; then
-      debug "Creating link parent directory"
-
-      mkdir -p "${link_parent}"
-    fi
-
-    info "Linking ${file} -> ${link}"
-
-    if [[ -e "${link}" ]] && [[ ! -L "${link}" ]]; then
-      debug "Found existing ${link}, creating backup"
-
-      mv "${link}" "${link}.bak"
-    fi
-
-    ln -sfr "${file}" "${link}"
-
-    echo "${link}" >> ~/.dotfiles.manifest
-  done
-
-  if [[ -z "$(grep "##### DOTFILE START #####" ~/.bashrc)" ]]; then
-    read -r -p "Modify ~/.bashrc to load dotfiles? (y/n) " autoload
-
-    if [[ "${autoload}" == "y" ]]; then
-      info "Appending ~/.bashrc"
-
-      tee -a ~/.bashrc << EOF >>/dev/null
+            tee -a ~/.bashrc << EOF >>/dev/null
 ##### DOTFILE START #####
 export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfiles)"
 export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
@@ -143,54 +195,40 @@ export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 source <(cat ~/devel/personal/dotfiles/library/*.sh)
 ##### DOTFILE STOP  #####
 EOF
+        fi
     fi
-  fi
 }
 
 installer::uninstall() {
-  info "Uninstalling dotfiles"
+    info "Uninstalling dotfiles"
 
-  local file
+    installer::unlink
 
-  if [[ -e "${DOTFILE_MANIFEST}" ]]; then
-    while IFS= read -r file; do
-      info "Unlink ${file}"
+    info "Cleaning up ~/.bashrc"
 
-      unlink "${file}"
-
-      if [[ -e "${file}.bak" ]]; then
-        debug "Restoring backup \"${file}\""
-
-        mv "${file}.bak" "${file}"
-      fi
-    done < "${DOTFILE_MANIFEST}"
-
-    rm "${DOTFILE_MANIFEST}"
-  fi
-
-  info "Cleaning up ~/.bashrc"
-
-  sed -i "/##### DOTFILE START #####/,/##### DOTFILE STOP  #####/d" ~/.bashrc
+    sed -i "/##### DOTFILE START #####/,/##### DOTFILE STOP  #####/d" ~/.bashrc
 }
 
 main() {
-  local cmd="${1:-bootstrap}"
+    local cmd="${1:-bootstrap}"
 
-  case "${cmd}" in
-    bootstrap)
-      installer::bootstrap
-      ;;
-    install)
-      installer::install
-      ;;
-    uninstall)
-      installer::uninstall
-      ;;
-    *)
-      echo "Invalid option ${cmd}"
-      ;;
-  esac
+    case "${cmd}" in
+        bootstrap)
+            installer::bootstrap
+            ;;
+        link)
+            installer::link
+            ;;
+        install)
+            installer::install
+            ;;
+        uninstall)
+            installer::uninstall
+            ;;
+        *)
+            echo "Invalid option ${cmd}"
+            ;;
+    esac
 }
 
 main "$@"
-
