@@ -192,7 +192,9 @@ installer::install() {
 export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfiles)"
 export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 
-source <(cat ~/devel/personal/dotfiles/library/*.sh)
+find "\${DOTFILE_PATH}/library" -mindepth 1 -type f -print0 | while IFS= read -r -d '' file; do
+    source "\${file}"
+done
 ##### DOTFILE STOP  #####
 EOF
         fi
