@@ -74,7 +74,8 @@ install_packages() {
     wtype \
     tmux \
     fzf \
-    neovim
+    neovim \
+    lazygit
 }
 
 install_other() {
