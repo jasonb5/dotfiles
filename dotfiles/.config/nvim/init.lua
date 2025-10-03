@@ -179,4 +179,9 @@ require('lazy').setup({
             { '<leader>sS', function() Snacks.picker.lsp_workspace_symbols() end, { desc = 'Search workspace symbols' } },
         },
     },
+    {
+        'nvim-mini/mini.pairs',
+        event = 'VeryLazy',
+        opts = {},
+    },
 })
