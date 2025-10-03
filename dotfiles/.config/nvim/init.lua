@@ -126,6 +126,11 @@ require('lazy').setup({
                 }
             })
         end,
+        keys = {
+            { '<leader>ca', function() vim.lsp.buf.code_action() end, { desc = 'Code action' } },
+            { 'K', function() vim.lsp.buf.hover() end, { 'Hover information' } },
+            { '<C-k>', function() vim.lsp.buf.signature_help() end, { 'Signature help' } },
+        },
     },
     {
         'folke/lazydev.nvim',
@@ -154,7 +159,7 @@ require('lazy').setup({
         keys = {
             { '<leader>e', function() Snacks.explorer.open() end, { desc = 'Opens explorer' } },
             { '<leader>lg', function() Snacks.lazygit.open() end, { desc = 'Opens lazygit' } },
-            { '<leader>fb', function() Snacks.picker.buffes() end, { desc = 'Find buffer' } },
+            { '<leader>fb', function() Snacks.picker.buffers() end, { desc = 'Find buffer' } },
             { '<leader>ff', function() Snacks.picker.files() end, { desc = 'Find files' } },
             { '<leader>fg', function() Snacks.picker.git_files() end, { desc = 'Find git files' } },
             { '<leader>fr', function() Snacks.picker.recent() end, { desc = 'Find recent' } },
@@ -168,8 +173,8 @@ require('lazy').setup({
             { 'gd', function() Snacks.picker.lsp_definitions() end, { desc = 'Goto definition' } },
             { 'gD', function() Snacks.picker.lsp_declarations() end, { desc = 'Goto declaration' } },
             { 'gr', function() Snacks.picker.lsp_references() end, { desc = 'Goto reference' } },
-            { 'gI', function() Snacks.picker.lsp_implementation() end, { desc = 'Goto implementation' } },
-            { 'gy', function() Snacks.picker.lsp_type_definition() end, { desc = 'Goto type definition' } },
+            { 'gI', function() Snacks.picker.lsp_implementations() end, { desc = 'Goto implementation' } },
+            { 'gy', function() Snacks.picker.lsp_type_definitions() end, { desc = 'Goto type definition' } },
             { '<leader>ss', function() Snacks.picker.lsp_symbols() end, { desc = 'Search symbols' } },
             { '<leader>sS', function() Snacks.picker.lsp_workspace_symbols() end, { desc = 'Search workspace symbols' } },
         },
