@@ -91,6 +91,11 @@ require('lazy').setup({
         opts = {},
     },
     {
+        'nvim-lualine/lualine.nvim',
+        event = 'VeryLazy',
+        opts = {},
+    },
+    {
         'nvim-treesitter/nvim-treesitter',
         lazy = false,
         branch = 'main',
