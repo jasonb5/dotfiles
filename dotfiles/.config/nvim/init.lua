@@ -51,8 +51,6 @@ key('n', '<Esc>', '<cmd>nohlsearch<cr>', { desc = 'Clear highlighting' })
 key('n', '<leader>\\', '<cmd>vsplit<cr>', { desc = 'Vertical split' })
 key('n', '<leader>-', '<cmd>split<cr>', { desc = 'Horizontal split' })
 
-key('n', '<leader>sq', '<cmd>q<cr>', { desc = 'Close split' })
-
 key('n', '<C-h>', '<C-w>h', { desc = 'Move to left split' })
 key('n', '<C-j>', '<C-w>j', { desc = 'Move to bottom split' })
 key('n', '<C-k>', '<C-w>k', { desc = 'Move to top split' })
@@ -65,7 +63,12 @@ key('n', '<C-Right>', '<cmd>vertical resize +2<cr>', { desc = 'Increase split wi
 
 key('n', '<leader>bn', '<cmd>bnext<cr>', { desc = 'Move to next buffer' })
 key('n', '<leader>bp', '<cmd>bprevious<cr>', { desc = 'Move to previous buffer' })
-key('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete buffer' })
+key('n', '<leader>bd', function()
+    Snacks.bufdelete.delete()
+end, { desc = 'Delete buffer' })
+key('n', '<leader>od', function()
+    Snacks.bufdelete.other()
+end, { desc = 'Delete other buffers' })
 
 key('n', '<leader>fn', '<cmd>enew<cr>', { desc = 'New file' })
 
@@ -101,6 +104,7 @@ require('lazy').setup({
             }, { summary = true })
 
             vim.api.nvim_create_autocmd('FileType', {
+                pattern = { 'lua' },
                 callback = function(ev)
                     vim.treesitter.start()
                 end,
@@ -118,6 +122,7 @@ require('lazy').setup({
         config = function(_, opts)
             require('mason-lspconfig').setup({
                 ensure_intalled = {
+                    'lua_ls',
                 }
             })
         end,
@@ -125,5 +130,48 @@ require('lazy').setup({
     {
         'folke/lazydev.nvim',
         ft = 'lua',
+        opts = {},
+    },
+    {
+        'folke/snacks.nvim',
+        priority = 1000,
+        lazy = false,
+        opts = {
+            bigfile = {},
+            dim = {},
+            explorer = {},
+            indent = {},
+            input = {},
+            lazygit = {},
+            picker = {},
+            quickfile = {},
+            scroll = {},
+            terminal = {},
+        },
+        config = function(_, opts)
+            require('snacks').setup(opts)
+        end,
+        keys = {
+            { '<leader>e', function() Snacks.explorer.open() end, { desc = 'Opens explorer' } },
+            { '<leader>lg', function() Snacks.lazygit.open() end, { desc = 'Opens lazygit' } },
+            { '<leader>fb', function() Snacks.picker.buffes() end, { desc = 'Find buffer' } },
+            { '<leader>ff', function() Snacks.picker.files() end, { desc = 'Find files' } },
+            { '<leader>fg', function() Snacks.picker.git_files() end, { desc = 'Find git files' } },
+            { '<leader>fr', function() Snacks.picker.recent() end, { desc = 'Find recent' } },
+            { '<leader>sb', function() Snacks.picker.lines() end, { desc = 'Search buffer' } },
+            { '<leader>sB', function() Snacks.picker.grep_buffers() end, { desc = 'Search all buffes' } },
+            { '<leader>sg', function() Snacks.picker.grep() end, { desc = 'Search all files' } },
+            { '<leader>sd', function() Snacks.picker.diagnostics() end, { desc = 'Search diagnostics' } },
+            { '<leader>sh', function() Snacks.picker.help() end, { desc = 'Search help' } },
+            { '<leader>si', function() Snacks.picker.icons() end, { desc = 'Search icons' } },
+            { '<leader>sq', function() Snacks.picker.qflist() end, { desc = 'Search quickfix list' } },
+            { 'gd', function() Snacks.picker.lsp_definitions() end, { desc = 'Goto definition' } },
+            { 'gD', function() Snacks.picker.lsp_declarations() end, { desc = 'Goto declaration' } },
+            { 'gr', function() Snacks.picker.lsp_references() end, { desc = 'Goto reference' } },
+            { 'gI', function() Snacks.picker.lsp_implementation() end, { desc = 'Goto implementation' } },
+            { 'gy', function() Snacks.picker.lsp_type_definition() end, { desc = 'Goto type definition' } },
+            { '<leader>ss', function() Snacks.picker.lsp_symbols() end, { desc = 'Search symbols' } },
+            { '<leader>sS', function() Snacks.picker.lsp_workspace_symbols() end, { desc = 'Search workspace symbols' } },
+        },
     },
 })
