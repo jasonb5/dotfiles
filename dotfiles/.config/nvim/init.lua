@@ -72,4 +72,12 @@ key('n', '<leader>fn', '<cmd>enew<cr>', { desc = 'New file' })
 key('n', '<leader>w', '<cmd>w<cr>', { desc = 'Write buffer' })
 key('n', '<leader>q', '<cmd>q<cr>', { desc = 'Quit ' })
 
-require('lazy').setup({})
+require('lazy').setup({
+    {
+        'rose-pine/neovim',
+        name = 'rose-pine',
+        config = function()
+            vim.cmd('colorscheme rose-pine')
+        end,
+    },
+})
