@@ -86,6 +86,11 @@ require('lazy').setup({
         end,
     },
     {
+        'akinsho/bufferline.nvim',
+        event = 'VeryLazy',
+        opts = {},
+    },
+    {
         'nvim-treesitter/nvim-treesitter',
         lazy = false,
         branch = 'main',
