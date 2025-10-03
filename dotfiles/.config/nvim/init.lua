@@ -109,4 +109,17 @@ require('lazy').setup({
             vim.bo.indentexpr = 'v:lua.require"nvim-treesitter".indextexpr()'
         end,
     },
+    {
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            { 'mason-org/mason.nvim', opts = {} },
+            { 'mason-org/mason-lspconfig.nvim', opts = {} },
+        },
+        config = function(_, opts)
+            require('mason-lspconfig').setup({
+                ensure_intalled = {
+                }
+            })
+        end,
+    },
 })
