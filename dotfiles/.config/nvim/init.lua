@@ -131,12 +131,23 @@ require('lazy').setup({
         dependencies = {
             { 'mason-org/mason.nvim', opts = {} },
             { 'mason-org/mason-lspconfig.nvim', opts = {} },
+            'saghen/blink.cmp',
+        },
+        opts = {
+            servers = {
+                lua_ls = {},
+            },
         },
         config = function(_, opts)
+            local lspconfig = require('lspconfig')
+
+            for server, config in pairs(opts.servers) do
+                config.capabilities = require('blink.cmp').get_lsp_capabilities()
+                lspconfig[server].setup(config)
+            end
+
             require('mason-lspconfig').setup({
-                ensure_intalled = {
-                    'lua_ls',
-                }
+                ensure_intalled = vim.tbl_keys(opts.servers)
             })
         end,
         keys = {
@@ -146,8 +157,8 @@ require('lazy').setup({
         },
     },
     {
-        'folke/lazydev.nvim',
-        ft = 'lua',
+        'saghen/blink.cmp',
+        build = 'cargo build --release',
         opts = {},
     },
     {
