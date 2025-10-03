@@ -80,4 +80,33 @@ require('lazy').setup({
             vim.cmd('colorscheme rose-pine')
         end,
     },
+    {
+        'nvim-treesitter/nvim-treesitter',
+        lazy = false,
+        branch = 'main',
+        build = ':TSUpdate',
+        opts = {},
+        config = function(_, opts)
+            require('nvim-treesitter').install({
+                'bash',
+                'json',
+                'lua',
+                'markdown',
+                'markdown_inline',
+                'python',
+                'query',
+                'regex',
+                'xml',
+                'yaml',
+            }, { summary = true })
+
+            vim.api.nvim_create_autocmd('FileType', {
+                callback = function(ev)
+                    vim.treesitter.start()
+                end,
+            })
+
+            vim.bo.indentexpr = 'v:lua.require"nvim-treesitter".indextexpr()'
+        end,
+    },
 })
