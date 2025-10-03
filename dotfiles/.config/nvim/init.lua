@@ -122,4 +122,8 @@ require('lazy').setup({
             })
         end,
     },
+    {
+        'folke/lazydev.nvim',
+        ft = 'lua',
+    },
 })
