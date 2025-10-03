@@ -46,6 +46,8 @@ opt.swapfile = false
 
 opt.encoding = 'utf-8'
 
+opt.signcolumn = 'yes'
+
 key('n', '<Esc>', '<cmd>nohlsearch<cr>', { desc = 'Clear highlighting' })
 
 key('n', '<leader>\\', '<cmd>vsplit<cr>', { desc = 'Vertical split' })
@@ -183,5 +185,9 @@ require('lazy').setup({
         'nvim-mini/mini.pairs',
         event = 'VeryLazy',
         opts = {},
+    },
+    {
+        'lewis6991/gitsigns.nvim',
+        opts = {}
     },
 })
