@@ -130,36 +130,97 @@ require('lazy').setup({
         event = { 'BufReadPost', 'BufNewFile', 'BufWritePre' },
         dependencies = {
             { 'mason-org/mason.nvim', opts = {} },
-            { 'mason-org/mason-lspconfig.nvim', opts = {} },
+            'mason-org/mason-lspconfig.nvim',
             'saghen/blink.cmp',
         },
         opts = {
             servers = {
-                lua_ls = {},
+                lua_ls = {
+                    Lua = {
+                        runtime = {
+                            version = 'LuaJIT',
+                        },
+                        diagnostics = {
+                            globals = { 'vim' },
+                        },
+                        workspace = {
+                            library = {
+                                vim.env.VIMRUNTIME,
+                                vim.fn.stdpath('data') .. '/lazy/',
+                            },
+                        },
+                    },
+                },
+                pyright = {},
             },
         },
         config = function(_, opts)
+            local registry = require('mason-registry')
+            local specs = registry.get_all_package_specs()
+            local Package = require('mason-core.package')
+            local lspconfig_to_package = {}
+
+            -- build registry of lspconfig to package
+            for _, package_spec in ipairs(specs) do
+                local lspconfig = vim.tbl_get(package_spec, 'neovim', 'lspconfig')
+
+                if lspconfig then
+                    lspconfig_to_package[lspconfig] = package_spec.name
+                end
+            end
+
+            for pkgname, _ in pairs(opts.servers) do
+                local name, version = Package.Parse(pkgname)
+                -- package name from lspconfig
+                local package_name = lspconfig_to_package[name]
+                local package = registry.get_package(package_name)
+
+                if not package:is_installed() and not package:is_installing() then
+                    package:install({ version = version}, function(success, err)
+                        if success then
+                            print('Installed ', name)
+                        else
+                            print('Failed to install ', name, ' error ', err)
+                        end
+                    end)
+                end
+            end
+
             local lspconfig = require('lspconfig')
 
             for server, config in pairs(opts.servers) do
                 config.capabilities = require('blink.cmp').get_lsp_capabilities()
-                lspconfig[server].setup(config)
-            end
 
-            require('mason-lspconfig').setup({
-                ensure_intalled = vim.tbl_keys(opts.servers)
-            })
+                lspconfig[server].setup({ settings = config })
+            end
         end,
         keys = {
             { '<leader>ca', function() vim.lsp.buf.code_action() end, { desc = 'Code action' } },
             { 'K', function() vim.lsp.buf.hover() end, { 'Hover information' } },
-            { '<C-k>', function() vim.lsp.buf.signature_help() end, { 'Signature help' } },
         },
     },
     {
         'saghen/blink.cmp',
+        event = { 'InsertEnter', 'CmdlineEnter' },
         build = 'cargo build --release',
-        opts = {},
+        opts = {
+            completion = {
+                documentation = {
+                    auto_show = true,
+                    auto_show_delay_ms = 500,
+                    treesitter_highlighting = false
+                },
+                ghost_text = {
+                    enabled = true
+                },
+            },
+            signature = {
+                enabled = true,
+            },
+            keymap = {
+                ['<C-h>'] = { 'accept' },
+            },
+        },
     },
     {
         'folke/snacks.nvim',
