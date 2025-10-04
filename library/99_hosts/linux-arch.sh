@@ -22,12 +22,6 @@ install_aur() {
     popd
 }
 
-update_system() {
-    info "Updating system packages"
-
-    sudo pacman -Syu
-}
-
 check_missing_aur_packages() {
     local required_packages=("swww" "wallust", "rofi-nerdy") 
     local missing=""
@@ -74,8 +68,21 @@ install_packages() {
         tmux \
         fzf \
         neovim \
-        lazygit
-    }
+        lazygit \
+        lsb-release \
+        networkmanager
+
+    if [[ "$(systemctl is-active systemd-networkd)" == "active" ]]; then
+        sudo systemctl stop systemd-networkd
+        sudo systemctl disable systemd-networkd
+
+        sudo systemctl stop iwd
+        sudo systemctl disable iwd
+    fi
+
+    sudo systemctl start NetworkManager
+    sudo systemctl enable NetworkManager
+}
 
 install_other() {
     if ! command_exists node; then
@@ -130,7 +137,6 @@ bootstrap_pre() {
 }
 
 bootstrap_post() {
-    update_system
     install_packages
     install_other
 }
