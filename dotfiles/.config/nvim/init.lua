@@ -218,7 +218,8 @@ require('lazy').setup({
                 enabled = true,
             },
             keymap = {
-                ['<C-h>'] = { 'accept' },
+                preset = 'enter',
+                ['<C-y>'] = { 'select_and_accept' },
             },
         },
     },
