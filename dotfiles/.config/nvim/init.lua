@@ -173,9 +173,9 @@ require('lazy').setup({
                 local name, version = Package.Parse(pkgname)
                 -- package name from lspconfig
                 local package_name = lspconfig_to_package[name]
-                local package = registry.get_package(package_name)
+                local ok, package = pcall(registry.get_package, package_name)
 
-                if not package:is_installed() and not package:is_installing() then
+                if ok and not package:is_installed() and not package:is_installing() then
                     package:install({ version = version}, function(success, err)
                         if success then
                             print('Installed ', name)
