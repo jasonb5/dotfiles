@@ -274,4 +274,11 @@ require('lazy').setup({
         'lewis6991/gitsigns.nvim',
         opts = {}
     },
+    {
+        'danymat/neogen',
+        opts = {},
+        keys = {
+            { '<leader>cn', function() require('neogen').generate() end, desc = 'Generation Annotations' },
+        },
+    },
 })
