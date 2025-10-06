@@ -27,6 +27,20 @@ elif [[ "${action}" == "mute" ]]; then
     fi
 
     exit 0
+elif [[ "${action}" == "micmute" ]]; then
+    pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+    muted="$(pactl get-source-mute @DEFAULT_SOURCE@ | grep -Po 'Mute: \K.*')"
+
+    debug "Current mute state: ${muted}"
+
+    if [[ "${muted}" == "yes" ]]; then
+        dunstify -r 100 "Microphone change" "Muted"
+    else
+        dunstify -r 100 "Microphone change" "Unmuted"
+    fi
+
+    exit 0
 else
     debug "Unknown action: ${action}"
 
