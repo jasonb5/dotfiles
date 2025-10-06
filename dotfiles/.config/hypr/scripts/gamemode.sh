@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 hyprgamemode="$(hyprctl getoption animations:enabled | awk 'NR==1{print $2}')"
 
 if [[ "${hyprgamemode}" -eq 1 ]]; then
@@ -12,10 +12,10 @@ if [[ "${hyprgamemode}" -eq 1 ]]; then
         keyword general:gaps_out 0; \
         keyword general:border_size 1; \
         keyword decoration:rounding 0"
-    hyprctl notify 1 5000 "rgb(40a02b)" "Gamemode [ON]"
+    dunstify "Gamemode [ON]"
     exit 0
 else
-    hyprctl notify 1 5000 "rgb(d20f39)" "Gamemode [OFF]"
+    dunstify "Gamemode [OFF]"
     hyprctl reload
     exit 0
 fi
