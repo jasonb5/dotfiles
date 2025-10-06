@@ -38,7 +38,7 @@
         "interval": 30,   
         "exec": "checkupdates | wc -l",
         "exec-if": "exit 0",
-        "on-click": "kitty sh -c 'yay -Syu; echo Done - Press enter to exit; read'; pkill -SIGRTMIN+8 waybar",
+        "on-click": "~/.config/hypr/scripts/float.sh kitty sh -c 'yay -Syu; echo Done - Press enter to exit; read'",
         "signal": 8,
         "tooltip": false
     },
