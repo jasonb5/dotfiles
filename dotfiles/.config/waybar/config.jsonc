@@ -78,7 +78,7 @@
 		"tooltip-format-disconnected": "Error",
 		"tooltip-format-wifi": "{essid} ({signalStrength}%) ",
 		"tooltip-format-ethernet": "{ifname} 🖧 ",
-		"on-click": "kitty nmtui"
+		"on-click": "~/.config/hypr/scripts/float.sh kitty nmtui"
 	},
     "battery": {
 		"interval":30,
