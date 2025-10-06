@@ -152,6 +152,7 @@ require('lazy').setup({
                     },
                 },
                 pyright = {},
+                bashls = {},
             },
         },
         config = function(_, opts)
