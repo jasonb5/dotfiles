@@ -40,6 +40,18 @@ check_missing_aur_packages() {
 }
 
 install_packages() {
+    read -r -p "Skip installing required packages? (y/n) " -t 2 answer
+
+    if [[ $? -gt 128 ]] || [[ "${answer}" == "y" ]]; then
+        echo 
+
+        info "Skipping installing required packages"
+
+        return 1
+    fi
+
+    echo 
+
     info "Installing required packages"
 
     sudo pacman -Sy --noconfirm \
@@ -85,6 +97,18 @@ install_packages() {
 }
 
 install_other() {
+    read -r -p "Skip installing other packages? (y/n) " -t 2 answer
+
+    if [[ $? -gt 128 ]] || [[ "${answer}" == "y" ]]; then
+        echo
+
+        info "Skipping installing other packages"
+
+        return 1
+    fi
+
+    echo
+
     if ! command_exists node; then
         info "Install fnm and nodejs"
 
