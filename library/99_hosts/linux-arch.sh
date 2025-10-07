@@ -23,7 +23,7 @@ install_aur() {
 }
 
 check_missing_aur_packages() {
-    local required_packages=("swww" "wallust", "rofi-nerdy") 
+    local required_packages=("swww" "pywal16", "rofi-nerdy") 
     local missing=""
 
     for pkg in "${required_packages[@]}"; do 
