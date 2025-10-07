@@ -12,11 +12,13 @@ if [[ "${hyprgamemode}" -eq 1 ]]; then
         keyword general:gaps_out 0; \
         keyword general:border_size 1; \
         keyword decoration:rounding 0"
+    killall waybar
     dunstify "Gamemode [ON]"
     exit 0
 else
     dunstify "Gamemode [OFF]"
     hyprctl reload
+    hyprctl dispatch exec waybar
     exit 0
 fi
 
