@@ -8,24 +8,11 @@ readonly DOTFILE_MAIN="${DOTFILE_PATH}/main.sh"
 readonly DOTFILE_REPO="https://github.com/jasonb5/dotfiles"
 readonly DOTFILE_RAW_REPO="https://raw.githubusercontent.com/jasonb5/dotfiles/refs/heads/main"
 
-bootstrap_logging() {
-    local local_file="${DOTFILE_PATH}/library/10_functions.sh"
-    local remote_file="${DOTFILE_RAW_REPO}/library/10_functions.sh"
-
-    if [[ -e "${local_file}" ]]; then
-        cat "${local_file}"
-    else
-        curl -L "${remote_file}"
-    fi
-}
-
-eval "$(bootstrap_logging)"
-
 installer::os() {
     echo "$(uname -s | tr '[[:upper:]]' '[[:lower:]]')"
 }
 
-installer::distribution() {
+installer::dist() {
     echo "$(echo $(lsb_release -i ) | sed 's/.*: //' | tr '[[:upper:]]' '[[:lower:]]')"
 }
 
@@ -33,68 +20,61 @@ installer::hostname() {
     echo "$(uname -n | tr '[[:upper:]]' '[[:lower:]]')"
 }
 
-installer::source_and_run() {
-    local file="${1}"
-    local function_name="${2}"
+installer::is_valid_path() {
+    if [[ -e "${1}" ]]; then
+        debug "Path '${1}' exists"
 
-    if [[ ! -e "${file}" ]]; then
-        debug "Skipping '${file}', does not exist"
-
-        return
+        return 0
     fi
 
-    debug "Loading '${file}'"
-
-    source "${file}"
-
-    if ! declare -f ${function_name} &>/dev/null; then
-        debug "Skipping '${function_name}', does not exist"
-        
-        return
-    fi
-
-    debug "Running '${function_name}'"
-
-    "${function_name}"
-
-    debug "Clearing '${function_name}'"
-
-    unset "${function_name}"
+    return 1
 }
 
-installer::run_host_function() {
-    local os
-    local distribution
-    local hostname
-    local response
-    local read_code
-    local function_name="${1}"
+installer::find_valid_host_file() {
+    find "${1}" -mindepth 1 -type d | while read -r dir; do
+        local dirname="${dir##${1}/}"
 
-    read -p "Would you like to skip '${function_name}'? (y/n) " -s -t 4 "response"
+        if [[ ${dirname} =~ ^[a-zA-Z0-1]+-[a-zA-Z0-1]+-[a-zA-Z0-1]+$ ]]; then
+            local hostname="$(echo ${dir} | cut -d'-' -f3)"
 
-    read_code="$?"
+            if [[ "${2}" =~ ${hostname} ]]; then
+                echo "${dir}/${3}"
 
-    echo ""
+                return 0
+            fi
+        fi
+    done
 
-    if [[ ${read_code} -gt 128 ]]; then
-        debug "User input timed out"
+    return 1
+}
 
-        response="y"
+installer::source_and_run() {
+    if installer::is_valid_path "${1}"; then
+        debug "Sourcing '${1}'"
+
+        source "${1}"
+
+        if declare -f "${2}" &>/dev/null; then
+            debug "Running '${2}'"
+
+            "${2}"
+            unset "${2}"
+        else
+            debug "Skipping '${2}', does not exist"
+        fi
+    else
+        debug "Skipping '${1}', does not exist"
     fi
+}
 
-    if [[ "${response}" != "n" ]]; then
-        debug "Skipping running '${function_name}', got response '${response}'"
+installer::run_hook() {
+    local os_file="${DOTFILE_PATH}/library/$(installer::os)/${1}"
+    local dist_file="${DOTFILE_PATH}/library/$(installer::os)-$(installer::dist)/${1}"
+    local host_file="$(installer::find_valid_host_file $(dirname $(dirname ${dist_file})) $(installer::hostname) ${1})"
 
-        return
-    fi
-
-    os="$(installer::os)"
-    distribution="$(installer::distribution)"
-    hostname="$(installer::hostname)"
-
-    installer::source_and_run "${DOTFILE_PATH}/library/99_hosts/${os}.sh" "${function_name}"
-    installer::source_and_run "${DOTFILE_PATH}/library/99_hosts/${os}-${distribution}.sh" "${function_name}"
-    installer::source_and_run "${DOTFILE_PATH}/library/99_hosts/${os}-${distribution}-${hostname}.sh" "${function_name}"
+    installer::source_and_run "${os_file}" "${2}"
+    installer::source_and_run "${dist_file}" "${2}"
+    installer::source_and_run "${host_file}" "${2}"
 }
 
 installer::bootstrap() {
@@ -106,11 +86,11 @@ installer::bootstrap() {
         git clone --filter=blob:none "${DOTFILE_REPO}" "${DOTFILE_PATH}"
     fi
 
-    installer::run_host_function "bootstrap_pre"
+    installer::run_hook "bootstrap.sh" "bootstrap_pre"
 
     source "${DOTFILE_MAIN}" install
 
-    installer::run_host_function "bootstrap_post"
+    installer::run_hook "bootstrap.sh" "bootstrap_post"
 }
 
 installer::link() {
@@ -120,9 +100,9 @@ installer::link() {
         touch "${DOTFILE_MANIFEST}"
     fi
 
-    installer::run_host_function "link_pre"
-
     local file
+
+    installer::run_hook "bootstrap.sh" "link_pre"
 
     find "${DOTFILE_PATH}/dotfiles" -type f -print0 | while IFS= read -r -d '' file; do
         local relative="${file##"${DOTFILE_PATH}/dotfiles/"}"
@@ -149,7 +129,7 @@ installer::link() {
         echo "${link}" >> ~/.dotfiles.manifest
     done
 
-    installer::run_host_function "link_post"
+    installer::run_hook "bootstrap.sh" "link_post"
 }
 
 installer::unlink() {
@@ -185,6 +165,10 @@ installer::install() {
         read -r -p "Modify ~/.bashrc to load dotfiles? (y/n) " autoload
 
         if [[ "${autoload}" == "y" ]]; then
+            local os_dir="${DOTFILE_PATH}/library/$(installer::os)"
+            local dist_dir="${os_dir}-$(installer::dist)"
+            local host_dir="$(installer::find_valid_host_file ${dist_dir})"
+
             info "Appending ~/.bashrc"
 
             tee -a ~/.bashrc << EOF >>/dev/null
@@ -192,9 +176,9 @@ installer::install() {
 export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfiles)"
 export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 
-find "\${DOTFILE_PATH}/library" -mindepth 1 -type f -print0 | while IFS= read -r -d '' file; do
-    source "\${file}"
-done
+$(if installer::is_valid_path ${os_dir}; then echo "source ~/${os_dir##$(realpath ~)/}/*.sh"; fi)
+$(if installer::is_valid_path ${dist_dir}; then echo "source ~/${dist_dir##$(realpath ~)/}/*.sh"; fi)
+$(if installer::is_valid_path ${host_dir}; then echo "source ~/${host_dir##$(realpath ~)/}/*.sh"; fi)
 ##### DOTFILE STOP  #####
 EOF
         fi
@@ -210,6 +194,20 @@ installer::uninstall() {
 
     sed -i "/##### DOTFILE START #####/,/##### DOTFILE STOP  #####/d" ~/.bashrc
 }
+
+bootstrap_logging() {
+    # logging functions are always in base os
+    local local_file="${DOTFILE_PATH}/library/$(installer::os)/functions.sh"
+    local remote_file="${DOTFILE_RAW_REPO}/library/$(installer::os)/functions.sh"
+
+    if [[ -e "${local_file}" ]]; then
+        cat "${local_file}"
+    else
+        curl -L "${remote_file}"
+    fi
+}
+
+eval "$(bootstrap_logging)"
 
 main() {
     local cmd="${1:-bootstrap}"
