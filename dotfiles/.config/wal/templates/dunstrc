@@ -4,12 +4,12 @@
     origin = top-right
     offset = (10, 10)
     frame_width = 2
-    frame_color = "{{color0}}CC"
+    frame_color = "{color0}CC"
     gap_size = 4
     font = "Fira Code Light 9"
     corner_radius = 10
-    background = "{{background}}CC"
-    foreground = "{{foreground}}"
+    background = "{background}CC"
+    foreground = "{foreground}"
 
 [urgency_low]
     timeout = 10

@@ -1,8 +1,0 @@
-backend = "wal"
-palette = "darkcomp16"
-
-[templates]
-waybar = { template = "waybar.css", target = "~/.config/waybar/colors.css" }
-hyprland = { template = "hyprland.conf", target = "~/.config/hypr/config/colors.conf" }
-rofi = { template = "rofi.rasi", target = "~/.config/rofi/colors.rasi" }
-dunstrc = { template = "dunstrc", target = "~/.config/dunst/dunstrc" }

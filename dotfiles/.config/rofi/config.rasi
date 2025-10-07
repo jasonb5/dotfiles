@@ -1,4 +1,4 @@
-@import "colors"
+@import "~/.cache/wal/colors-rofi-dark"
 
 window {
     font: "Fira Code Light 9";
@@ -7,7 +7,6 @@ window {
     padding: 10px;
     border: 0px;
     border-radius: 10px;
-    background-color: @bg;
 
     children: [ "mainbox-wrapper" ];
 }
@@ -30,12 +29,10 @@ element selected.active,
 element alternate.normal,
 element alternate.urgent,
 element alternate.active {
-    background-color: @bg;
 }
 
 element selected.active,
 element selected.normal {
-    background-color: @color4;
     border-radius: 10px;
 }
 
@@ -44,13 +41,11 @@ element {
 }
 
 scrollbar {
-    handle-color: @fg;
     handle-rounded-corners: true;
 }
 
 message,
 listview {
-    border-color: @fg;
 }
 
 listview { border: 2px dash 0px dash 0px dash 0px dash; }
@@ -63,7 +58,6 @@ prompt,
 entry,
 textbox,
 element-text {
-    text-color: @fg;
 }
 
 @media ( enabled: env(PREVIEW, false)) {
