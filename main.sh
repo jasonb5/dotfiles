@@ -156,11 +156,7 @@ installer::unlink() {
     fi
 }
 
-installer::install() {
-    info "Installing dotfiles"
-
-    installer::link
-
+installer::modify_bashrc() {
     if [[ -z "$(grep "##### DOTFILE START #####" ~/.bashrc)" ]]; then
         read -r -p "Modify ~/.bashrc to load dotfiles? (y/n) " autoload
 
@@ -176,13 +172,27 @@ installer::install() {
 export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfiles)"
 export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 
-$(if installer::is_valid_path ${os_dir}; then echo "source ~/${os_dir##$(realpath ~)/}/*.sh"; fi)
-$(if installer::is_valid_path ${dist_dir}; then echo "source ~/${dist_dir##$(realpath ~)/}/*.sh"; fi)
-$(if installer::is_valid_path ${host_dir}; then echo "source ~/${host_dir##$(realpath ~)/}/*.sh"; fi)
+$(if installer::is_valid_path ${os_dir}; then find ${os_dir} -maxdepth 1 -type f -exec echo -en "source {}\n" \; ; fi)
+$(if installer::is_valid_path ${dist_dir}; then find ${dist_dir} -maxdepth 1 -type f -exec echo -en "source {}\n" \; ; fi)
+$(if installer::is_valid_path ${host_dir}; then find ${host_dir} -maxdepth 1 -type f -exec echo -en "source {}\n" \; ; fi)
 ##### DOTFILE STOP  #####
 EOF
         fi
     fi
+}
+
+installer::clear_bashrc() {
+    info "Cleaning up ~/.bashrc"
+
+    sed -i "/##### DOTFILE START #####/,/##### DOTFILE STOP  #####/d" ~/.bashrc
+}
+
+installer::install() {
+    info "Installing dotfiles"
+
+    installer::link
+
+    installer::modify_bashrc 
 }
 
 installer::uninstall() {
@@ -190,9 +200,7 @@ installer::uninstall() {
 
     installer::unlink
 
-    info "Cleaning up ~/.bashrc"
-
-    sed -i "/##### DOTFILE START #####/,/##### DOTFILE STOP  #####/d" ~/.bashrc
+    installer::clear_bashrc
 }
 
 bootstrap_logging() {
@@ -224,6 +232,10 @@ main() {
             ;;
         uninstall)
             installer::uninstall
+            ;;
+        reset-bashrc)
+            installer::clear_bashrc 
+            installer::modify_bashrc 
             ;;
         *)
             echo "Invalid option ${cmd}"
