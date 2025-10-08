@@ -1,11 +1,11 @@
 @import "~/.cache/wal/colors-rofi-dark"
 
 window {
-    font: "Fira Code Light 9";
+    font: "Fira Code Light 10";
     transparency: "real";
     width: 25%;
     padding: 10px;
-    border: 0px;
+    border: 2px;
     border-radius: 10px;
 
     children: [ "mainbox-wrapper" ];
@@ -18,17 +18,6 @@ mainbox-wrapper {
 
 icon-current-entry {
     expand: true;
-}
-
-element normal.normal,
-element normal.urgent,
-element normal.active,
-element selected.normal,
-element selected.urgent,
-element selected.active,
-element alternate.normal,
-element alternate.urgent,
-element alternate.active {
 }
 
 element selected.active,
@@ -44,20 +33,11 @@ scrollbar {
     handle-rounded-corners: true;
 }
 
-message,
-listview {
-}
-
 listview { border: 2px dash 0px dash 0px dash 0px dash; }
+
 message { 
     padding: 4px 0px 4px 0px;
     border: 2px dash 0px dash 0px dash 0px dash; 
-}
-
-prompt,
-entry,
-textbox,
-element-text {
 }
 
 @media ( enabled: env(PREVIEW, false)) {
