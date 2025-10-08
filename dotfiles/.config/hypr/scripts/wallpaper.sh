@@ -13,6 +13,7 @@ if [[ -n "${selected}" ]]; then
     fi
 
     ln -sf "${wallpaper_path}" "${current_path}"
+    ln -sf "${wallpaper_path}" "/usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/current"
 
     wal -i "${current_path}"
 fi
