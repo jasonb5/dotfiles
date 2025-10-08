@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_packages() {
-    read -r -p "Skip installing required packages? (y/n) " -t 2 answer
+    read -r -p "Skip installing required packages? [Y|n] " -t 2 answer
 
     if [[ $? -gt 128 ]] || [[ "${answer}" == "y" ]]; then
         echo 
@@ -57,8 +57,20 @@ install_packages() {
     sudo systemctl enable NetworkManager
 }
 
+install_yay() {
+    local temp_dir="$(mktemp -d)"
+
+    git clone --filter blob:none https://aur.archlinux.org/yay.git "${temp_dir}"
+
+    pushd "${temp_dir}"
+
+    makepkg -i
+
+    popd
+}
+
 install_other() {
-    read -r -p "Skip installing other packages? (y/n) " -t 2 answer
+    read -r -p "Skip installing other packages? [Y|n] " -t 2 answer
 
     if [[ $? -gt 128 ]] || [[ "${answer}" == "y" ]]; then
         echo
@@ -69,6 +81,16 @@ install_other() {
     fi
 
     echo
+
+    if ! command_exists yay; then
+        install_yay
+    fi
+
+    info "Yay: $(yay --version)"
+
+    local yay_packages="swww python-pywal16 rofi-nerdy sddm-astronaut-theme"
+
+    yay -S ${yay_packages}
 
     if ! command_exists node; then
         info "Install fnm and nodejs"
@@ -85,6 +107,8 @@ install_other() {
 
         npm install -g @google/gemini-cli
     fi
+
+    info "Gemini: $(gemini --version)"
 
     if [[ ! -e ~/.tmux ]];  then
         info "Installing tmux tpm"
@@ -117,6 +141,28 @@ fi
     fi
 }
 
+setup_sddm() {
+    local theme="astronaut.conf"
+    local width; local height
+
+    width="$(hyprctl monitors | grep -A1 Monitor | sed -n '2p' | cut -d'@' -f1 | tr -d '\t' | cut -d'x' -f1)"
+    height="$(hyprctl monitors | grep -A1 Monitor | sed -n '2p' | cut -d'@' -f1 | tr -d '\t' | cut -d'x' -f2)"
+
+    sudo chown -R root:titters /usr/share/sddm/themes
+    sudo chmod -R 0775 /usr/share/sddm/themes
+
+    echo -e "[Theme]\nCurrent=sddm-astronaut-theme" | sudo tee /etc/sddm.conf
+
+    sed -i'' "s/\(ConfigFile=Themes\/\).*/\1${theme}/" /usr/share/sddm/themes/sddm-astronaut-theme/metadata.desktop
+
+    cp "/usr/share/sddm/themes/sddm-astronaut-theme/Themes/${theme}" "/usr/share/sddm/themes/sddm-astronaut-theme/Themes/${theme}.user" 
+
+    sed -i'' "s/\(ScreenWidth=\).*/\1\"${width}\"/" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf.user
+    sed -i'' "s/\(ScreenHeight=\).*/\1\"${height}\"/" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf.user
+    sed -i'' "s/\(Font=\).*/\1\"Fira Code Mono\"/" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf.user
+    sed -i'' "s/\(Background=\"Backgrounds\/\).*/\1current\"/" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf.user
+}
+
 bootstrap_pre() {
     generate_hypr_host_file
 }
@@ -124,6 +170,7 @@ bootstrap_pre() {
 bootstrap_post() {
     install_packages
     install_other
+    setup_sddm
 }
 
 link_post() {
