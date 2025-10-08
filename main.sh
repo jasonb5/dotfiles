@@ -156,11 +156,18 @@ installer::unlink() {
     fi
 }
 
+installer::get_files_to_source() {
+    if installer::is_valid_path "${1}"; then
+        # Skip bootstrap.sh, only used during bookstrapping
+        find "${1}" -maxdepth 1 -type f -not -name bootstrap.sh -exec echo -en "source {}\n" \;
+    fi
+}
+
 installer::modify_bashrc() {
     if [[ -z "$(grep "##### DOTFILE START #####" ~/.bashrc)" ]]; then
-        read -r -p "Modify ~/.bashrc to load dotfiles? (y/n) " autoload
+        read -r -p "Modify ~/.bashrc to load dotfiles? [y|N] " -t 4 autoload
 
-        if [[ "${autoload}" == "y" ]]; then
+        if [[ "${autoload:-n}" == "y" ]]; then
             local os_dir="${DOTFILE_PATH}/library/$(installer::os)"
             local dist_dir="${os_dir}-$(installer::dist)"
             local host_dir="$(installer::find_valid_host_file ${dist_dir})"
@@ -172,9 +179,9 @@ installer::modify_bashrc() {
 export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfiles)"
 export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 
-$(if installer::is_valid_path ${os_dir}; then find ${os_dir} -maxdepth 1 -type f -exec echo -en "source {}\n" \; ; fi)
-$(if installer::is_valid_path ${dist_dir}; then find ${dist_dir} -maxdepth 1 -type f -exec echo -en "source {}\n" \; ; fi)
-$(if installer::is_valid_path ${host_dir}; then find ${host_dir} -maxdepth 1 -type f -exec echo -en "source {}\n" \; ; fi)
+$(installer::get_files_to_source ${os_dir})
+$(installer::get_files_to_source ${dist_dir})
+$(installer::get_files_to_source ${host_dir})
 ##### DOTFILE STOP  #####
 EOF
         fi
