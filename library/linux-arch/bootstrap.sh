@@ -1,44 +1,5 @@
 #!/usr/bin/env bash
 
-install_aur() {
-    local tempdir
-    local package="${1}"
-    local review="${2}"
-
-    tempdir="$(mktemp -d)"
-
-    git clone --depth 1 "https://aur.archlinux.org/${package}.git" "${tempdir}"
-
-    pushd "${tempdir}"
-
-    if [[ "${review}" == "true" ]]; then
-        makepkg -o --printsrcinfo --verifysource
-
-        vim PKGBUILD
-    fi
-
-    makepkg -si
-
-    popd
-}
-
-check_missing_aur_packages() {
-    local required_packages=("swww" "pywal16", "rofi-nerdy") 
-    local missing=""
-
-    for pkg in "${required_packages[@]}"; do 
-        if ! command_exists "${pkg}"; then
-            missing+="${pkg}, "
-        fi
-    done
-
-    if (( ${#missing} > 0 )); then
-        info "${missing:0:(( ${#missing} - 2 ))}"
-        else
-            info "No missing aur packages"
-    fi
-}
-
 install_packages() {
     read -r -p "Skip installing required packages? (y/n) " -t 2 answer
 
