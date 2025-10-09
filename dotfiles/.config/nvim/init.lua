@@ -247,7 +247,7 @@ require('lazy').setup({
             { '<leader>e', function() Snacks.explorer.open() end, { desc = 'Opens explorer' } },
             { '<leader>lg', function() Snacks.lazygit.open() end, { desc = 'Opens lazygit' } },
             { '<leader>fb', function() Snacks.picker.buffers() end, { desc = 'Find buffer' } },
-            { '<leader>ff', function() Snacks.picker.files() end, { desc = 'Find files' } },
+            { '<leader>ff', function() Snacks.picker.files({ hidden = true }) end, { desc = 'Find files' } },
             { '<leader>fg', function() Snacks.picker.git_files() end, { desc = 'Find git files' } },
             { '<leader>fr', function() Snacks.picker.recent() end, { desc = 'Find recent' } },
             { '<leader>sb', function() Snacks.picker.lines() end, { desc = 'Search buffer' } },
