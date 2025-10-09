@@ -182,6 +182,12 @@ export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 $(installer::get_files_to_source ${os_dir})
 $(installer::get_files_to_source ${dist_dir})
 $(installer::get_files_to_source ${host_dir})
+
+# run init_bash if it exists
+if declare -f init_bash; then
+    init_bash
+fi
+
 ##### DOTFILE STOP  #####
 EOF
         fi
