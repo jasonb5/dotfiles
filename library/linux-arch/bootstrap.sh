@@ -47,7 +47,8 @@ install_packages() {
         swww \
         python-pywal16 \
         rofi-nerdy \
-        sddm-astronaut-theme
+        sddm-astronaut-theme \
+        starship 
 
     if [[ "$(systemctl is-active systemd-networkd)" == "active" ]]; then
         sudo systemctl stop systemd-networkd

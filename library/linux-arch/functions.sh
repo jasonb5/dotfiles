@@ -2,6 +2,7 @@
 
 function init_bash() {
     debug "Init bash" 
+    eval "$(starship init bash)"
 }
 
 function tmuxs() {
