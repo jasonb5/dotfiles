@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 
 function init_bash() {
-    debug "Init bash" 
     eval "$(starship init bash)"
+
+    export HISTTIMEFORMAT="%F %T "
+    export HISTCONTROL=ignoredups:ignorespace
+
+    shopt -s histappend
+
+    ulimit -c 0
 }
 
 function tmuxs() {
