@@ -1,7 +1,7 @@
 @import "~/.cache/wal/colors-rofi-dark"
 
 window {
-    font: "Fira Code Light 10";
+    font: "Fira Code Light 12";
     transparency: "real";
     width: 25%;
     padding: 10px;
