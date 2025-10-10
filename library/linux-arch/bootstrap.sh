@@ -15,7 +15,7 @@ install_packages() {
 
     info "Installing required packages"
 
-    sudo pacman -Sy --noconfirm \
+    yay -Sy \
         base-devel \
         unzip \
         git \
@@ -43,7 +43,11 @@ install_packages() {
         neovim \
         lazygit \
         lsb-release \
-        networkmanager
+        networkmanager \
+        swww \
+        python-pywal16 \
+        rofi-nerdy \
+        sddm-astronaut-theme
 
     if [[ "$(systemctl is-active systemd-networkd)" == "active" ]]; then
         sudo systemctl stop systemd-networkd
@@ -58,15 +62,17 @@ install_packages() {
 }
 
 install_yay() {
-    local temp_dir="$(mktemp -d)"
+    if ! command_exists yay; then
+        local temp_dir="$(mktemp -d)"
 
-    git clone --filter blob:none https://aur.archlinux.org/yay.git "${temp_dir}"
+        git clone --filter blob:none https://aur.archlinux.org/yay.git "${temp_dir}"
 
-    pushd "${temp_dir}"
+        pushd "${temp_dir}"
 
-    makepkg -i
+        makepkg -i
 
-    popd
+        popd
+    fi
 }
 
 install_other() {
@@ -87,10 +93,6 @@ install_other() {
     fi
 
     info "Yay: $(yay --version)"
-
-    local yay_packages="swww python-pywal16 rofi-nerdy sddm-astronaut-theme"
-
-    yay -S ${yay_packages}
 
     if ! command_exists node; then
         info "Install fnm and nodejs"
@@ -168,6 +170,7 @@ bootstrap_pre() {
 }
 
 bootstrap_post() {
+    install_yay
     install_packages
     install_other
     setup_sddm
