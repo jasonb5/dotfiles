@@ -16,4 +16,10 @@ if [[ -n "${selected}" ]]; then
     ln -sf "${wallpaper_path}" "/usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/current"
 
     wal -i "${current_path}"
+
+    if [[ ! -e ~/.config/dunst/ ]]; then
+        mkdir -p ~/.config/dunst
+    fi
+
+    ln -sf ~/.cache/wal/dunstrc ~/.config/dunst/dunstrc
 fi
