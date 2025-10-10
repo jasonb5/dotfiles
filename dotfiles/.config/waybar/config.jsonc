@@ -15,7 +15,8 @@
         "temperature",
         "bluetooth",
         "network",
-        "battery"
+        "battery",
+        "custom/power"
     ],
     "margin": "8px 0px 0px 0px",
     "reload_style_on_change": true,
@@ -100,6 +101,10 @@
             "󰂂",
             "󰁹"
         ]
+    },
+    "custom/power": {
+        "format": "⏻",
+        "on-click": "~/.config/hypr/scripts/powermenu.sh"
     }
 }
 
