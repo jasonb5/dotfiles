@@ -123,7 +123,7 @@ install_other() {
 generate_hypr_host_file() {
     local scale="1.0"
     local hypr_host_file
-    hypr_host_file="$(realpath ~/.config/hypr/config/host.conf)"
+    hypr_host_file="$(realpath ~/.config/hypr/host.conf)"
 
     if [[ ! -e "${hypr_host_file}" ]]; then
         info "Generating hyprland host.conf"
