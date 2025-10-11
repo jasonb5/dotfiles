@@ -3,7 +3,7 @@
 window {
     font: "Fira Code Light 12";
     transparency: "real";
-    width: 25%;
+    width: 40%;
     padding: 10px;
     border: 2px;
     border-radius: 10px;
@@ -33,7 +33,10 @@ scrollbar {
     handle-rounded-corners: true;
 }
 
-listview { border: 2px dash 0px dash 0px dash 0px dash; }
+listview { 
+    border: 2px dash 0px dash 0px dash 0px dash; 
+    columns: 2;
+}
 
 message { 
     padding: 4px 0px 4px 0px;
