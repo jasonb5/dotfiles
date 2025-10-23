@@ -1,0 +1,4 @@
+[submodule "library/private"]
+	path = library/private
+	url = git@github.com:jasonb5/dotfiles-private
+	branch = main

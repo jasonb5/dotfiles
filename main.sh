@@ -9,15 +9,35 @@ readonly DOTFILE_REPO="https://github.com/jasonb5/dotfiles"
 readonly DOTFILE_RAW_REPO="https://raw.githubusercontent.com/jasonb5/dotfiles/refs/heads/main"
 
 installer::os() {
-    echo "$(uname -s | tr '[[:upper:]]' '[[:lower:]]')"
+    uname -s | tr '[[:upper:]]' '[[:lower:]]'
 }
 
 installer::dist() {
-    echo "$(echo $(lsb_release -i ) | sed 's/.*: //' | tr '[[:upper:]]' '[[:lower:]]')"
+    lsb_release -i | sed 's/[^:]*:\s//' | tr '[[:upper:]]' '[[:lower:]]'
 }
 
 installer::hostname() {
-    echo "$(uname -n | tr '[[:upper:]]' '[[:lower:]]')"
+    uname -n | tr '[[:upper:]]' '[[:lower:]]'
+}
+
+installer::os_dir() {
+    find ${DOTFILE_PATH}/library -type d -path */$(installer::os) | head -n1
+}
+
+installer::os_dist_dir() {
+    find ${DOTFILE_PATH}/library -type d -path */$(installer::os)-$(installer::dist) | head -n1
+}
+
+installer::os_dist_host_dir() {
+    find ${DOTFILE_PATH}/library -type d -regex .*$(installer::os)-$(installer::dist)-[^//]* | while IFS= read -r x; do
+        local hostname="$(basename ${x} | rev | cut -d'-' -f1 | rev)"
+        if [[ "$(installer::hostname)" =~ .*${hostname}.* ]]; then
+            echo "${x}"
+            return 1
+        fi
+    done 
+
+    return 0
 }
 
 installer::is_valid_path() {
@@ -26,24 +46,6 @@ installer::is_valid_path() {
 
         return 0
     fi
-
-    return 1
-}
-
-installer::find_valid_host_file() {
-    find "${1}" -mindepth 1 -type d | while read -r dir; do
-        local dirname="${dir##${1}/}"
-
-        if [[ ${dirname} =~ ^[a-zA-Z0-1]+-[a-zA-Z0-1]+-[a-zA-Z0-1]+$ ]]; then
-            local hostname="$(echo ${dir} | cut -d'-' -f3)"
-
-            if [[ "${2}" =~ ${hostname} ]]; then
-                echo "${dir}/${3}"
-
-                return 0
-            fi
-        fi
-    done
 
     return 1
 }
@@ -68,9 +70,13 @@ installer::source_and_run() {
 }
 
 installer::run_hook() {
-    local os_file="${DOTFILE_PATH}/library/$(installer::os)/${1}"
-    local dist_file="${DOTFILE_PATH}/library/$(installer::os)-$(installer::dist)/${1}"
-    local host_file="$(installer::find_valid_host_file $(dirname $(dirname ${dist_file})) $(installer::hostname) ${1})"
+    local os_file
+    local dist_file
+    local host_file
+
+    os_file="$(installer::os_dir)/${1}"
+    dist_file="$(installer::os_dist_dir)/${1}"
+    host_file="$(installer::os_dist_host_dir)/${1}"
 
     installer::source_and_run "${os_file}" "${2}"
     installer::source_and_run "${dist_file}" "${2}"
@@ -100,12 +106,31 @@ installer::link() {
         touch "${DOTFILE_MANIFEST}"
     fi
 
-    local file
-
     installer::run_hook "bootstrap.sh" "link_pre"
 
-    find "${DOTFILE_PATH}/dotfiles" -type f -print0 | while IFS= read -r -d '' file; do
-        local relative="${file##"${DOTFILE_PATH}/dotfiles/"}"
+    local os_dir="$(installer::os_dir)"
+    local dist_dir="$(installer::os_dist_dir)"
+    local host_dir="$(installer::os_dist_host_dir)"
+
+    installer::link_files_from_dir "${DOTFILE_PATH}/dotfiles"
+    installer::link_files_from_dir "${os_dir}/dotfiles"
+    installer::link_files_from_dir "${dist_dir}/dotfiles"
+    installer::link_files_from_dir "${host_dir}/dotfiles"
+
+    exit 1
+
+    installer::run_hook "bootstrap.sh" "link_post"
+}
+
+installer::link_files_from_dir() {
+    if [[ ! -e "${1}" ]]; then
+        debug "Skipping linking dotfiles from \"${1}\", does not exist"
+        
+        return 1
+    fi
+
+    find "${1}" -type f -print0 | while IFS= read -r -d '' file; do
+        local relative="${file##"${1}/"}"
         local link
         link="$(realpath ~)/${relative}"
         local link_parent="${link%%"$(basename "${link}")"}"
@@ -126,10 +151,10 @@ installer::link() {
 
         ln -sfr "${file}" "${link}"
 
-        echo "${link}" >> ~/.dotfiles.manifest
+        echo "${link}" >> "${DOTFILE_MANIFEST}"
     done
 
-    installer::run_hook "bootstrap.sh" "link_post"
+    return 0 
 }
 
 installer::unlink() {
@@ -245,10 +270,6 @@ main() {
             ;;
         uninstall)
             installer::uninstall
-            ;;
-        reset-bashrc)
-            installer::clear_bashrc 
-            installer::modify_bashrc 
             ;;
         *)
             echo "Invalid option ${cmd}"
