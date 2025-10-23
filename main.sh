@@ -117,8 +117,6 @@ installer::link() {
     installer::link_files_from_dir "${dist_dir}/dotfiles"
     installer::link_files_from_dir "${host_dir}/dotfiles"
 
-    exit 1
-
     installer::run_hook "bootstrap.sh" "link_post"
 }
 
