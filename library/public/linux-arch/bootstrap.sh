@@ -120,30 +120,6 @@ install_other() {
     fi
 }
 
-generate_hypr_host_file() {
-    local scale="1.0"
-    local hypr_host_file
-    hypr_host_file="$(realpath ~/.config/hypr/host.conf)"
-
-    if [[ ! -e "${hypr_host_file}" ]]; then
-        info "Generating hyprland host.conf"
-
-        if [[ "${HOSTNAME}" == "lo" ]]; then
-            scale="1.2"
-        fi
-
-        debug "Setting hyprland scale to ${scale}"
-
-        tee -a "${hypr_host_file}" << EOF >>/dev/null
-\$monitorScale = ${scale}
-EOF
-
-if [[ -v $(grep "${hypr_host_file}" "${DOTFILE_MANIFEST}") ]]; then
-    echo "${hypr_host_file}" | tee -a "${DOTFILE_MANIFEST}"
-fi
-    fi
-}
-
 setup_sddm() {
     local theme="astronaut.conf"
     local width; local height
@@ -164,10 +140,6 @@ setup_sddm() {
     sed -i'' "s/\(ScreenHeight=\).*/\1\"${height}\"/" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf.user
     sed -i'' "s/\(Font=\).*/\1\"Fira Code Mono\"/" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf.user
     sed -i'' "s/\(Background=\"Backgrounds\/\).*/\1current\"/" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf.user
-}
-
-bootstrap_pre() {
-    generate_hypr_host_file
 }
 
 bootstrap_post() {
