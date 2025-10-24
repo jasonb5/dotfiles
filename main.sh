@@ -257,17 +257,13 @@ main() {
     local cmd="${1:-bootstrap}"
 
     case "${cmd}" in
-        bootstrap)
-            installer::bootstrap
-            ;;
-        link)
-            installer::link
-            ;;
-        install)
-            installer::install
-            ;;
-        uninstall)
-            installer::uninstall
+        bootstrap) installer::bootstrap;;
+        link) installer::link;;
+        install) installer::install;;
+        uninstall) installer::uninstall;;
+        bashrc)
+            installer::clear_bashrc
+            installer::modify_bashrc
             ;;
         *)
             echo "Invalid option ${cmd}"
