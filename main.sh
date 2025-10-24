@@ -191,9 +191,9 @@ installer::modify_bashrc() {
         read -r -p "Modify ~/.bashrc to load dotfiles? [y|N] " -t 4 autoload
 
         if [[ "${autoload:-n}" == "y" ]]; then
-            local os_dir="${DOTFILE_PATH}/library/$(installer::os)"
-            local dist_dir="${os_dir}-$(installer::dist)"
-            local host_dir="$(installer::find_valid_host_file ${dist_dir})"
+            local os_dir="$(installer::os_dir)"
+            local dist_dir="$(installer::os_dist_dir)"
+            local host_dir="$(installer::os_dist_host_dir)"
 
             info "Appending ~/.bashrc"
 
