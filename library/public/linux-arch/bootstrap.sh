@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
 
 install_packages() {
-    read -r -p "Skip installing required packages? [Y|n] " -t 2 answer
-
-    if [[ $? -gt 128 ]] || [[ "${answer}" == "y" ]]; then
-        echo 
-
-        info "Skipping installing required packages"
-
-        return 1
-    fi
-
-    echo 
-
     info "Installing required packages"
 
     yay -Sy \
@@ -77,18 +65,6 @@ install_yay() {
 }
 
 install_other() {
-    read -r -p "Skip installing other packages? [Y|n] " -t 2 answer
-
-    if [[ $? -gt 128 ]] || [[ "${answer}" == "y" ]]; then
-        echo
-
-        info "Skipping installing other packages"
-
-        return 1
-    fi
-
-    echo
-
     if ! command_exists yay; then
         install_yay
     fi
