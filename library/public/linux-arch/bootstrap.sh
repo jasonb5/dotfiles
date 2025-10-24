@@ -38,10 +38,16 @@ install_packages() {
         sddm-astronaut-theme \
         starship 
 
+    if [[ "${?}" ]]; then
+        return 1
+    fi
+
     if [[ "$(systemctl is-active systemd-networkd)" == "active" ]]; then
         sudo systemctl stop systemd-networkd
         sudo systemctl disable systemd-networkd
+    fi
 
+    if [[ "$(systemctl is-active iwd)" == "active" ]]; then
         sudo systemctl stop iwd
         sudo systemctl disable iwd
     fi
