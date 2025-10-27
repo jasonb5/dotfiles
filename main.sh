@@ -241,8 +241,8 @@ installer::uninstall() {
 
 bootstrap_logging() {
     # logging functions are always in base os
-    local local_file="${DOTFILE_PATH}/library/$(installer::os)/functions.sh"
-    local remote_file="${DOTFILE_RAW_REPO}/library/$(installer::os)/functions.sh"
+    local local_file="${DOTFILE_PATH}/library/public/$(installer::os)/functions.sh"
+    local remote_file="${DOTFILE_RAW_REPO}/library/public/$(installer::os)/functions.sh"
 
     if [[ -e "${local_file}" ]]; then
         cat "${local_file}"
