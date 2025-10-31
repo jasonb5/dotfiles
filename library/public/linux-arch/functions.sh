@@ -25,3 +25,9 @@ function tmuxs() {
         tmux switch-client -t "${name}"
     fi
 }
+
+function fcd() {
+    target="$(find . -type d -not -path '*.git*' | fzf)"
+
+    pushd "${target}"
+}
