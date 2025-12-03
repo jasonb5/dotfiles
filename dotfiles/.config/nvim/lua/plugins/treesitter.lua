@@ -7,6 +7,14 @@ return {
         config = function(self, opts)
             require'nvim-treesitter'.setup {}
             require'nvim-treesitter'.install(opts.parsers)
+
+            vim.api.nvim_create_autocmd('FileType', {
+                pattern = opts.parsers,
+                callback = function()
+                    vim.treesitter.start()
+                    vim.bo.indentexpr = 'v:lua.require("nvim-treesittter").indentexpr()'
+                end,
+            })
         end,
         opts = {
             parsers = {
