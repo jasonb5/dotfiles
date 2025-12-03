@@ -11,8 +11,9 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require('lsp')
 require('settings')
+require('autocmds')
+require('lsp')
 
 require('lazy').setup('plugins', {
     rocks = { enabled = false },
