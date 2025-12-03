@@ -5,6 +5,7 @@ readonly DOTFILE_PATH
 DOTFILE_MANIFEST="$(realpath ~/.dotfiles.manifest)"
 readonly DOTFILE_MANIFEST
 readonly DOTFILE_MAIN="${DOTFILE_PATH}/main.sh"
+readonly DOTFILE_MODULES="${DOTFILE_PATH}/modules"
 readonly DOTFILE_REPO="https://github.com/jasonb5/dotfiles"
 readonly DOTFILE_RAW_REPO="https://raw.githubusercontent.com/jasonb5/dotfiles/refs/heads/main"
 
@@ -21,23 +22,11 @@ installer::hostname() {
 }
 
 installer::os_dir() {
-    find ${DOTFILE_PATH}/library -type d -path */$(installer::os) | head -n1
+    find ${DOTFILE_MODULES} -type d -path "*/$(installer::os)" | head -n1
 }
 
 installer::os_dist_dir() {
-    find ${DOTFILE_PATH}/library -type d -path */$(installer::os)-$(installer::dist) | head -n1
-}
-
-installer::os_dist_host_dir() {
-    find ${DOTFILE_PATH}/library -type d -regex .*$(installer::os)-$(installer::dist)-[^//]* | while IFS= read -r x; do
-        local hostname="$(basename ${x} | rev | cut -d'-' -f1 | rev)"
-        if [[ "$(installer::hostname)" =~ .*${hostname}.* ]]; then
-            echo "${x}"
-            return 1
-        fi
-    done 
-
-    return 0
+    find ${DOTFILE_MODULES} -type d -path "*/$(installer::os)-$(installer::dist)" | head -n1
 }
 
 installer::is_valid_path() {
@@ -76,11 +65,9 @@ installer::run_hook() {
 
     os_file="$(installer::os_dir)/${1}"
     dist_file="$(installer::os_dist_dir)/${1}"
-    host_file="$(installer::os_dist_host_dir)/${1}"
 
     installer::source_and_run "${os_file}" "${2}"
     installer::source_and_run "${dist_file}" "${2}"
-    installer::source_and_run "${host_file}" "${2}"
 }
 
 installer::bootstrap() {
@@ -92,67 +79,83 @@ installer::bootstrap() {
         git clone --filter=blob:none "${DOTFILE_REPO}" "${DOTFILE_PATH}"
     fi
 
-    installer::run_hook "bootstrap.sh" "bootstrap_pre"
-
     source "${DOTFILE_MAIN}" install
-
-    installer::run_hook "bootstrap.sh" "bootstrap_post"
 }
 
 installer::link() {
     if [[ -e "${DOTFILE_MANIFEST}" ]]; then
         installer::unlink
-
-        touch "${DOTFILE_MANIFEST}"
     fi
 
-    installer::run_hook "bootstrap.sh" "link_pre"
+    touch "${DOTFILE_MANIFEST}"
 
     local os_dir="$(installer::os_dir)"
     local dist_dir="$(installer::os_dist_dir)"
-    local host_dir="$(installer::os_dist_host_dir)"
 
-    installer::link_files_from_dir "${DOTFILE_PATH}/dotfiles"
-    installer::link_files_from_dir "${os_dir}/dotfiles"
-    installer::link_files_from_dir "${dist_dir}/dotfiles"
-    installer::link_files_from_dir "${host_dir}/dotfiles"
+    info "Linking files from \"${DOTFILE_PATH}\""
 
-    installer::run_hook "bootstrap.sh" "link_post"
-}
-
-installer::link_files_from_dir() {
-    if [[ ! -e "${1}" ]]; then
-        debug "Skipping linking dotfiles from \"${1}\", does not exist"
-        
-        return 1
-    fi
-
-    find "${1}" -type f -print0 | while IFS= read -r -d '' file; do
-        local relative="${file##"${1}/"}"
-        local link
-        link="$(realpath ~)/${relative}"
-        local link_parent="${link%%"$(basename "${link}")"}"
-
-        if [[ ! -e "${link_parent}" ]]; then
-            debug "Creating link parent directory"
-
-            mkdir -p "${link_parent}"
-        fi
-
-        info "Linking ${file} -> ${link}"
-
-        if [[ -e "${link}" ]] && [[ ! -L "${link}" ]]; then
-            debug "Found existing ${link}, creating backup"
-
-            mv "${link}" "${link}.bak"
-        fi
-
-        ln -sfr "${file}" "${link}"
-
-        echo "${link}" >> "${DOTFILE_MANIFEST}"
+    find "${DOTFILE_PATH}" -type f \( -iname '.*' -o -path '*/.*/*' \) ! \( -path '*/.git/*' -o -path '*/modules/*' \) -print0 \
+        | while IFS= read -r -d '' file; do
+        installer::link_path "${DOTFILE_PATH}" "${file}"
     done
 
-    return 0 
+    info "Linking files from \"${os_dir}\""
+
+    find "${os_dir}" -type f \( -iname '.*' -o -path '*/.*/*' \) ! -path '*/.git/*' -print0 \
+        | while IFS= read -r -d '' file; do
+        installer::link_path "${os_dir}" "${file}"
+    done
+
+    info "Linking files from \"${dist_dir}\""
+
+    find "${dist_dir}" -type f \( -iname '.*' -o -path '*/.*/*' \) ! -path '*/.git/*' -print0 \
+        | while IFS= read -r -d '' file; do
+        installer::link_path "${dist_dir}" "${file}"
+    done
+
+    find "${DOTFILE_PATH}" -type f -iname 'hostname_regex.txt' -print0 \
+        | while IFS= read -r -d '' file; do
+        local hostname_regex
+        hostname_regex="$(cat $file)"
+        local path
+        path="$(dirname $file)"
+
+        if [[ "$(uname -n)" =~ ${hostname_regex} ]]; then
+            info "Linking files from \"${path}\""
+
+            find "${path}" -type f \( -iname '.*' -o -path '*/.*/*' \) ! -path '*/.git/*' -print0 \
+                | while IFS= read -r -d '' file2; do
+                installer::link_path "${path}" "${file2}"
+            done
+        fi
+    done
+}
+
+installer::link_path() {
+    local file
+    file="$(realpath ${2})"
+    local relative="${file##"${1}/"}"
+    local link
+    link="$(realpath ~)/${relative}"
+    local link_parent="${link%%"$(basename "${link}")"}"
+
+    if [[ ! -e "${link_parent}" ]]; then
+        debug "Creating link parent directory"
+
+        mkdir -p "${link_parent}"
+    fi
+
+    info "Linking ${file} -> ${link}"
+
+    if [[ -e "${link}" ]] && [[ ! -L "${link}" ]]; then
+        debug "Found existing ${link}, creating backup"
+
+        mv "${link}" "${link}.bak"
+    fi
+
+    ln -sfr "${file}" "${link}"
+
+    echo "${link}" >> "${DOTFILE_MANIFEST}"
 }
 
 installer::unlink() {
@@ -193,24 +196,18 @@ installer::modify_bashrc() {
         if [[ "${autoload:-n}" == "y" ]]; then
             local os_dir="$(installer::os_dir)"
             local dist_dir="$(installer::os_dist_dir)"
-            local host_dir="$(installer::os_dist_host_dir)"
 
             info "Appending ~/.bashrc"
 
-            tee -a ~/.bashrc << EOF >>/dev/null
+            tee -a "${HOME}/.bashrc" << EOF >>/dev/null
 ##### DOTFILE START #####
 export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfiles)"
 export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 
 $(installer::get_files_to_source ${os_dir})
 $(installer::get_files_to_source ${dist_dir})
-$(installer::get_files_to_source ${host_dir})
 
-# run init_bash if it exists
-if declare -f init_bash >/dev/null; then
-    init_bash
-fi
-
+run_if_defined "init_bash"
 ##### DOTFILE STOP  #####
 EOF
         fi
@@ -240,14 +237,10 @@ installer::uninstall() {
 }
 
 bootstrap_logging() {
-    # logging functions are always in base os
-    local local_file="${DOTFILE_PATH}/library/public/$(installer::os)/functions.sh"
-    local remote_file="${DOTFILE_RAW_REPO}/library/public/$(installer::os)/functions.sh"
-
     if [[ -e "${local_file}" ]]; then
-        cat "${local_file}"
+        cat "${DOTFILE_PATH}/modules/$(installer::os)/functions.sh"
     else
-        curl -L "${remote_file}"
+        curl -L "${DOTFILE_RAW_REPO}/modules/$(installer::os)/functions.sh"
     fi
 }
 
@@ -258,15 +251,11 @@ main() {
 
     case "${cmd}" in
         bootstrap) installer::bootstrap;;
-        link) installer::link;;
         install) installer::install;;
         uninstall) installer::uninstall;;
-        bashrc)
-            installer::clear_bashrc
-            installer::modify_bashrc
-            ;;
+        link) installer::link;;
         *)
-            echo "Invalid option ${cmd}"
+            echo "Invalid command ${cmd}"
             ;;
     esac
 }
