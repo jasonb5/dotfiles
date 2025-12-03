@@ -1,11 +1,15 @@
 return {
     {
         'nvim-treesitter/nvim-treesitter',
-        dependencies = {},
-        version = false,
+        lazy = false,
+        branch = 'main',
         build = ':TSUpdate',
+        config = function(self, opts)
+            require'nvim-treesitter'.setup {}
+            require'nvim-treesitter'.install(opts.parsers)
+        end,
         opts = {
-            ensure_installed = {
+            parsers = {
                 'bash',
                 'gitcommit',
                 'json',
@@ -20,8 +24,6 @@ return {
                 'vimdoc',
                 'yaml',
             },
-            highlight = { enable = true },
-            indent = { enable = true },
         },
     },
 }
