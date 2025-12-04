@@ -29,6 +29,7 @@ function install_os_packages() {
         nerd-fonts \
         base-devel \
         lua-language-server \
+        bash-language-server \
         unzip \
         git \
         less \
@@ -60,6 +61,10 @@ function install_os_packages() {
 }
 
 function install_packages() {
+    if ! command_exists rustup; then
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s --
+    fi
+
     if ! command_exists node; then
         curl -o- https://fnm.vercel.app/install | bash
 
