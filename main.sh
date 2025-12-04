@@ -83,12 +83,6 @@ installer::bootstrap() {
 }
 
 installer::link() {
-    if [[ -e "${DOTFILE_MANIFEST}" ]]; then
-        installer::unlink
-    fi
-
-    touch "${DOTFILE_MANIFEST}"
-
     local os_dir="$(installer::os_dir)"
     local dist_dir="$(installer::os_dist_dir)"
 
@@ -223,6 +217,13 @@ installer::clear_bashrc() {
 installer::install() {
     info "Installing dotfiles"
 
+    if [[ -e "${DOTFILE_MANIFEST}" ]]; then
+        installer::unlink
+    fi
+
+    touch "${DOTFILE_MANIFEST}"
+
+
     installer::link
 
     installer::modify_bashrc 
@@ -237,7 +238,7 @@ installer::uninstall() {
 }
 
 bootstrap_logging() {
-    if [[ -e "${local_file}" ]]; then
+    if [[ -e "${DOTFILE_PATH}/modules/$(installer::os)/functions.sh" ]]; then
         cat "${DOTFILE_PATH}/modules/$(installer::os)/functions.sh"
     else
         curl -L "${DOTFILE_RAW_REPO}/modules/$(installer::os)/functions.sh"
