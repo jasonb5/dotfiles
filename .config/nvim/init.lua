@@ -13,6 +13,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require('settings')
 require('lsp')
+require('keymaps')
 
 require('lazy').setup('plugins', {
     rocks = { enabled = false },
