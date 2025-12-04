@@ -63,6 +63,8 @@ function install_packages() {
     if ! command_exists node; then
         curl -o- https://fnm.vercel.app/install | bash
 
+        fnm install 22
+
         info "Installed \"fnm\" and \"node\""
     fi
 
