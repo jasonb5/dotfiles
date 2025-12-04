@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
 function setup_os() {
+    install_os_packages
     install_packages
 
     setup_networkmanager
     setup_tmux
 }
 
-function install_packages() {
+function install_os_packages() {
     if ! command_exists yay; then
         local temp_dir
         temp_dir="$(mktemp -d)"
@@ -56,7 +57,9 @@ function install_packages() {
         python-pywal16 \
         networkmanager \
         starship
+}
 
+function install_packages() {
     if ! command_exists node; then
         curl -o- https://fnm.vercel.app/install | bash
 
