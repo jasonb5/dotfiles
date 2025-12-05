@@ -29,7 +29,6 @@ function install_os_packages() {
         nerd-fonts \
         base-devel \
         lua-language-server \
-        bash-language-server \
         unzip \
         git \
         less \
@@ -65,13 +64,23 @@ function install_packages() {
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s --
     fi
 
+    if ! command_exists uv; then
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+    fi
+
+    uv tool install \
+        basedpyright
+
     if ! command_exists node; then
         curl -o- https://fnm.vercel.app/install | bash
 
-        fnm install 22
-
         info "Installed \"fnm\" and \"node\""
     fi
+
+    fnm install 22
+
+    npm install -g \
+        bash-language-server
 
     if ! command_exists gemini; then
         npm install -g @google/gemini-cli
