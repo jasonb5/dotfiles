@@ -14,6 +14,16 @@ return {
                 ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
             },
         },
+        completion = {
+            list = {
+                selection = { preselect = false, auto_insert = true },
+                max_items = 10,
+            },
+            documentation = { auto_show = true },
+            menu = {
+                scrollbar = false,
+            }
+        },
         keys = {
             { '<leader>bp', '<cmd>BufferLinePick<cr>', desc = 'Select buffer to open' },
             { '<leader>bc', '<cmd>BufferLinePickClose<cr>', desc = 'Select buffer to close' },
