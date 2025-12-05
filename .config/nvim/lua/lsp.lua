@@ -1,4 +1,13 @@
-vim.diagnostic.config {}
+vim.diagnostic.config {
+    virtual_text = {
+        prefix = '',
+        spacing = 2,
+    },
+    float = {
+        source = 'if_many',
+    },
+    signs = false,
+}
 
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
