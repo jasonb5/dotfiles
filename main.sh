@@ -147,9 +147,11 @@ installer::link_path() {
         mv "${link}" "${link}.bak"
     fi
 
-    ln -sfr "${file}" "${link}"
+    if [[ ! -e "${link}" ]]; then
+        ln -sfr "${file}" "${link}"
 
-    echo "${link}" >> "${DOTFILE_MANIFEST}"
+        echo "${link}" >> "${DOTFILE_MANIFEST}"
+    fi
 }
 
 installer::unlink() {
