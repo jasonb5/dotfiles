@@ -257,6 +257,7 @@ main() {
         install) installer::install;;
         uninstall) installer::uninstall;;
         link) installer::link;;
+        relink) installer::unlink; installer::link;;
         *)
             echo "Invalid command ${cmd}"
             ;;
