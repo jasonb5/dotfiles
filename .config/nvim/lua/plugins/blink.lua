@@ -2,7 +2,6 @@ return {
     {
         'saghen/blink.cmp',
         build = 'cargo +nightly build --release',
-        event = 'InsertEnter',
         opts = {
             keymap = {
                 ['<CR>'] = { 'accept', 'fallback' },
