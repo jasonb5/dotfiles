@@ -6,3 +6,5 @@ gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye > /dev/null
 
 eval "$(starship init bash)"
+
+source "${HOME}/.config/nvm/nvm.sh"
