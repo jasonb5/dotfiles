@@ -29,47 +29,6 @@ installer::os_dist_dir() {
     find ${DOTFILE_MODULES} -type d -path "*/$(installer::os)-$(installer::dist)" | head -n1
 }
 
-installer::is_valid_path() {
-    if [[ -e "${1}" ]]; then
-        debug "Path '${1}' exists"
-
-        return 0
-    fi
-
-    return 1
-}
-
-installer::source_and_run() {
-    if installer::is_valid_path "${1}"; then
-        debug "Sourcing '${1}'"
-
-        source "${1}"
-
-        if declare -f "${2}" &>/dev/null; then
-            debug "Running '${2}'"
-
-            "${2}"
-            unset "${2}"
-        else
-            debug "Skipping '${2}', does not exist"
-        fi
-    else
-        debug "Skipping '${1}', does not exist"
-    fi
-}
-
-installer::run_hook() {
-    local os_file
-    local dist_file
-    local host_file
-
-    os_file="$(installer::os_dir)/${1}"
-    dist_file="$(installer::os_dist_dir)/${1}"
-
-    installer::source_and_run "${os_file}" "${2}"
-    installer::source_and_run "${dist_file}" "${2}"
-}
-
 installer::bootstrap() {
     info "Bootstrapping dotfiles"
 
@@ -203,7 +162,6 @@ export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 $(installer::get_files_to_source ${os_dir})
 $(installer::get_files_to_source ${dist_dir})
 
-run_if_defined "init_bash"
 ##### DOTFILE STOP  #####
 EOF
         fi
@@ -224,7 +182,6 @@ installer::install() {
     fi
 
     touch "${DOTFILE_MANIFEST}"
-
 
     installer::link
 
