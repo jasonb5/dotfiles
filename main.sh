@@ -139,7 +139,7 @@ installer::unlink() {
 
 installer::get_files_to_source() {
     # Skip bootstrap.sh, only used during bookstrapping
-    find "${1}" -maxdepth 1 -type f -not -name bootstrap.sh -exec echo -en "source {}\n" \;
+    find "${1}" -maxdepth 1 -type f -not \( -name bootstrap.sh -or -iname '.*' \) -exec echo -en "source {}\n" \;
 }
 
 installer::modify_bashrc() {
@@ -208,11 +208,22 @@ main() {
     local cmd="${1:-bootstrap}"
 
     case "${cmd}" in
-        bootstrap) installer::bootstrap;;
-        install) installer::install;;
-        uninstall) installer::uninstall;;
-        link) installer::link;;
-        relink) installer::unlink; installer::link;;
+        bootstrap|b)
+            installer::bootstrap;;
+        install|i)
+            installer::install;;
+        uninstall|u)
+            installer::uninstall;;
+        link|l)
+            installer::link;;
+        update-link|ul)
+            installer::unlink
+            installer::link
+            ;;
+        update-shell|us)
+            installer::clear_bashrc
+            installer::modify_bashrc
+            ;;
         *)
             echo "Invalid command ${cmd}"
             ;;
