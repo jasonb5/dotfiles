@@ -7,4 +7,6 @@ gpg-connect-agent updatestartuptty /bye > /dev/null
 
 eval "$(starship init bash)"
 
-source "${HOME}/.config/nvm/nvm.sh"
+if [[ -e "${HOME}/.config/nvm/nvm.sh" ]]; then
+    source "${HOME}/.config/nvm/nvm.sh"
+fi
