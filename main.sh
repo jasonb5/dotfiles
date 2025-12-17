@@ -138,10 +138,8 @@ installer::unlink() {
 }
 
 installer::get_files_to_source() {
-    if installer::is_valid_path "${1}"; then
-        # Skip bootstrap.sh, only used during bookstrapping
-        find "${1}" -maxdepth 1 -type f -not -name bootstrap.sh -exec echo -en "source {}\n" \;
-    fi
+    # Skip bootstrap.sh, only used during bookstrapping
+    find "${1}" -maxdepth 1 -type f -not -name bootstrap.sh -exec echo -en "source {}\n" \;
 }
 
 installer::modify_bashrc() {
@@ -185,7 +183,7 @@ installer::install() {
 
     installer::link
 
-    installer::modify_bashrc 
+    installer::modify_bashrc
 }
 
 installer::uninstall() {
