@@ -12,7 +12,8 @@ function setup() {
 function install_packages() {
     sudo pacman -S --needed \
         git \
-        base-devel
+        base-devel \
+        swaync
 }
 
 function install_yay() {
@@ -50,6 +51,10 @@ function install_theme_assets() {
     install_asset \
         https://raw.githubusercontent.com/rose-pine/waybar/refs/heads/main/rose-pine-moon.css \
         "${HOME}/.config/waybar/rose-pine-moon.css"
+
+    install_asset \
+        https://raw.githubusercontent.com/rose-pine/swaync/refs/heads/main/theme/rose-pine-moon.css \
+        "${HOME}/.config/swaync/style.css"
 }
 
 function install_asset() {
