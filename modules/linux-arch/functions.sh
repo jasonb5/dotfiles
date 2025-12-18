@@ -46,6 +46,10 @@ function install_theme_assets() {
     install_asset \
         https://raw.githubusercontent.com/rose-pine/kitty/refs/heads/main/dist/rose-pine-moon.conf \
         "${HOME}/.config/kitty/themes/rose-pine-moon.conf"
+
+    install_asset \
+        https://raw.githubusercontent.com/rose-pine/waybar/refs/heads/main/rose-pine-moon.css \
+        "${HOME}/.config/waybar/rose-pine-moon.css"
 }
 
 function install_asset() {
