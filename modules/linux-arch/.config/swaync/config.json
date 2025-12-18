@@ -1,0 +1,24 @@
+{
+    "$shcema": "/etc/xdg/swaync/configSchema.json",
+
+    "positionY": "bottom",
+    "notification-window-width": 400,
+
+    "widgets": [
+        "title",
+        "dnd",
+        "backlight",
+        "volume",
+        "notifications"
+    ],
+
+    "widget-config": {
+        "backlight": {
+            "label": "Backlight: ",
+            "device": "intel_backlight",
+        },
+        "volume": {
+            "label": "Volume: "
+        }
+    },
+}
