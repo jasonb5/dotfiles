@@ -55,6 +55,10 @@ function install_theme_assets() {
     install_asset \
         https://raw.githubusercontent.com/rose-pine/swaync/refs/heads/main/theme/rose-pine-moon.css \
         "${HOME}/.config/swaync/style.css"
+
+    install_asset \
+        https://raw.githubusercontent.com/rose-pine/rofi/refs/heads/main/rose-pine-moon.rasi \
+        "${HOME}/.config/rofi/config.rasi"
 }
 
 function install_asset() {

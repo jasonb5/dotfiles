@@ -1,0 +1,10 @@
+configuration {
+    combi-modes: "window,run,drun";
+    modes: "combi,window,run.drun";
+
+    show-icons: true;
+
+    sidebar-mode: true;
+
+    window-thumbnail: true;
+}
