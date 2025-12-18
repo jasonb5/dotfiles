@@ -1,6 +1,7 @@
 {
-    "margin": "4 4 0",
+    "margin": "4",
     "spacing": 2,
+    "reload_style_on_change": true,
     "modules-left": [
         "battery",
         "network",
