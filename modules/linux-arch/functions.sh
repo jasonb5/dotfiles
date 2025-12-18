@@ -4,6 +4,7 @@ function setup() {
     install_packages
     install_yay
     install_nvm
+    install_theme_assets
 
     setup_tmux
 }
@@ -39,6 +40,27 @@ function install_nvm() {
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
     nvm install 22
+}
+
+function install_theme_assets() {
+    install_asset \
+        https://raw.githubusercontent.com/rose-pine/kitty/refs/heads/main/dist/rose-pine-moon.conf \
+        "${HOME}/.config/kitty/themes/rose-pine-moon.conf"
+}
+
+function install_asset() {
+    local url="${1}"
+    local path="${2}"
+
+    if [[ ! -e "$(dirname ${path})" ]]; then
+        mkdir -p "$(dirname ${path})"
+    fi
+
+    curl -L -o "${path}" "${url}"
+
+    if ! grep "${path}" "${DOTFILE_MANIFEST}"; then
+        echo "${path}" >> "${DOTFILE_MANIFEST}"
+    fi
 }
 
 function setup_tmux() {
