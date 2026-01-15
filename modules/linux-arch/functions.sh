@@ -13,7 +13,8 @@ function install_packages() {
     sudo pacman -S --needed \
         git \
         base-devel \
-        swaync
+        swaync \
+        ttf-delugia-code
 }
 
 function install_yay() {
