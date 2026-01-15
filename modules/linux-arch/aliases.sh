@@ -9,3 +9,5 @@ alias tmuxf="fzf_tmux"
 
 alias ul="source ${DOTFILE_PATH}/main.sh ul"
 alias us="source ${DOTFILE_PATH}/main.sh us"
+
+alias lf="fc-list"

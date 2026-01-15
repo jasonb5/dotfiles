@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
 
 function setup() {
-    install_packages
+    install_presetup_packages
     install_yay
+    install_packages
     install_nvm
     install_theme_assets
 
     setup_tmux
 }
 
-function install_packages() {
-    sudo pacman -S --needed \
+function install_presetup_packages() {
+    sudo pacman -Sy --needed \
         git \
-        base-devel \
-        swaync \
-        ttf-delugia-code
+        base-devel
 }
 
 function install_yay() {
@@ -32,6 +31,13 @@ function install_yay() {
     cd yay
 
     makepkg -si
+}
+
+function install_packages() {
+    yay -Sy --needed \
+        swaync \
+        ttf-iosevka-nerd \
+        ttf-iosevkaterm-nerd
 }
 
 function install_nvm() {
