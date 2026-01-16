@@ -37,7 +37,8 @@ function install_packages() {
     yay -Sy --needed \
         swaync \
         ttf-iosevka-nerd \
-        ttf-iosevkaterm-nerd
+        ttf-iosevkaterm-nerd \
+        rose-pine-gtk-theme-full
 }
 
 function install_nvm() {
