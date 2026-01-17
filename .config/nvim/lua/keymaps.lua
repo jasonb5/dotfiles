@@ -11,6 +11,10 @@ vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to bottom window', remap =
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to top window', remap = true })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window', remap = true })
 
+-- Buffer navigation
+vim.keymap.set('n', 'H', '<cmd>bprevious<cr>', { desc = 'Go to previous buffer' })
+vim.keymap.set('n', 'L', '<cmd>bnext<cr>', { desc = 'Go to next buffer' })
+
 -- Tab navigation
 vim.keymap.set('n', '<leader>tc', '<cmd>tabclose<cr>', { desc = 'Close tab' })
 vim.keymap.set('n', '<leader>tn', '<cmd>tab split<cr>', { desc = 'New tab' })
