@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function setup() {
+function __setup() {
     install_presetup_packages
     install_yay
     install_packages
