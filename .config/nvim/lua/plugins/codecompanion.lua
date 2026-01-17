@@ -2,10 +2,13 @@ return {
     {
         'olimorris/codecompanion.nvim',
         cmd = 'CodeCompanion',
-        dependencies = { 'nvim-lua/plenary.nvim' },
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'zbirenbaum/copilot.lua',
+        },
         keys = {
-            { '<leader>at', '<cmd>CodeCompanionChat Toggle<cr>', desc = 'Toggle CodeCompanion chat' },
-            { '<leader>aa', '<cmd>CodeCompanionChat Add<cr>', desc = 'Add to CodeCompanion chat', mode = 'x' },
+            { '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', desc = 'Toggle CodeCompanion chat' },
+            { '<leader>ca', '<cmd>CodeCompanionChat Add<cr>', desc = 'Add to CodeCompanion chat', mode = 'x' },
         },
         opts = {},
     },
