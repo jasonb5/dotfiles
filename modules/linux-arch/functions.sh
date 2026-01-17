@@ -90,6 +90,14 @@ function setup_tmux() {
     fi
 }
 
+function fzf_nvim() {
+    local file
+    file=$(find . -type f | fzf --preview 'bat --style=numbers --color=always --line-range :500 {}' --height=40% --layout=reverse --border)
+    if [[ -n "$file" ]]; then
+        nvim "$file"
+    fi
+}
+
 function fzf_tmux() {
     selected="$(find ${HOME}/devel -mindepth 2 -maxdepth 2 -type d | fzf)"
 
