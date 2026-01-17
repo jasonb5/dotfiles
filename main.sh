@@ -41,6 +41,37 @@ installer::bootstrap() {
     source "${DOTFILE_MAIN}" install
 }
 
+installer::setup() {
+    local os_dir="$(installer::os_dir)"
+    local dist_dir="$(installer::os_dist_dir)"
+
+    if [[ -e "${os_dir}/functions.sh" ]]; then
+        source "${os_dir}/functions.sh"
+
+        declare -f __setup && eval "__setup"
+    fi
+
+    if [[ -e "${dist_dir}/functions.sh" ]]; then
+        source "${dist_dir}/functions.sh"
+
+        declare -f __setup && eval "__setup"
+    fi
+
+    find "${DOTFILE_PATH}" -type f -iname 'hostname_regex.txt' -print0 \
+        | while IFS= read -r -d '' file; do
+        local hostname_regex
+        hostname_regex="$(cat $file)"
+        local path
+        path="$(dirname $file)"
+
+        if [[ "$(uname -n)" =~ ${hostname_regex} ]] && [[ -e "${path}/functions.sh" ]]; then
+            source "${path}/functions.sh"
+
+            declare -f __setup && eval "__setup"
+        fi
+    done
+}
+
 installer::link() {
     local os_dir="$(installer::os_dir)"
     local dist_dir="$(installer::os_dist_dir)"
@@ -223,6 +254,9 @@ main() {
         update-shell|us)
             installer::clear_bashrc
             installer::modify_bashrc
+            ;;
+        setup):
+            installer::setup
             ;;
         *)
             echo "Invalid command ${cmd}"
