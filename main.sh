@@ -188,6 +188,8 @@ installer::modify_bashrc() {
 export DOTFILE_PATH="\$(realpath ~/devel/personal/dotfiles)"
 export DOTFILE_MANIFEST="\$(realpath ~/.dotfiles.manifest)"
 
+[[ -e "\$(realpath ~/.bashrc.priv)" ]] && source \$(realpath ~/.bashrc.priv)
+
 $(installer::get_files_to_source ${os_dir})
 $(installer::get_files_to_source ${dist_dir})
 
@@ -247,12 +249,10 @@ main() {
             installer::uninstall;;
         link|l)
             installer::link;;
-        update-link|ul)
+        refresh|r)
             installer::unlink
-            installer::link
-            ;;
-        update-shell|us)
             installer::clear_bashrc
+            installer::link
             installer::modify_bashrc
             ;;
         setup):
