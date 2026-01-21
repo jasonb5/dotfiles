@@ -7,4 +7,4 @@ gpg-connect-agent updatestartuptty /bye > /dev/null
 
 eval "$(starship init bash)"
 
-source /usr/share/nvim/nvim-init.sh
+source /usr/share/nvm/init-nvm.sh
