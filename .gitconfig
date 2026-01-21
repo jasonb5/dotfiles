@@ -1,6 +1,6 @@
 [core]
 	autocrlf = input
-	editor = vim
+	editor = nvim
 
 [includeIf "gitdir:~/devel/personal/"]
 	path = ~/.gitconfig.personal
