@@ -39,7 +39,8 @@ function install_packages() {
         ttf-iosevkaterm-nerd \
         rose-pine-gtk-theme-full \
         nvm \
-        uv
+        uv \
+        bitwarden-cli
 
     source /usr/share/nvm/init-nvm.sh
 
