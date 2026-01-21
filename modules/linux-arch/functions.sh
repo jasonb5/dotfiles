@@ -4,7 +4,6 @@ function __setup() {
     install_presetup_packages
     install_yay
     install_packages
-    install_nvm
     install_theme_assets
 
     setup_tmux
@@ -38,17 +37,15 @@ function install_packages() {
         swaync \
         ttf-iosevka-nerd \
         ttf-iosevkaterm-nerd \
-        rose-pine-gtk-theme-full
-}
+        rose-pine-gtk-theme-full \
+        nvm \
+        uv
 
-function install_nvm() {
-    if command_exists "node"; then
-        return
-    fi
-
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    source /usr/share/nvm/init-nvm.sh
 
     nvm install 22
+
+    npm install -g @google/gemini-cli
 }
 
 function install_theme_assets() {
