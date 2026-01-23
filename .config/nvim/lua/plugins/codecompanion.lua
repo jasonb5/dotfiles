@@ -14,42 +14,49 @@ return {
         opts = {
             interactions = {
                 chat = {
-                    adapter = "gemini_cli"
+                    adapter = 'openai',
+                    model = 'gpt-4.1-2025-04-14'
                 },
                 inline = {
-                    adapter = {
-                        name = "mistral",
-                        model = "mistral-small-latest"
-                    }
+                    adapter = 'openai',
+                    model = 'gpt-4.1-2025-04-14'
                 },
+                cmd = {
+                    adapter = 'openai',
+                    model = 'gpt-5-nano-2025-08-07'
+                },
+                background = {
+                    adapter = 'openai',
+                    model = 'gpt-5-nano-2025-08-07'
+                }
             },
             adapters = {
                 http = {
                     anthropic = function()
                         return require('codecompanion.adapters').extend('anthropic', {
                             env = {
-                                api_key = "cmd:bw get password anthropic.api_key",
+                                api_key = 'cmd:bw get password anthropic.api_key',
                             },
                         })
                     end,
                     gemini = function()
                         return require('codecompanion.adapters').extend('gemini',  {
                             env = {
-                                api_key = "cmd:bw get password gemini.api_key",
+                                api_key = 'cmd:bw get password gemini.api_key',
                             },
                         })
                     end,
                     mistral = function()
                         return require('codecompanion.adapters').extend('mistral', {
                             env = {
-                                api_key = "cmd:bw get password mistral.api_key",
+                                api_key = 'cmd:bw get password mistral.api_key',
                             },
                         })
                     end,
                     openai = function()
                         return require('codecompanion.adapters').extend('openai', {
                             env = {
-                                api_key = "cmd:bw get password openai.api_key",
+                                api_key = 'cmd:bw get password openai.api_key',
                             },
                         })
                     end,
