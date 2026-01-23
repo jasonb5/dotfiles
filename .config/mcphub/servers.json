@@ -1,23 +1,4 @@
 {
   "mcpServers": {
-    "context7": {
-      "type": "streamable-http",
-      "url": "https://mcp.context7.com/mcp"
-    },
-    "fetch": {
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "mcp/fetch"
-      ],
-      "command": "docker"
-    },
-    "github": {
-      "headers": {
-        "Authorization": "Bearer ${cmd: bw get password github.api_key}"
-      },
-      "url": "https://api.githubcopilot.com/mcp/"
-    }
   }
 }
