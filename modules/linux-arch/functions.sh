@@ -44,9 +44,13 @@ function install_packages() {
 
     source /usr/share/nvm/init-nvm.sh
 
+    # base node version
     nvm install 22
 
+    # install llm agents
     npm install -g @google/gemini-cli
+    npm install -g @openai/codex
+    curl -fsSL https://claude.ai/install.sh | bash
 }
 
 function install_theme_assets() {
