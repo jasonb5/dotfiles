@@ -40,7 +40,10 @@ function install_packages() {
         rose-pine-gtk-theme-full \
         nvm \
         uv \
-        bitwarden-cli
+        bitwarden-cli \
+        basedpyright \
+        lua-language-server \
+        bash-language-server
 
     source /usr/share/nvm/init-nvm.sh
 
