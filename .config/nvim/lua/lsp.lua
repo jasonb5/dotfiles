@@ -1,6 +1,3 @@
-local function on_attach(client, bufnr)
-end
-
 vim.diagnostic.config {}
 
 vim.api.nvim_create_autocmd('LspAttach', {
