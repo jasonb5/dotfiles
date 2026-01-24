@@ -50,3 +50,5 @@ vim.opt.pumheight = 15
 -- Status line.
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 1
+
+vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"

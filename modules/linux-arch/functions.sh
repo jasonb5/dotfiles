@@ -43,7 +43,9 @@ function install_packages() {
         bitwarden-cli \
         basedpyright \
         lua-language-server \
-        bash-language-server
+        bash-language-server \
+        stylua \
+        python-black
 
     source /usr/share/nvm/init-nvm.sh
 
