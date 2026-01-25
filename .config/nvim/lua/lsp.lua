@@ -6,23 +6,33 @@ vim.api.nvim_create_autocmd('LspAttach', {
         local buf = args.buf
 
         if client:supports_method 'textDocument/references' then
-            vim.keymap.set('n', '<leader>fr', '<cmd>FzfLua lsp_references<cr>')
+            vim.keymap.set('n', '<leader>fr', function()
+                require'fzf-lua'.lsp_references()
+            end)
         end
 
         if client:supports_method 'textDocument/definition' then
-            vim.keymap.set('n', '<leader>fd', '<cmd>FzfLua lsp_definitions<cr>')
+            vim.keymap.set('n', '<leader>fd', function()
+                require'fzf-lua'.lsp_definitions()
+            end)
         end
 
         if client:supports_method 'textDocument/implementation' then
-            vim.keymap.set('n', '<leader>fi', '<cmd>FzfLua lsp_implementations<cr>')
+            vim.keymap.set('n', '<leader>fi', function()
+                require'fzf-lua'.lsp_implementations()
+            end)
         end
 
         if client:supports_method 'textDocument/documentSymbol' then
-            vim.keymap.set('n', '<leader>fs', '<cmd>FzfLua lsp_document_symbols<cr>')
+            vim.keymap.set('n', '<leader>fs', function()
+                require'fzf-lua'.lsp_document_symbols()
+            end)
         end
 
         if client:supports_method 'textDocument/codeAction' then
-            vim.keymap.set('n', '<leader>ca', '<cmd>FzfLua lsp_code_actions<cr>')
+            vim.keymap.set('n', '<leader>ca', function()
+                require'fzf-lua'.lsp_code_actions()
+            end)
         end
 
         if client:supports_method 'textDocument/signatureHelp' then
