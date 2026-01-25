@@ -2,8 +2,8 @@ return {
     {
         'lukas-reineke/indent-blankline.nvim',
         main = 'ibl',
-        event = 'VeryLazy',
-        opts = {
-        },
+        ---@module 'ibl',
+        ---@type ibl.config
+        opts = {},
     },
 }
