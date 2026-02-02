@@ -34,7 +34,20 @@ function install_yay() {
 
 function install_packages() {
     yay -Sy --needed \
+        rofi \
         swaync \
+        swaybg \
+        swayidle \
+        swaylock \
+        waybar \
+        wl-clipboard \
+        cliphist \
+        slurp \
+        grim \
+        wf-recorder \
+        brightnessctl \
+        xdg-user-dirs \
+        xdg-desktop-portal-wlr \
         ttf-iosevka-nerd \
         ttf-iosevkaterm-nerd \
         rose-pine-gtk-theme-full \
