@@ -9,8 +9,9 @@
         "power-profiles-daemon"
     ],
     "modules-center": [
-        "hyprland/workspaces",
-        "custom/notifications"
+        "sway/workspaces",
+        "custom/notifications",
+        "custom/recorder"
     ],
     "modules-right": [
         "clock",
@@ -68,6 +69,13 @@
         "exec": "swaync-client -swb",
         "on-click": "swaync-client -t -sw",
         "escape": true
+    },
+    "custom/recorder": {
+        "format": "<span color='#FF4444'> ⬤</span>",
+        "return-type": "json",
+        "interval": 1,
+        "exec": "echo '{\"class\": \"recording\"}'",
+        "exec-if": "pgrep wf-recorder"
     },
     "clock": {
         "format": "<span color='#E7A1D7'>󰅐</span> {:%I:%M %p}",
