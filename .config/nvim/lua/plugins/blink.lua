@@ -1,13 +1,18 @@
 return {
-    {
-        'saghen/blink.cmp',
-        version = '1.*',
-
-        ---@module 'blink.cmp'
-        ---@type blink.cmp.Config
-        opts = {
-            keymap = { preset = 'super-tab' },
-            completion = { documentation = { auto_show = true } },
-        }
-    },
+	{
+		"saghen/blink.cmp",
+		version = "1.*",
+		---@module 'blink.cmp'
+		---@type blink.cmp.Config
+		opts = {
+			keymap = {
+				preset = "super-tab",
+			},
+			completion = {
+				documentation = {
+					auto_show = true,
+				},
+			},
+		},
+	},
 }
