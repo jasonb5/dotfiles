@@ -1,54 +1,54 @@
--- Set leader key to <space>.
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+-- Backup and Swap files
+vim.o.backup = false
+vim.o.swapfile = false
+vim.o.undodir = vim.env.HOME .. '/.undodir'
+vim.o.undofile = true
 
--- Default 4 spaces for identation.
-vim.opt.sw = 4
-vim.opt.ts = 4
-vim.opt.et = true
+-- System clipboard
+vim.o.clipboard = 'unnamedplus'
 
--- Visualize whitespaces.
-vim.opt.list = true
+-- Better split window behavior
+vim.o.splitright = true
+vim.o.splitbelow = true
 
--- Show line numbers.
-vim.opt.number = true
+-- UI/Display settings
+vim.o.termguicolors = true
+vim.opt.termguicolors = true
+vim.o.statuscolumn = '%l %s'
+vim.o.signcolumn = 'yes:1'
+vim.o.laststatus = 3
+vim.cmd 'filetype plugin indent on';
+vim.o.ls = 0 -- legacy statusline
+vim.o.ch = 0 -- command height
+vim.o.colorcolumn = '80'
+vim.o.cursorline = true
 
--- Enable mouse mode.
-vim.opt.mouse = 'a'
+-- Number/Line handling
+vim.o.relativenumber = true
+vim.o.number = true
+vim.o.scrolloff = 4
 
--- Disable horizontal scroll and limit vertical to 3 lines.
-vim.opt.mousescroll = 'ver:3,hor:0'
+-- Tabs and indentation
+vim.o.expandtab = true
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.shiftround = false
+vim.o.backspace = 'indent,eol,start'
 
--- Wrap long lines at words.
-vim.opt.linebreak = true
+-- Search
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.incsearch = true
 
--- Rounded borders for floating windows.
-vim.opt.winborder = 'rounded'
+-- Completion
+vim.o.completeopt = 'menuone,noinsert'
 
--- Sync clipboard.
-vim.opt.clipboard = 'unnamedplus'
+-- List & whitespace
+vim.o.wrap = false
 
--- Save undo history.
-vim.opt.undofile = true
+-- Editing behavior
+vim.o.updatetime = 250
+vim.o.hidden = true
+vim.o.virtualedit = 'all'
+vim.o.wildmode = 'list:longest,full'
 
--- Case insensitive search unless search contains capitals.
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Enables sign column.
-vim.opt.signcolumn = 'yes'
-
--- Update time and timeouts.
-vim.opt.updatetime = 300
-vim.opt.timeoutlen = 500
-vim.opt.ttimeoutlen = 10
-
--- Completion.
-vim.opt.completeopt = 'menuone,noselect,noinsert'
-vim.opt.pumheight = 15
-
--- Status line.
-vim.opt.laststatus = 3
-vim.opt.cmdheight = 1
-
-vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
