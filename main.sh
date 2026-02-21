@@ -248,7 +248,9 @@ main() {
         uninstall|u)
             installer::uninstall;;
         link|l)
-            installer::link;;
+            installer::unlink
+            installer::link
+            ;;
         refresh|r)
             installer::unlink
             installer::clear_bashrc
