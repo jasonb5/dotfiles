@@ -4,7 +4,7 @@ return {
 		cmd = "CodeCompanion",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"zbirenbaum/copilot.lua",
+      "github/copilot.vim",
 		},
 		keys = {
 			{ "<leader>tc", "<cmd>CodeCompanionChat Toggle<cr>", desc = "Toggle CodeCompanion chat" },
@@ -70,20 +70,20 @@ return {
 					end,
 				},
 			},
-			extensions = {
-				mcphub = {
-					callback = "mcphub.extensions.codecompanion",
-					opts = {
-						make_tools = true,
-						show_server_tools_in_chat = true,
-						add_mcp_prefix_to_tool_names = false,
-						show_result_in_chat = true,
-						format_tool = nil,
-						make_vars = true,
-						make_slash_commands = true,
-					},
-				},
-			},
+			-- extensions = {
+			-- 	mcphub = {
+			-- 		callback = "mcphub.extensions.codecompanion",
+			-- 		opts = {
+			-- 			make_tools = true,
+			-- 			show_server_tools_in_chat = true,
+			-- 			add_mcp_prefix_to_tool_names = false,
+			-- 			show_result_in_chat = true,
+			-- 			format_tool = nil,
+			-- 			make_vars = true,
+			-- 			make_slash_commands = true,
+			-- 		},
+			-- 	},
+			-- },
 		},
 		config = function(_, opts)
 			local cwd = vim.fn.getcwd()
