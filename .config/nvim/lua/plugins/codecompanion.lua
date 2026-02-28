@@ -1,7 +1,12 @@
 return {
 	{
 		"olimorris/codecompanion.nvim",
-		cmd = "CodeCompanion",
+		cmd = {
+			"CodeCompanion",
+			"CodeCompanionChat",
+			"CodeCompanionAction",
+			"CodeCompanionCmd",
+		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
       "github/copilot.vim",
