@@ -9,7 +9,7 @@ return {
 		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-      "github/copilot.vim",
+			"github/copilot.vim",
 		},
 		keys = {
 			{ "<leader>tc", "<cmd>CodeCompanionChat Toggle<cr>", desc = "Toggle CodeCompanion chat" },
@@ -26,16 +26,13 @@ return {
 			},
 			adapters = {
 				acp = {
-					codex = function()
-						return require("codecompanion.adapters").extend("codex", {
-							defaults = {
-								auth_method = "chatgpt",
-							},
-							env = {
-								OPENAI_API_KEY = "cmd:bw get password openai.api_key",
-							},
-						})
-					end,
+          claude_code = function()
+            return require("codecompanion.adapters").extend("claude_code", {
+              env = {
+                CLAUDE_CODE_OAUTH_TOKEN = "cmd:bw get password anthropic.oauth_token",
+              },
+            })
+          end,
 				},
 				http = {
 					anthropic = function()
@@ -59,36 +56,22 @@ return {
 							},
 						})
 					end,
-					openai = function()
-						return require("codecompanion.adapters").extend("openai", {
-							env = {
-								api_key = "cmd:bw get password openai.api_key",
-							},
-						})
-					end,
-					tavily = function()
-						return require("codecompanion.adapters").extend("tavily", {
-							env = {
-								api_key = "cmd:bw get password tavily.api_key",
-							},
-						})
-					end,
 				},
 			},
-			-- extensions = {
-			-- 	mcphub = {
-			-- 		callback = "mcphub.extensions.codecompanion",
-			-- 		opts = {
-			-- 			make_tools = true,
-			-- 			show_server_tools_in_chat = true,
-			-- 			add_mcp_prefix_to_tool_names = false,
-			-- 			show_result_in_chat = true,
-			-- 			format_tool = nil,
-			-- 			make_vars = true,
-			-- 			make_slash_commands = true,
-			-- 		},
-			-- 	},
-			-- },
+			extensions = {
+				mcphub = {
+					callback = "mcphub.extensions.codecompanion",
+					opts = {
+						make_tools = true,
+						show_server_tools_in_chat = true,
+						add_mcp_prefix_to_tool_names = false,
+						show_result_in_chat = true,
+						format_tool = nil,
+						make_vars = true,
+						make_slash_commands = true,
+					},
+				},
+			},
 		},
 		config = function(_, opts)
 			local cwd = vim.fn.getcwd()
@@ -96,19 +79,20 @@ return {
 
 			local default = {
 				chat = {
-					adapter = "codex",
+					adapter = "claude_code",
+          model = "claude-sonnet-4-6",
 				},
 				inline = {
-					adapter = "openai",
-					model = "gpt-4.1-2025-04-14",
+					adapter = "claude_code",
+          model = "claude-haiku-4-5",
 				},
 				cmd = {
-					adapter = "openai",
-					model = "gpt-5-nano-2025-08-07",
+					adapter = "claude_code",
+          model = "claude-haiku-4-5",
 				},
 				background = {
-					adapter = "openai",
-					model = "gpt-5-nano-2025-08-07",
+					adapter = "claude_code",
+          model = "claude-haiku-4-5",
 				},
 			}
 
