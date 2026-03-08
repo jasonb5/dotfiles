@@ -33,7 +33,7 @@ function install_yay() {
 }
 
 function install_packages() {
-    yay -Sy --needed \
+    yay -S --needed \
         rofi \
         swaync \
         swaybg \
