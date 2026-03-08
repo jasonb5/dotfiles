@@ -5,6 +5,12 @@ return {
             'nvim-lua/plenary.nvim',
         },
         build = 'npm install -g mcp-hub@latest',
-        opts = {},
+        opts = {
+          extensions = {
+            avante = {
+              make_slash_commands = true,
+            },
+          },
+        },
     }
 }
