@@ -14,7 +14,10 @@ return {
       provider = "claude",
       providers = {
         claude = {
-          auth_type = "max"
+          auth_type = "max",
+        },
+        copilot =  {
+          model = "gpt-5-mini",
         },
       },
       selector = {
