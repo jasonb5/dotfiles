@@ -55,6 +55,14 @@ return {
         "delete_dir",
         "bash",         -- Built-in terminal access      
       },
-    }
+    },
+    config = function(_, opts)
+      local cwd = vim.fn.getcwd()
+      if cwd:match("work") then
+        opts.provider = "copilot"
+      end
+
+      require("avante").setup(opts)
+    end,
   }
 }
