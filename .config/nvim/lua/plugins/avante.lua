@@ -57,12 +57,14 @@ return {
       },
     },
     config = function(_, opts)
+      require("avante").setup(opts)
+
       local cwd = vim.fn.getcwd()
       if cwd:match("work") then
-        opts.provider = "copilot"
+        require("avante.api").switch_provider("copilot")
+      else
+        require("avante.api").switch_provider("claude")
       end
-
-      require("avante").setup(opts)
     end,
   }
 }
