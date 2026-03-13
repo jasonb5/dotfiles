@@ -1,5 +1,28 @@
 #!/usr/bin/env bash
 
+function with_bw() {
+  local session="$(bw unlock --raw | tail -n1)"
+
+  while [[ $# -gt 0 ]]; do
+    case "${1}" in
+      --) shift; break ;;
+      *:*)
+        IFS=":" read -r key value <<< "${1}"
+
+        local secret_id="$(bw --session ${session} list items --search ${key} | jq -r '.[0].id')"
+        local secret="$(bw --session ${session} get password ${secret_id})"
+
+        export "${value}=${secret}"
+        ;;
+    esac
+    shift
+  done
+
+  unset session
+
+  exec "${@}"
+}
+
 function __setup() {
     install_presetup_packages
     install_yay
