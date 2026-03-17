@@ -1,5 +1,20 @@
 vim.diagnostic.config {}
 
+-- Toggle diagnostics state
+local diagnostics_enabled = true
+
+-- Function to toggle diagnostics
+function _G.toggle_diagnostics()
+    diagnostics_enabled = not diagnostics_enabled
+    if diagnostics_enabled then
+        vim.diagnostic.enable()
+        print("Diagnostics enabled")
+    else
+        vim.diagnostic.disable()
+        print("Diagnostics disabled")
+    end
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
