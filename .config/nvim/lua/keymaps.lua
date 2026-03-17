@@ -4,6 +4,10 @@ vim.g.mapleader = ' '
 vim.keymap.set('n', '<leader>/', '<cmd>noh<cr>', { desc = 'Clear highlighting' })
 
 
+-- Diagnostics
+vim.keymap.set('n', '<leader>td', '<cmd>lua toggle_diagnostics()<cr>', { desc = 'Toggle diagnostics/lint messages' })
+
+
 -- Quit
 vim.keymap.set('n', '<leader>qq', '<cmd>qall!<cr>', { desc = 'Quit all without saving' })
 
