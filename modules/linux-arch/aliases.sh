@@ -12,3 +12,5 @@ alias ul="source ${DOTFILE_PATH}/main.sh ul"
 alias us="source ${DOTFILE_PATH}/main.sh us"
 
 alias lf="fc-list"
+
+alias nvim_bw="with_bw 'anthropic.oauth_token:AVANTE_ANTHROPIC_API_KEY' -- nvim"
