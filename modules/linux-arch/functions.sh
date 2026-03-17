@@ -20,7 +20,7 @@ function with_bw() {
 
   unset session
 
-  exec "${@}"
+  "${@}"
 }
 
 function __setup() {
