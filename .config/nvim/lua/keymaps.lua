@@ -35,7 +35,3 @@ vim.keymap.set('n', '<M-h>', '<cmd>vertical resize -2<cr>', { desc = 'Decrease w
 vim.keymap.set('n', '<M-j>', '<cmd>resize -2<cr>', { desc = 'Decrease window height' })
 vim.keymap.set('n', '<M-k>', '<cmd>resize +2<cr>', { desc = 'Increase window height' })
 vim.keymap.set('n', '<M-l>', '<cmd>vertical resize +2<cr>', { desc = 'Increase window width' })
-
-vim.keymap.set('n', '<leader>ft', '<cmd>FloatingTerminal<cr>', { desc = 'Open a floating terminal' })
-vim.keymap.set('n', '<leader>fc', '<cmd>FloatingTerminalToCodeCompanion<cr>', { desc = 'Send floating terminal output to CodeCompanion' })
-vim.keymap.set('t', '<leader>fc', '<C-\\><C-n><cmd>FloatingTerminalToCodeCompanion<cr>', { desc = 'Send floating terminal output to CodeCompanion' })
