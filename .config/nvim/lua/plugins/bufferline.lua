@@ -1,6 +1,9 @@
 return {
 	{
 		"akinsho/bufferline.nvim",
+		dependencies = {
+			"folke/snacks.nvim",
+		},
 		opts = {
 			options = {
 				show_close_icon = false,
