@@ -90,13 +90,10 @@ function install_packages() {
 
     # install llm agents
     npm install -g @google/gemini-cli
-
     curl -fsSL https://claude.ai/install.sh | bash
     npm install -g @zed-industries/claude-agent-acp
-
     curl -fsSL https://gh.io/copilot-install | bash
-
-    curl -LsSf https://mistral.ai/vibe/install.sh | bash
+    npm i -g opencode-ai@latest
 }
 
 function install_theme_assets() {
