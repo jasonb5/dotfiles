@@ -51,3 +51,6 @@ vim.o.updatetime = 250
 vim.o.hidden = true
 vim.o.virtualedit = 'all'
 vim.o.wildmode = 'list:longest,full'
+
+-- Auto-reload files when changed on disk
+vim.o.autoread = true
