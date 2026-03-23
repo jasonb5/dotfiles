@@ -4,10 +4,7 @@ function nopencode() {
   AUTH_SRC="${HOME}/.claude/.credentials.json"
   AUTH_DST="${HOME}/.local/share/opencode/auth.json"
 
-  echo "[INFO] Generating auth.json from Claude credentials..."
-
-  command -v jq >/dev/null 2>&1 || { echo "[ERROR] jq not installed"; exit 1; }
-  [[ -f "$AUTH_SRC" ]] || { echo "[ERROR] Missing source file: $AUTH_SRC"; exit 1; }
+  [[ -f "$AUTH_SRC" ]] || { exit 1; }
 
   mkdir -p "$(dirname "$AUTH_DST")"
 
@@ -20,10 +17,8 @@ function nopencode() {
     }
   }' "$AUTH_SRC" > "${AUTH_DST}.tmp"
 
-  echo "[INFO] Moving generated file into place..."
-  mv -v "${AUTH_DST}.tmp" "$AUTH_DST"
+  mv "${AUTH_DST}.tmp" "$AUTH_DST"
 
-  echo "[INFO] Done."
   opencode "$@"
 }
 
