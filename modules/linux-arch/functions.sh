@@ -1,27 +1,5 @@
 #!/usr/bin/env bash
 
-function nopencode() {
-  AUTH_SRC="${HOME}/.claude/.credentials.json"
-  AUTH_DST="${HOME}/.local/share/opencode/auth.json"
-
-  [[ -f "$AUTH_SRC" ]] || { exit 1; }
-
-  mkdir -p "$(dirname "$AUTH_DST")"
-
-  jq '{
-    anthropic: {
-      type: "oauth",
-      refresh: (.claudeAiOauth.refreshToken // error("missing refreshToken")),
-      access: (.claudeAiOauth.accessToken // error("missing accessToken")),
-      expires: (.claudeAiOauth.expiresAt // error("missing expiresAt"))
-    }
-  }' "$AUTH_SRC" > "${AUTH_DST}.tmp"
-
-  mv "${AUTH_DST}.tmp" "$AUTH_DST"
-
-  opencode "$@"
-}
-
 function with_bw() {
   local session="$(bw unlock --raw | tail -n1)"
 
@@ -116,6 +94,7 @@ function install_packages() {
     npm install -g @zed-industries/claude-agent-acp
     curl -fsSL https://gh.io/copilot-install | bash
     npm i -g opencode-ai@latest
+    npm i -g opencode-claude-auth
 }
 
 function install_theme_assets() {
