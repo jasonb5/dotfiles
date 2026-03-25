@@ -3,5 +3,15 @@
   "plugin": [
     "superpowers@git+https://github.com/obra/superpowers.git",
     "opencode-claude-auth"
-  ]
+  ],
+  "mcp": {
+    "memory": {
+      "type": "local",
+      "command": ["docker", "run", "-i", "-v", "claude-memory:/app/dist", "--rm", "mcp/memory"]
+    },
+    "sequential-thinking": {
+      "type": "local",
+      "command": ["docker", "run", "--rm", "-i", "mcp/sequentialthinking"]
+    }
+  }
 }
