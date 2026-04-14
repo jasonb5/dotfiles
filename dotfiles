@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+source "$ROOT_DIR/lib/common.sh"
+source "$ROOT_DIR/lib/log.sh"
+source "$ROOT_DIR/lib/detect.sh"
+source "$ROOT_DIR/lib/manifest.sh"
+source "$ROOT_DIR/lib/scopes.sh"
+source "$ROOT_DIR/lib/install.sh"
+source "$ROOT_DIR/lib/bootstrap.sh"
+source "$ROOT_DIR/lib/rc.sh"
+source "$ROOT_DIR/lib/uninstall.sh"
+
+usage() {
+  cat <<'EOF'
+Usage: dotfiles <command>
+
+Commands:
+  detect        Print detected platform scope
+  install       Link managed config files into $HOME
+  bootstrap     Run scoped provisioning files
+  inject-shell  Inject bash rc sourcing block
+  uninstall     Remove managed files and shell injection
+EOF
+}
+
+cmd="${1:-}"
+
+case "$cmd" in
+  detect)
+    detect_scope
+    ;;
+  install)
+    run_install
+    ;;
+  bootstrap)
+    run_bootstrap
+    ;;
+  inject-shell)
+    inject_shell_rc "${2:-}"
+    ;;
+  uninstall)
+    run_uninstall
+    ;;
+  ""|-h|--help|help)
+    usage
+    ;;
+  *)
+    die "unknown command: $cmd"
+    ;;
+esac
