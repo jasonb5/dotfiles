@@ -1,0 +1,27 @@
+set $mod Mod4
+set $term kitty
+set $menu fuzzel
+
+font pango:monospace 10
+
+output * background #1f1f28 solid_color
+
+bindsym $mod+Return exec $term
+bindsym $mod+d exec $menu
+bindsym $mod+Shift+q kill
+bindsym $mod+Shift+e exec swaymsg exit
+bindsym $mod+Shift+c reload
+
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+bindsym Print exec grim -g "$(slurp)" - | wl-copy
+
+exec_always swaybg -c '#1f1f28'
