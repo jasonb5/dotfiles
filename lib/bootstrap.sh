@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+dotfiles_source_shell_dir() {
+  local dir="$1"
+  local file
+
+  [[ -d "$dir" ]] || return 0
+  shopt -s nullglob
+  for file in "$dir"/*.sh; do
+    [[ -f "$file" ]] || continue
+    . "$file"
+  done
+}
+
 dotfiles_run_tree() {
   local tree="$1"
   local scope_root file
@@ -24,6 +36,7 @@ run_bootstrap() {
   load_detected_scope
   DOTFILES_ROOT="$(dotfiles_repo_root)"
   export DOTFILES_OS DOTFILES_DISTRO DOTFILES_HOST DOTFILES_ROOT
+  dotfiles_source_shell_dir "$ROOT_DIR/shell/distro/$DOTFILES_DISTRO"
   dotfiles_log_info "starting bootstrap"
   dotfiles_run_tree bootstrap
   dotfiles_log_info "bootstrap complete"

@@ -31,6 +31,9 @@ Logs are written to `~/.local/state/dotfiles/dotfiles.log`.
 - Never touch unmanaged top-level dotfiles in `$HOME`
 
 Arch bootstrap steps live under `bootstrap/distro/arch/`.
+Current Arch steps include `yay`, `volta`, and `uv`.
+Arch shell PATH setup lives under `shell/distro/arch/` and is sourced both by
+interactive shells and bootstrap.
 
 ## Commands
 
