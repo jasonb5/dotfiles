@@ -33,7 +33,11 @@ scope_dir() {
       fi
       ;;
     *)
-      printf '%s/%s/%s\n' "$ROOT_DIR" "$tree" "$value"
+      if [[ "$scope" == common ]]; then
+        printf '%s/%s/%s\n' "$ROOT_DIR" "$tree" "$value"
+      else
+        printf '%s/%s/%s/%s\n' "$ROOT_DIR" "$tree" "$scope" "$value"
+      fi
       ;;
   esac
 }

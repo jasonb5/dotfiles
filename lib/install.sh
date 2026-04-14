@@ -46,6 +46,7 @@ dotfiles_link_relative() {
   rel="$(dotfiles_realpath_relative "$source" "$target_dir")"
   dotfiles_log_info "linking ${target} -> ${rel}"
   ln -s -- "$rel" "$target"
+
   manifest_add_record link "$target" "$source"
 }
 
