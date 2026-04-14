@@ -1,0 +1,9 @@
+[user]
+	name = Jason Boutte
+	email = boutte.jason@pm.me
+
+[includeIf "gitdir:~/devel/work/**"]
+	path = ~/.gitconfig.work
+
+[includeIf "gitdir:~/devel/personal/**"]
+	path = ~/.gitconfig.personal

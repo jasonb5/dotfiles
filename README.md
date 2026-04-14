@@ -11,6 +11,9 @@
 `config/` paths mirror the target path under `$HOME`. For example,
 `config/common/.bashrc` maps to `~/.bashrc`.
 
+Git config lives in `config/common/.gitconfig` and delegates identity to
+top-level `~/.gitconfig.work` and `~/.gitconfig.personal` via `includeIf` rules.
+
 Backups use the postfix `.dotfiles.backup`, so `~/.config/nvim/init.lua`
 backs up to `~/.config/nvim/init.lua.dotfiles.backup`.
 
