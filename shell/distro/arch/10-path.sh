@@ -8,4 +8,9 @@ case ":$PATH:" in
   *) PATH="$HOME/.local/bin${PATH:+:$PATH}" ;;
 esac
 
+case ":$PATH:" in
+  *":$HOME/.cargo/bin:"*) ;;
+  *) PATH="$HOME/.cargo/bin${PATH:+:$PATH}" ;;
+esac
+
 export PATH
