@@ -30,6 +30,8 @@ Logs are written to `~/.local/state/dotfiles/dotfiles.log`.
 - Uninstall only removes manifest-tracked items and injected rc lines
 - Never touch unmanaged top-level dotfiles in `$HOME`
 
+Arch bootstrap steps live under `bootstrap/distro/arch/`.
+
 ## Commands
 
 - `./dotfiles detect`

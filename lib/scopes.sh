@@ -23,7 +23,19 @@ scope_dir() {
 
   value="$(dotfiles_scope_value "$scope")"
   [[ -n "$value" ]] || return 0
-  printf '%s/%s/%s\n' "$ROOT_DIR" "$tree" "$value"
+
+  case "$tree" in
+    bootstrap)
+      if [[ "$scope" == common ]]; then
+        printf '%s/%s/%s\n' "$ROOT_DIR" "$tree" "$value"
+      else
+        printf '%s/%s/%s/%s\n' "$ROOT_DIR" "$tree" "$scope" "$value"
+      fi
+      ;;
+    *)
+      printf '%s/%s/%s\n' "$ROOT_DIR" "$tree" "$value"
+      ;;
+  esac
 }
 
 scope_dirs_low_to_high() {
