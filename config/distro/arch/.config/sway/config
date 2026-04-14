@@ -4,7 +4,7 @@ set $menu fuzzel
 
 font pango:monospace 10
 
-output * background #1f1f28 solid_color
+output * background #232136 solid_color
 
 floating_modifier $mod normal
 
@@ -28,4 +28,4 @@ bindsym $mod+Shift+l move right
 
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
 
-exec_always swaybg -c '#1f1f28'
+exec_always swaybg -c '#232136'
