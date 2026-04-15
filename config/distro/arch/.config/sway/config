@@ -27,6 +27,8 @@ bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
+bindsym $mod+Shift+n exec swaync-client -t -sw
 
 exec_always swaybg -c '#232136'
 exec_always sh -c 'pkill -x ironbar >/dev/null 2>&1 || true; ironbar'
+exec_always sh -c 'pkill -x swaync >/dev/null 2>&1 || true; swaync'

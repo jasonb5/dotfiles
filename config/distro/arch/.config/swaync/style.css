@@ -1,0 +1,56 @@
+* {
+    font-family: "Iosevka Nerd Font";
+    font-size: 11px;
+}
+
+.notification-row,
+.control-center {
+    background: #232136;
+    color: #e0def4;
+}
+
+.notification,
+.notification-action,
+.control-center-list,
+.widget-title,
+.widget-dnd,
+.widget-label,
+.widget-buttons-grid,
+.widget-backlight,
+.widget-volume,
+.widget-mpris,
+.widget-menubar {
+    background: #232136;
+    color: #e0def4;
+}
+
+.notification {
+    border: 1px solid #393552;
+    border-radius: 12px;
+    margin: 8px;
+    padding: 10px;
+}
+
+.notification.critical {
+    border-color: #eb6f92;
+}
+
+.notification-button,
+.close-button,
+.dnd-button,
+.widget-buttons-grid button {
+    background: #393552;
+    color: #e0def4;
+    border-radius: 10px;
+}
+
+.notification-button:hover,
+.close-button:hover,
+.dnd-button:hover,
+.widget-buttons-grid button:hover {
+    background: #2a273f;
+}
+
+.notification-progress {
+    background: #c4a7e7;
+}
