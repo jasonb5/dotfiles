@@ -21,7 +21,7 @@ Logs are written to `~/.local/state/dotfiles/dotfiles.log`.
 
 ## Rules
 
-- Only files from `config/` may be symlinked into `$HOME`
+- `./dotfiles install` links scoped config files into `$HOME`
 - Symlinks must be relative
 - Scoped overlays are resolved in this order: `host`, `distro`, `os`, `common`
 - Detect `os`, `distro`, and `host` at bootstrap time
