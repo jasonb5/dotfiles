@@ -1,0 +1,58 @@
+:root {
+    --color-dark-primary: #232136;
+    --color-dark-secondary: #2a273f;
+    --color-white: #e0def4;
+    --color-active: #c4a7e7;
+    --color-urgent: #eb6f92;
+
+    --margin-lg: 1em;
+    --margin-sm: 0.5em;
+}
+
+* {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background-image: none;
+    font-family: "Iosevka Nerd Font";
+    font-size: 10px;
+}
+
+#bar, popover, popover contents, calendar {
+    background-color: var(--color-dark-primary);
+}
+
+box, button, label {
+    background-color: #0000;
+    color: var(--color-white);
+}
+
+button {
+    padding-left: var(--margin-sm);
+    padding-right: var(--margin-sm);
+}
+
+button:hover, button:active {
+    background-color: var(--color-dark-secondary);
+}
+
+#end > * + * {
+    margin-left: var(--margin-lg);
+}
+
+.clock {
+    font-weight: bold;
+}
+
+.workspaces .item.visible {
+    box-shadow: inset 0 -1px var(--color-white);
+}
+
+.workspaces .item.focused {
+    box-shadow: inset 0 -1px var(--color-active);
+    background-color: var(--color-dark-secondary);
+}
+
+.workspaces .item.urgent {
+    background-color: var(--color-urgent);
+}

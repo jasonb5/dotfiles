@@ -1,0 +1,23 @@
+position = "top"
+height = 24
+
+[[start]]
+type = "battery"
+
+[[start]]
+type = "volume"
+
+[[start]]
+type = "bluetooth"
+
+[[center]]
+type = "workspaces"
+
+[[center]]
+type = "notifications"
+
+[[end]]
+type = "tray"
+
+[[end]]
+type = "clock"

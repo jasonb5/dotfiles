@@ -2,7 +2,7 @@ set $mod Mod4
 set $term kitty
 set $menu fuzzel
 
-font pango:monospace 10
+font pango:Iosevka Nerd Font 10
 
 output * background #232136 solid_color
 
@@ -29,3 +29,4 @@ bindsym $mod+Shift+l move right
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
 
 exec_always swaybg -c '#232136'
+exec_always sh -c 'pkill -x ironbar >/dev/null 2>&1 || true; ironbar'

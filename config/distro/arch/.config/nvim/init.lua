@@ -12,6 +12,7 @@ vim.opt.smartcase = true
 vim.opt.signcolumn = "yes"
 vim.opt.clipboard = "unnamedplus"
 vim.opt.termguicolors = true
+vim.opt.guifont = "Iosevka Nerd Font:h10"
 
 require('rose-pine').setup({
   variant = 'moon',
