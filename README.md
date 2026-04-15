@@ -38,7 +38,7 @@ interactive shells and bootstrap.
 ## Commands
 
 - `./dotfiles detect`
-- `./dotfiles install`
 - `./dotfiles bootstrap`
+- `./dotfiles install`
 - `./dotfiles inject-shell [rcfile]`
 - `./dotfiles uninstall`

@@ -39,5 +39,6 @@ run_bootstrap() {
   dotfiles_source_shell_dir "$ROOT_DIR/shell/distro/$DOTFILES_DISTRO"
   dotfiles_log_info "starting bootstrap"
   dotfiles_run_tree bootstrap
+  run_install
   dotfiles_log_info "bootstrap complete"
 }
