@@ -8,3 +8,5 @@ vim.cmd("colorscheme rose-pine")
 require("bufferline").setup({})
 
 require("lualine").setup({})
+
+require("which-key").setup({})
