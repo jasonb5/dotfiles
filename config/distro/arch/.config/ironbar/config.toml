@@ -11,6 +11,12 @@ type = "battery"
 show_if = "sh -c 'set -- /sys/class/power_supply/BAT*; [ -e \"$1\" ]'"
 
 [[start]]
+type = "label"
+label = "profile {{1000:sh -c 'p=$(tuned-adm active 2>/dev/null | sed -n \"s/^Current active profile: //p\"); case $p in throughput-performance|latency-performance|accelerator-performance) printf performance ;; balanced|balanced-battery) printf balanced ;; powersave) printf powersave ;; *) printf %s \"$p\" ;; esac'}}"
+show_if = "sh -c 'command -v tuned-adm >/dev/null 2>&1'"
+on_click_left = "sh -c 'current=$(tuned-adm active 2>/dev/null | sed -n \"s/^Current active profile: //p\"); case $current in throughput-performance|latency-performance|accelerator-performance) next=powersave ;; powersave) next=balanced ;; balanced|balanced-battery|*) next=throughput-performance ;; esac; pkexec tuned-adm profile \"$next\"'"
+
+[[start]]
 type = "volume"
 max_volume = 125
 on_scroll_up = "sh -c 'vol=$(pactl get-sink-volume @DEFAULT_SINK@ | head -n1 | cut -d/ -f2 | tr -d \" %\"); new=$((vol + 5)); [ \"$new\" -gt 125 ] && new=125; pactl set-sink-volume @DEFAULT_SINK@ \"$new%\"'"
