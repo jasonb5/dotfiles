@@ -8,3 +8,4 @@ Arch sway config lives in `config/distro/arch/.config/sway/config`.
 
 Arch Rose Pine theme config lives under `config/distro/arch/.config/` for GTK,
 kitty, fuzzel, tmux, sway, swaync, ironbar, and Neovim.
+Tool manifests live under `tools/` at the repo root.

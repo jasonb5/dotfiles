@@ -1,0 +1,13 @@
+{
+  "name": "nvim-tools-node",
+  "private": true,
+  "version": "0.1.0",
+  "devDependencies": {
+    "eslint_d": "^14.1.0",
+    "prettier": "^3.5.3",
+    "typescript-language-server": "^4.3.4"
+  },
+  "scripts": {
+    "audit": "npm audit"
+  }
+}
