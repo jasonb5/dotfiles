@@ -26,6 +26,11 @@
     color: var(--color-text);
 }
 
+#bar:backdrop {
+    background-color: rgba(35, 33, 54, 0.88);
+    border: 1px solid rgba(144, 140, 170, 0.28);
+}
+
 #bar, popover, popover contents, calendar {
     border-radius: 12px;
 }
@@ -42,19 +47,32 @@ box, button, label {
     background-color: transparent;
 }
 
-button {
-    padding: 0.25rem 0.6rem;
-    min-height: 1.35rem;
+.widget {
+    min-height: 1.6rem;
+    min-width: 1.6rem;
+    padding: 0.2rem 0.55rem;
     border-radius: var(--radius);
+}
+
+button {
+    padding: 0;
+    min-height: inherit;
+    min-width: inherit;
+    border-radius: inherit;
     background-color: var(--color-surface);
+}
+
+#bar:backdrop button {
+    background-color: rgba(49, 46, 70, 0.9);
 }
 
 button:hover, button:active {
     background-color: var(--color-overlay);
 }
 
-button.brightness {
+.brightness {
     color: var(--color-gold);
+    background-color: rgba(246, 193, 119, 0.14);
 }
 
 button.battery {
@@ -72,6 +90,10 @@ button.bluetooth {
 button.clock {
     color: var(--color-muted);
     background-color: transparent;
+}
+
+#bar:backdrop button.clock {
+    color: var(--color-text);
 }
 
 button.tray,
@@ -94,13 +116,6 @@ button.notifications {
 .clock {
     font-weight: 600;
     letter-spacing: 0.06em;
-}
-
-.battery .icon,
-.brightness .icon,
-.volume .icon,
-.bluetooth .icon {
-    font-size: 12px;
 }
 
 .workspaces .item.visible {

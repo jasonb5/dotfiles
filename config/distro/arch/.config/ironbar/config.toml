@@ -3,7 +3,10 @@ height = 24
 
 [[start]]
 type = "label"
+class = "brightness"
 label = "{{ sh -c 'for d in /sys/class/backlight/*; do [ -f \"$d/brightness\" ] || continue; b=$(cat \"$d/brightness\"); m=$(cat \"$d/max_brightness\"); p=$(( b * 100 / m )); if [ \"$p\" -lt 25 ]; then printf \"󰃞\"; elif [ \"$p\" -lt 50 ]; then printf \"󰃟\"; elif [ \"$p\" -lt 75 ]; then printf \"󰃠\"; else printf \"󰃠\"; fi; break; done' }}"
+on_scroll_up = "brightnessctl -q set +10%"
+on_scroll_down = "brightnessctl -q set 10%-"
 show_if = "sh -c 'set -- /sys/class/backlight/*; [ -e \"$1\" ]'"
 
 [[start]]
