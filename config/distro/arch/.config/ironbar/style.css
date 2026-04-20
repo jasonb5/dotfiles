@@ -1,58 +1,136 @@
 :root {
-    --color-dark-primary: #232136;
-    --color-dark-secondary: #2a273f;
-    --color-white: #e0def4;
-    --color-active: #c4a7e7;
-    --color-urgent: #eb6f92;
-
-    --margin-lg: 1em;
-    --margin-sm: 0.5em;
+    --color-base: rgba(35, 33, 54, 0.68);
+    --color-surface: rgba(42, 39, 63, 0.58);
+    --color-overlay: rgba(49, 46, 70, 0.82);
+    --color-text: #e0def4;
+    --color-muted: #908caa;
+    --color-accent: #c4a7e7;
+    --color-rose: #eb6f92;
+    --color-foam: #9ccfd8;
+    --color-gold: #f6c177;
+    --color-border: rgba(144, 140, 170, 0.18);
+    --radius: 9px;
 }
 
 * {
-    border-radius: 0;
     border: none;
     box-shadow: none;
     background-image: none;
     font-family: "Iosevka Nerd Font";
     font-size: 10px;
+    color: var(--color-text);
+}
+
+#bar {
+    background-color: var(--color-base);
+    color: var(--color-text);
 }
 
 #bar, popover, popover contents, calendar {
-    background-color: var(--color-dark-primary);
+    border-radius: 12px;
+}
+
+popover, popover contents, calendar {
+    background-color: var(--color-base);
+}
+
+popover, popover contents {
+    border: 1px solid var(--color-border);
 }
 
 box, button, label {
-    background-color: #0000;
-    color: var(--color-white);
+    background-color: transparent;
 }
 
 button {
-    padding-left: var(--margin-sm);
-    padding-right: var(--margin-sm);
+    padding: 0.25rem 0.6rem;
+    min-height: 1.35rem;
+    border-radius: var(--radius);
+    background-color: var(--color-surface);
 }
 
 button:hover, button:active {
-    background-color: var(--color-dark-secondary);
+    background-color: var(--color-overlay);
 }
 
+button.brightness {
+    color: var(--color-gold);
+}
+
+button.battery {
+    color: var(--color-foam);
+}
+
+button.volume {
+    color: var(--color-rose);
+}
+
+button.bluetooth {
+    color: var(--color-accent);
+}
+
+button.clock {
+    color: var(--color-muted);
+    background-color: transparent;
+}
+
+button.tray,
+button.notifications {
+    background-color: transparent;
+}
+
+#start > * + *,
+#center > * + *,
 #end > * + * {
-    margin-left: var(--margin-lg);
+    margin-left: 0.45rem;
+}
+
+#start,
+#center,
+#end {
+    margin: 0 0.25rem;
 }
 
 .clock {
-    font-weight: bold;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+
+.battery .icon,
+.brightness .icon,
+.volume .icon,
+.bluetooth .icon {
+    font-size: 12px;
 }
 
 .workspaces .item.visible {
-    box-shadow: inset 0 -1px var(--color-white);
+    box-shadow: inset 0 0 0 1px rgba(224, 222, 244, 0.18);
 }
 
 .workspaces .item.focused {
-    box-shadow: inset 0 -1px var(--color-active);
-    background-color: var(--color-dark-secondary);
+    background-color: rgba(196, 167, 231, 0.28);
+    box-shadow: inset 0 0 0 1px rgba(196, 167, 231, 0.55);
+    color: var(--color-text);
 }
 
 .workspaces .item.urgent {
-    background-color: var(--color-urgent);
+    background-color: rgba(235, 111, 146, 0.34);
+    box-shadow: inset 0 0 0 1px rgba(235, 111, 146, 0.55);
+    color: var(--color-text);
+}
+
+.workspaces .item {
+    min-width: 1.25rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 8px;
+    background-color: rgba(42, 39, 63, 0.55);
+}
+
+calendar {
+    padding: 0.4rem;
+}
+
+calendar:selected {
+    color: var(--color-text);
+    background-color: rgba(196, 167, 231, 0.3);
 }
