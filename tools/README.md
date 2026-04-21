@@ -29,6 +29,14 @@ cd tools/lua-language-server
 
 The Neovim wrapper points at `tools/lua-language-server/install/bin/lua-language-server`.
 
+## Rust
+
+Rust language tooling is installed with `rustup` during Arch bootstrap.
+Neovim wrappers point at `~/.cargo/bin/rust-analyzer` and `~/.cargo/bin/rustfmt`.
+`tools/bin/cargo-clippy` opens `cargo clippy` from the repo root.
+
+The Node toolchain also provides `prettier` for `conform.nvim`.
+
 ## Combined audit
 
 ```sh

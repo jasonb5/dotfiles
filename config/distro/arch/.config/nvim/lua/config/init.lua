@@ -6,6 +6,7 @@ vim.pack.add({
   { src = "https://github.com/akinsho/bufferline.nvim" },
   { src = "https://github.com/nvim-lualine/lualine.nvim" },
   { src = "https://github.com/folke/which-key.nvim" },
+  { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
 })
 
