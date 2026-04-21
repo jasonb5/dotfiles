@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+  printf '%s: missing command\n' "${0##*/}" >&2
+  exit 1
+fi
+
+printf 'labwc socket: %s/%s\n' "${XDG_RUNTIME_DIR:-/run/user/$UID}" "${WAYLAND_DISPLAY:-unknown}"
+exec "$@"

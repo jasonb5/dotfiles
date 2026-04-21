@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+  printf 'usage: %s <command> [args...]\n' "${0##*/}"
+}
+
+if [[ $# -lt 1 ]]; then
+  usage >&2
+  exit 1
+fi
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+if [[ $# -eq 1 ]]; then
+  printf -v cmd '%q ' "$script_dir/labwc-session" sh -lc "$1"
+else
+  printf -v cmd '%q ' "$script_dir/labwc-session" "$@"
+fi
+exec labwc -S "$cmd"
