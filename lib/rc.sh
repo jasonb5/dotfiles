@@ -15,6 +15,7 @@ dotfiles_rc_block() {
 DOTFILES_ROOT="${repo_root}"
 export DOTFILES_ROOT
 . "${repo_root}/lib/detect.sh"
+. "${repo_root}/lib/scopes.sh"
 load_detected_scope
 source_shell_dir() {
   local dir="\$1"
@@ -29,6 +30,10 @@ source_shell_dir() {
 source_shell_dir "\${DOTFILES_ROOT}/shell/common"
 source_shell_dir "\${DOTFILES_ROOT}/shell/os/\${DOTFILES_OS}"
 source_shell_dir "\${DOTFILES_ROOT}/shell/distro/\${DOTFILES_DISTRO}"
+while IFS= read -r group; do
+  [[ -n "\$group" ]] || continue
+  source_shell_dir "\${DOTFILES_ROOT}/shell/group/\$group"
+done < <(dotfiles_groups_for_host "\${DOTFILES_HOST}")
 source_shell_dir "\${DOTFILES_ROOT}/shell/host/\${DOTFILES_HOST}"
 # <<< dotfiles shell <<<
 EOF

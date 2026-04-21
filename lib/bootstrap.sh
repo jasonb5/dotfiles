@@ -35,7 +35,7 @@ dotfiles_run_tree() {
 run_bootstrap() {
   load_detected_scope
   DOTFILES_ROOT="$(dotfiles_repo_root)"
-  export DOTFILES_OS DOTFILES_DISTRO DOTFILES_HOST DOTFILES_ROOT
+  export DOTFILES_OS DOTFILES_DISTRO DOTFILES_GROUP DOTFILES_GROUPS DOTFILES_HOST DOTFILES_ROOT
   dotfiles_source_shell_dir "$ROOT_DIR/shell/distro/$DOTFILES_DISTRO"
   dotfiles_log_info "starting bootstrap"
   dotfiles_run_tree bootstrap
