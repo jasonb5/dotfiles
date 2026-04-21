@@ -31,7 +31,11 @@ vim.lsp.config("lua_ls", {
   },
 })
 
-vim.lsp.enable({ "basedpyright", "ruff", "lua_ls" })
+vim.lsp.config("rust_analyzer", {
+  cmd = { tools_bin .. "/rust-analyzer" },
+})
+
+vim.lsp.enable({ "basedpyright", "ruff", "lua_ls", "rust_analyzer" })
 
 vim.diagnostic.config({
   severity_sort = true,
@@ -70,8 +74,5 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "gr", vim.lsp.buf.references, "References")
     map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
     map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
-    map("n", "<leader>f", function()
-      vim.lsp.buf.format({ async = true })
-    end, "Format buffer")
   end,
 })

@@ -7,10 +7,11 @@ source "${DOTFILES_ROOT:?}/lib/log.sh"
 
 if command -v rustup >/dev/null 2>&1; then
   dotfiles_log_info "rustup already installed"
-  exit 0
+else
+  dotfiles_log_info "installing rustup without shell setup"
+  curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal
 fi
 
-dotfiles_log_info "installing rustup without shell setup"
-curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal
+PATH="${HOME}/.cargo/bin:${PATH:-}" rustup component add rust-analyzer rustfmt clippy
 
-dotfiles_log_info "rustup installed"
+dotfiles_log_info "rustup, rust-analyzer, rustfmt, and clippy installed"
