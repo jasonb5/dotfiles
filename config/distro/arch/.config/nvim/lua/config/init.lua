@@ -8,6 +8,7 @@ vim.pack.add({
   { src = "https://github.com/folke/which-key.nvim" },
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
+  { src = "https://github.com/ibhagwan/fzf-lua" },
 })
 
 local plugin_dir = vim.fn.stdpath("config") .. "/lua/config/plugins"
