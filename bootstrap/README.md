@@ -6,7 +6,7 @@ Scopes are layered as `common -> os -> distro -> group -> host`, and hosts can m
 
 Arch distro steps live under `bootstrap/distro/arch/`.
 
-Current Arch steps include `common packages`, `yay`, `rose-pine`, `sway`, `swaync`, `tmux`, `rustup`, `volta`, `npm packages`, `uv`, and YubiKey support for GPG/SSH.
+Current Arch steps include `common packages`, `yay`, `rose-pine`, `sway`, `swaync`, `containers`, `tmux`, `rustup`, `volta`, `npm packages`, `uv`, and YubiKey support for GPG/SSH.
 
 `./dotfiles bootstrap` ends by running `./dotfiles install`.
 
