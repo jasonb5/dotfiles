@@ -8,6 +8,11 @@ Arch tmux config lives in `config/distro/arch/.tmux.conf`.
 
 Arch sway config lives in `config/distro/arch/.config/sway/config`.
 
+Host-specific sway overrides can live in `config/host/<hostname>/.config/sway/config`.
+
+Shared Sway idle timeout templates live in `config/distro/arch/.config/sway/idle.conf`,
+with host overrides at the same relative path under `config/host/<hostname>/`.
+
 Arch Rose Pine theme config lives under `config/distro/arch/.config/` for GTK,
 kitty, fuzzel, tmux, sway, swaync, ironbar, and Neovim.
 

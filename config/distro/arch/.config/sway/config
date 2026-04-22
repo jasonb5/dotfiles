@@ -49,7 +49,10 @@ bindsym $mod+Shift+l move right
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
 bindsym $mod+Shift+n exec swaync-client -t -sw
 
+include ~/.config/sway/idle.conf
+
 exec_always swaybg -c '#232136'
 exec_always sh -c 'pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true; /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1'
 exec_always sh -c 'pkill -x ironbar >/dev/null 2>&1 || true; ironbar'
 exec_always sh -c 'pkill -x swaync >/dev/null 2>&1 || true; swaync'
+exec_always sh -c 'pkill -x swayidle >/dev/null 2>&1 || true; swayidle -w timeout $swayidle_lock_timeout "swaylock -f -c 232136" timeout $swayidle_suspend_timeout "systemctl suspend" before-sleep "swaylock -f -c 232136"'
