@@ -4,6 +4,8 @@ Managed dotfiles live here.
 
 Scopes are layered as `common -> os -> distro -> group -> host`, and a host can load multiple groups.
 
+Shared screen config lives in `config/common/.screenrc`.
+
 Arch tmux config lives in `config/distro/arch/.tmux.conf`.
 
 Arch sway config lives in `config/distro/arch/.config/sway/config`.

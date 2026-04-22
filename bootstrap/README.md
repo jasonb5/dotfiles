@@ -8,7 +8,7 @@ Arch distro steps live under `bootstrap/distro/arch/`.
 
 Host-specific bootstrap steps live under `bootstrap/host/<hostname>/`.
 
-Current Arch steps include `common packages`, `yay`, `rose-pine`, `sway`, `swaync`, `containers`, `tmux`, `rustup`, `volta`, `npm packages`, `uv`, and YubiKey support for GPG/SSH.
+Current Arch steps include `common packages`, `yay`, `rose-pine`, `sway`, `swaync`, `containers`, `screen`, `tmux`, `rustup`, `volta`, `npm packages`, `uv`, and YubiKey support for GPG/SSH.
 
 The `lo` host includes a security baseline that enables a firewall, disables SSH, applies conservative sysctl hardening, and enables audit logging.
 
