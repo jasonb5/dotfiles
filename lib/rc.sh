@@ -14,8 +14,8 @@ dotfiles_rc_block() {
 # >>> dotfiles shell >>>
 DOTFILES_ROOT="${repo_root}"
 export DOTFILES_ROOT
-. "${repo_root}/lib/detect.sh"
 . "${repo_root}/lib/scopes.sh"
+. "${repo_root}/lib/detect.sh"
 load_detected_scope
 source_shell_dir() {
   local dir="\$1"

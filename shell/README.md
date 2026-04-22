@@ -1,9 +1,12 @@
 # shell
 
-Bash aliases and functions live here.
+Bash aliases, shell startup banner, and functions live here.
 
 Common shell setup runs first from `shell/common/`, including clearing any
 pre-existing aliases before distro-specific shell snippets are sourced.
+
+`shell/common/01-banner.sh` prints the interactive startup banner and package
+update count.
 
 Group shell setup can live under `shell/group/` and is sourced for every matched group.
 
