@@ -8,11 +8,15 @@ Arch distro steps live under `bootstrap/distro/arch/`.
 
 Host-specific bootstrap steps live under `bootstrap/host/<hostname>/`.
 
-Current Arch steps include `common packages`, `yay`, `rose-pine`, `sway`, `swaync`, `containers`, `screen`, `tmux`, `rustup`, `volta`, `npm packages`, `uv`, and YubiKey support for GPG/SSH.
+Current Arch steps include `common packages`, `security/runtime baseline`, `yay`, `rose-pine`, `sway`, `swaync`, `containers`, `screen`, `tmux`, `rustup`, `volta`, `npm packages`, `uv`, and YubiKey support for GPG/SSH.
 
-The `lo` host includes a security baseline that enables a firewall, disables SSH, applies conservative sysctl hardening, and enables audit logging.
+The `lo` host now keeps only laptop-specific hardening: it disables SSH, disables unused network services, and installs firejail for per-app sandboxing.
 
-The `lo` host also disables `avahi`, `cups`, and `bluetooth` by default, and installs `firejail` for per-app sandboxing.
+Docker, sysctl hardening, and auditd live in the general Arch bootstrap. Docker is kept rootful and does not use user namespace remapping.
+
+UFW stays in the `lo` host bootstrap so firewall policy remains host-specific and does not affect every Arch machine.
+
+The `lo` host also disables `avahi`, `cups`, and `bluetooth` by default.
 
 `./dotfiles bootstrap` ends by running `./dotfiles install`.
 
