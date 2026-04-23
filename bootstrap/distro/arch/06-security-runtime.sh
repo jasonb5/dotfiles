@@ -29,6 +29,7 @@ EOF
 sudo sysctl --system >/dev/null
 
 dotfiles_log_info "enabling Docker"
+sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json >/dev/null <<'EOF'
 {
   "runtimes": {
