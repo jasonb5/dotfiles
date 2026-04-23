@@ -18,6 +18,8 @@ UFW stays in the `lo` host bootstrap so firewall policy remains host-specific an
 
 The `lo` host also disables `avahi`, `cups`, and `bluetooth` by default.
 
+The `ganymede` host gets libvirt, a minimal x86 QEMU stack, virt-manager, and firmware support for managing a dedicated VM.
+
 `./dotfiles bootstrap` ends by running `./dotfiles install`.
 
 The YubiKey step installs the tools and agent config, then you can import your
