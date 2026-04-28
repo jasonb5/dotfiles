@@ -20,17 +20,6 @@ if [[ ! -L "$agent_conf_target" || "$(readlink -- "$agent_conf_target")" != "$(d
   ln -s -- "$(dotfiles_realpath_relative "$agent_conf_source" "$HOME/.gnupg")" "$agent_conf_target"
 fi
 
-auth_keygrip="$(gpg -K --with-keygrip 2>/dev/null | awk '/^ssb>/ && /\[A\]/ { want=1; next } want && /Keygrip = / { print $3; exit }')"
-if [[ -n "$auth_keygrip" ]]; then
-  sshcontrol="$HOME/.gnupg/sshcontrol"
-  mkdir -p "$HOME/.gnupg"
-  touch "$sshcontrol"
-  chmod 600 "$sshcontrol"
-  if ! grep -Fxq -- "$auth_keygrip" "$sshcontrol"; then
-    printf '%s\n' "$auth_keygrip" >>"$sshcontrol"
-  fi
-fi
-
 # Import your exported public key separately when you have the file handy.
 # gpg --import pubkey.asc
 
