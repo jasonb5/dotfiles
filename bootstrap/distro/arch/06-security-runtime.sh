@@ -6,7 +6,7 @@ source "${DOTFILES_ROOT:?}/lib/common.sh"
 source "${DOTFILES_ROOT:?}/lib/log.sh"
 
 dotfiles_log_info "installing security and runtime baseline"
-sudo pacman -S --needed --noconfirm audit docker docker-compose
+sudo pacman -S --needed --noconfirm audit docker docker-compose podman podman-compose
 
 dotfiles_log_info "writing sysctl hardening"
 sudo tee /etc/sysctl.d/99-dotfiles-arch.conf >/dev/null <<'EOF'
@@ -31,7 +31,7 @@ sudo sysctl --system >/dev/null
 dotfiles_log_info "enabling Docker service"
 sudo systemctl enable --now docker.service
 sudo usermod -aG docker "$USER"
-dotfiles_log_info "Docker and Docker Compose installed; re-login to pick up docker group membership"
+dotfiles_log_info "Docker, Docker Compose, Podman, and Podman Compose installed; re-login to pick up docker group membership"
 
 dotfiles_log_info "enabling audit logging"
 sudo systemctl enable --now auditd
