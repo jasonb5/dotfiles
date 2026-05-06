@@ -7,7 +7,7 @@ source "${DOTFILES_ROOT:?}/lib/install.sh"
 source "${DOTFILES_ROOT:?}/lib/log.sh"
 
 dotfiles_log_info "installing gpg and yubi key support packages"
-sudo pacman -S --needed --noconfirm gnupg pinentry pcsclite ccid opensc openssh yubikey-manager
+sudo pacman -S --needed --noconfirm gnupg pinentry pcsclite ccid opensc openssh libfido2 yubikey-manager
 
 install -d -m 700 "$HOME/.gnupg"
 chmod 700 "$HOME/.gnupg"
