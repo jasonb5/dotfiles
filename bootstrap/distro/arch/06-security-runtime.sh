@@ -6,7 +6,7 @@ source "${DOTFILES_ROOT:?}/lib/common.sh"
 source "${DOTFILES_ROOT:?}/lib/log.sh"
 
 dotfiles_log_info "installing security and runtime baseline"
-sudo pacman -S --needed --noconfirm audit docker
+sudo pacman -S --needed --noconfirm audit docker docker-compose
 
 dotfiles_log_info "writing sysctl hardening"
 sudo tee /etc/sysctl.d/99-dotfiles-arch.conf >/dev/null <<'EOF'
@@ -28,24 +28,10 @@ net.ipv4.tcp_syncookies=1
 EOF
 sudo sysctl --system >/dev/null
 
-dotfiles_log_info "enabling Docker"
-sudo mkdir -p /etc/docker
-sudo tee /etc/docker/daemon.json >/dev/null <<'EOF'
-{
-  "runtimes": {
-    "nvidia": {
-      "args": [],
-      "path": "nvidia-container-runtime"
-    }
-  }
-}
-EOF
-sudo systemctl enable --now docker
+dotfiles_log_info "enabling Docker service"
+sudo systemctl enable --now docker.service
 sudo usermod -aG docker "$USER"
-dotfiles_log_info "Docker installed; re-login to pick up docker group membership"
-
-dotfiles_log_info "restarting Docker after config update"
-sudo systemctl restart docker
+dotfiles_log_info "Docker and Docker Compose installed; re-login to pick up docker group membership"
 
 dotfiles_log_info "enabling audit logging"
 sudo systemctl enable --now auditd
