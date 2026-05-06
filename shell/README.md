@@ -16,4 +16,7 @@ Arch Rose Pine shell/theme setup lives in `bootstrap/distro/arch/` and
 Arch PATH setup for `~/.volta/bin`, `~/.cargo/bin`, and `~/.local/bin` lives in
 `shell/distro/arch/10-path.sh`.
 
+Arch editor defaults (`EDITOR`/`VISUAL`) are set to `nvim` in
+`shell/distro/arch/15-editor.sh`.
+
 YubiKey GPG/SSH shell setup lives in `shell/distro/arch/20-gpg.sh`.
