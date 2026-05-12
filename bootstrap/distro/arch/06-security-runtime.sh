@@ -6,7 +6,7 @@ source "${DOTFILES_ROOT:?}/lib/common.sh"
 source "${DOTFILES_ROOT:?}/lib/log.sh"
 
 dotfiles_log_info "installing security and runtime baseline"
-sudo pacman -S --needed --noconfirm audit docker docker-compose podman podman-compose
+sudo pacman -S --needed --noconfirm audit docker docker-compose podman podman-compose wireguard-tools openresolv
 
 dotfiles_log_info "writing sysctl hardening"
 sudo tee /etc/sysctl.d/99-dotfiles-arch.conf >/dev/null <<'EOF'
@@ -36,4 +36,4 @@ dotfiles_log_info "Docker, Docker Compose, Podman, and Podman Compose installed;
 dotfiles_log_info "enabling audit logging"
 sudo systemctl enable --now auditd
 
-dotfiles_log_info "security and runtime baseline installed"
+dotfiles_log_info "security and runtime baseline installed (including WireGuard tooling and resolveconf)"

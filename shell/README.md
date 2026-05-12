@@ -20,3 +20,6 @@ Arch editor defaults (`EDITOR`/`VISUAL`) are set to `nvim` in
 `shell/distro/arch/15-editor.sh`.
 
 YubiKey GPG/SSH shell setup lives in `shell/distro/arch/20-gpg.sh`.
+
+WireGuard interactive config helper is available as `wg_setup` from
+`shell/distro/arch/25-wireguard.sh`.
