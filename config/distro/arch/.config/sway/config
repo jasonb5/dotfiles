@@ -51,8 +51,10 @@ bindsym $mod+Shift+n exec swaync-client -t -sw
 
 include ~/.config/sway/idle.conf
 
+for_window [shell="xwayland"] title_format "[X11] %title"
+
 exec_always swaybg -c '#232136'
-exec_always sh -c 'dbus-update-activation-environment --systemd MOZ_ENABLE_WAYLAND=1 OZONE_PLATFORM=wayland QT_QPA_PLATFORM=wayland\;xcb'
+exec_always sh -c 'export MOZ_ENABLE_WAYLAND=1 QT_QPA_PLATFORM="wayland;xcb" ELECTRON_OZONE_PLATFORM_HINT=auto OZONE_PLATFORM_HINT=auto; dbus-update-activation-environment --systemd --all; systemctl --user import-environment MOZ_ENABLE_WAYLAND QT_QPA_PLATFORM ELECTRON_OZONE_PLATFORM_HINT OZONE_PLATFORM_HINT'
 exec_always sh -c 'pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true; /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1'
 exec_always sh -c 'pkill -x ironbar >/dev/null 2>&1 || true; ironbar'
 exec_always sh -c 'pkill -x swaync >/dev/null 2>&1 || true; swaync'
