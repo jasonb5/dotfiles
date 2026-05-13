@@ -1,2 +1,5 @@
 alias mkrepo-secrets='repo_secrets_init'
 alias opencode='with_repo_secrets opencode'
+alias chromium-wayland='XDG_CURRENT_DESKTOP=sway chromium --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --ozone-platform=wayland'
+alias chromium-webex-x11='env XDG_SESSION_TYPE=x11 XDG_CURRENT_DESKTOP=sway chromium --user-data-dir="$HOME/.config/chromium-webex-x11" --ozone-platform=x11 --disable-features=WebRTCPipeWireCapturer'
+alias kitty-xwayland='kitty -o linux_display_server=x11'
