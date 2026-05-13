@@ -8,7 +8,7 @@ Arch distro steps live under `bootstrap/distro/arch/`.
 
 Host-specific bootstrap steps live under `bootstrap/host/<hostname>/`.
 
-Current Arch steps include `common packages`, `security/runtime baseline`, `yay`, `rose-pine`, `sway`, `swaync`, `containers`, `screen`, `tmux`, `rustup`, `volta`, `npm packages`, `uv`, and YubiKey support for GPG/SSH.
+Current Arch steps include `common packages`, `security/runtime baseline`, `yay`, `rose-pine`, `sway`, `swaync`, `containers`, `bitwarden cli`, `screen`, `tmux`, `rustup`, `volta`, `npm packages`, `uv`, and YubiKey support for GPG/SSH.
 
 The `lo` host now keeps only laptop-specific hardening: it disables SSH, disables unused network services, and installs firejail for per-app sandboxing.
 
