@@ -6,7 +6,17 @@ source "${DOTFILES_ROOT:?}/lib/common.sh"
 source "${DOTFILES_ROOT:?}/lib/log.sh"
 
 dotfiles_log_info "installing security and runtime baseline"
-sudo pacman -S --needed --noconfirm audit docker docker-compose podman podman-compose wireguard-tools openresolv
+runtime_packages=(
+  audit
+  docker
+  docker-compose
+  podman
+  podman-compose
+  wireguard-tools
+  openresolv
+)
+
+sudo pacman -S --needed --noconfirm "${runtime_packages[@]}"
 
 dotfiles_log_info "writing sysctl hardening"
 sudo tee /etc/sysctl.d/99-dotfiles-arch.conf >/dev/null <<'EOF'
