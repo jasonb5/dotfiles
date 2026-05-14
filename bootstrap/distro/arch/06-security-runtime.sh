@@ -14,6 +14,7 @@ runtime_packages=(
   podman-compose
   wireguard-tools
   openresolv
+  nfs-utils
 )
 
 sudo pacman -S --needed --noconfirm "${runtime_packages[@]}"

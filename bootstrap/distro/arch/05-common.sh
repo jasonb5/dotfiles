@@ -15,6 +15,7 @@ common_packages=(
   fzf
   fd
   ripgrep
+  yazi
 )
 
 sudo pacman -S --needed --noconfirm "${common_packages[@]}"
