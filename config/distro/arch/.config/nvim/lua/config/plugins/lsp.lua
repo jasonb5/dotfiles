@@ -1,16 +1,20 @@
 local tools_root = vim.env.DOTFILES_ROOT or vim.fn.fnamemodify(vim.fn.stdpath("config"), ":p:h:h:h:h:h")
 local tools_bin = tools_root .. "/tools/bin"
+local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 vim.lsp.config("basedpyright", {
   cmd = { tools_bin .. "/basedpyright-langserver", "--stdio" },
+  capabilities = capabilities,
 })
 
 vim.lsp.config("ruff", {
   cmd = { tools_bin .. "/ruff", "server" },
+  capabilities = capabilities,
 })
 
 vim.lsp.config("lua_ls", {
   cmd = { tools_bin .. "/lua-language-server" },
+  capabilities = capabilities,
   settings = {
     Lua = {
       runtime = {
@@ -33,6 +37,7 @@ vim.lsp.config("lua_ls", {
 
 vim.lsp.config("rust_analyzer", {
   cmd = { tools_bin .. "/rust-analyzer" },
+  capabilities = capabilities,
 })
 
 vim.lsp.enable({ "basedpyright", "ruff", "lua_ls", "rust_analyzer" })

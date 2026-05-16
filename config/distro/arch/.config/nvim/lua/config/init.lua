@@ -4,6 +4,8 @@ require("config.keymaps")
 vim.pack.add({
   { src = "https://github.com/rose-pine/neovim" },
   { src = "https://github.com/akinsho/bufferline.nvim" },
+  { src = "https://github.com/Saghen/blink.lib" },
+  { src = "https://github.com/Saghen/blink.cmp", version = "main" },
   { src = "https://github.com/nvim-lualine/lualine.nvim" },
   { src = "https://github.com/folke/which-key.nvim" },
   { src = "https://github.com/stevearc/conform.nvim" },
