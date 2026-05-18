@@ -1,5 +1,5 @@
 position = "top"
-height = 24
+height = 28
 
 [[start]]
 type = "label"
@@ -14,6 +14,16 @@ type = "battery"
 show_icon = true
 show_label = false
 show_if = "sh -c 'set -- /sys/class/power_supply/BAT*; [ -e \"$1\" ]'"
+
+[[start]]
+type = "label"
+class = "cpu"
+label = "{{2000:sh -c 'read -r _ a b c d e f g h i j < /proc/stat; total1=$((a+b+c+d+e+f+g+h+i+j)); idle1=$((d+e)); sleep 0.2; read -r _ a b c d e f g h i j < /proc/stat; total2=$((a+b+c+d+e+f+g+h+i+j)); idle2=$((d+e)); dt=$((total2-total1)); di=$((idle2-idle1)); [ \"$dt\" -gt 0 ] && usage=$(( (100*(dt-di))/dt )) || usage=0; printf \"󰍛 %s%%\" \"$usage\"' }}"
+
+[[start]]
+type = "label"
+class = "mem"
+label = "{{3000:sh -c 'awk \"/MemTotal/ {t=\\$2} /MemAvailable/ {a=\\$2} END {u=((t-a)*100)/t; printf \\\"󰘚 %d%%\\\", u}\" /proc/meminfo' }}"
 
 [[start]]
 type = "label"
@@ -48,4 +58,4 @@ type = "tray"
 
 [[end]]
 type = "clock"
-format = "󰥔 %H:%M"
+format = "󰥔 %a %d %H:%M"

@@ -5,7 +5,7 @@
 
 .notification-row,
 .control-center {
-    background: #232136;
+    background: rgba(35, 33, 54, 0.96);
     color: #e0def4;
 }
 
@@ -20,15 +20,16 @@
 .widget-volume,
 .widget-mpris,
 .widget-menubar {
-    background: #232136;
+    background: rgba(35, 33, 54, 0.98);
     color: #e0def4;
 }
 
 .notification {
-    border: 1px solid #393552;
-    border-radius: 12px;
+    border: 1px solid #524f67;
+    border-radius: 6px;
     margin: 8px;
     padding: 10px;
+    box-shadow: none;
 }
 
 .notification.critical {
@@ -39,9 +40,10 @@
 .close-button,
 .dnd-button,
 .widget-buttons-grid button {
-    background: #393552;
+    background: rgba(57, 53, 82, 0.95);
     color: #e0def4;
-    border-radius: 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(110, 106, 134, 0.4);
 }
 
 .notification-button:hover,
@@ -53,4 +55,9 @@
 
 .notification-progress {
     background: #c4a7e7;
+}
+
+.widget-title,
+.widget-label {
+    color: #c4a7e7;
 }
