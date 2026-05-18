@@ -1,10 +1,30 @@
 set $mod Mod4
 set $term kitty
 set $menu fuzzel
+set $dotfiles_root /home/titters/devel/personal/dotfiles
+
+set $rose_base #232136
+set $rose_surface #2a273f
+set $rose_overlay #393552
+set $rose_muted #6e6a86
+set $rose_subtle #908caa
+set $rose_text #e0def4
+set $rose_iris #c4a7e7
+set $rose_love #eb6f92
 
 font pango:Iosevka Nerd Font 10
 
-output * background #232136 solid_color
+default_border pixel 2
+default_floating_border pixel 2
+gaps inner 10
+gaps outer 6
+smart_gaps on
+
+client.focused $rose_iris $rose_iris $rose_text $rose_iris $rose_iris
+client.focused_inactive $rose_surface $rose_surface $rose_subtle $rose_surface $rose_surface
+client.unfocused $rose_surface $rose_surface $rose_muted $rose_surface $rose_surface
+client.urgent $rose_love $rose_love $rose_text $rose_love $rose_love
+client.placeholder $rose_overlay $rose_overlay $rose_text $rose_overlay $rose_overlay
 
 floating_modifier $mod normal
 
@@ -48,13 +68,14 @@ bindsym $mod+Shift+l move right
 
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
 bindsym $mod+Shift+n exec swaync-client -t -sw
+bindsym $mod+Shift+w exec sh -c '"$dotfiles_root/scripts/distro/arch/wallpaper-picker.sh"'
 
 include ~/.config/sway/idle.conf
 
 for_window [shell="xwayland"] title_format "[X11] %title"
 
-exec_always swaybg -c '#232136'
-exec_always sh -c 'export MOZ_ENABLE_WAYLAND=1 QT_QPA_PLATFORM=wayland QT_WAYLAND_DISABLE_WINDOWDECORATION=1 ELECTRON_OZONE_PLATFORM_HINT=auto OZONE_PLATFORM_HINT=auto; dbus-update-activation-environment --systemd --all; systemctl --user import-environment MOZ_ENABLE_WAYLAND QT_QPA_PLATFORM QT_WAYLAND_DISABLE_WINDOWDECORATION ELECTRON_OZONE_PLATFORM_HINT OZONE_PLATFORM_HINT'
+exec_always sh -c 'export DOTFILES_ROOT="$dotfiles_root" MOZ_ENABLE_WAYLAND=1 QT_QPA_PLATFORM=wayland QT_WAYLAND_DISABLE_WINDOWDECORATION=1 ELECTRON_OZONE_PLATFORM_HINT=auto OZONE_PLATFORM_HINT=auto; dbus-update-activation-environment --systemd --all; systemctl --user import-environment DOTFILES_ROOT MOZ_ENABLE_WAYLAND QT_QPA_PLATFORM QT_WAYLAND_DISABLE_WINDOWDECORATION ELECTRON_OZONE_PLATFORM_HINT OZONE_PLATFORM_HINT'
+exec_always sh -c '"$dotfiles_root/scripts/distro/arch/wallpaper.sh"'
 exec_always sh -c 'pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true; /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1'
 exec_always sh -c 'pkill -x ironbar >/dev/null 2>&1 || true; ironbar'
 exec_always sh -c 'pkill -x swaync >/dev/null 2>&1 || true; swaync'
