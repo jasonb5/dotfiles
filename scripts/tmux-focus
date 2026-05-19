@@ -1,0 +1,256 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SESSION_NAME="${TMUX_FOCUS_SESSION:-}"
+if [ -z "$SESSION_NAME" ]; then
+  if [ -n "${TMUX:-}" ]; then
+    SESSION_NAME="$(tmux display-message -p '#S')"
+  else
+    SESSION_NAME='focus'
+  fi
+fi
+
+PERSONAL_ROOT="${TMUX_FOCUS_PERSONAL_ROOT:-$HOME/devel/personal}"
+WORK_ROOT="${TMUX_FOCUS_WORK_ROOT:-$HOME/devel/work}"
+
+usage() {
+  printf 'Usage: %s [--session NAME] [--list] [PROJECT ...]\n' "${0##*/}"
+  printf 'Autodiscovers projects under %s and %s.\n' "$PERSONAL_ROOT" "$WORK_ROOT"
+}
+
+declare -a project_labels=()
+declare -a project_paths=()
+
+add_projects_from_root() {
+  local group="$1"
+  local root="$2"
+  local dir base label
+
+  [ -d "$root" ] || return 0
+
+  for dir in "$root"/*; do
+    [ -d "$dir" ] || continue
+    base="${dir##*/}"
+    label="$group/$base"
+    project_labels+=("$label")
+    project_paths+=("$dir")
+  done
+}
+
+build_project_index() {
+  project_labels=()
+  project_paths=()
+  add_projects_from_root "personal" "$PERSONAL_ROOT"
+  add_projects_from_root "work" "$WORK_ROOT"
+}
+
+list_projects() {
+  printf '%s\n' '[blank]'
+  local i
+  for ((i = 0; i < ${#project_labels[@]}; i++)); do
+    printf '%s\n' "${project_labels[$i]}"
+  done
+}
+
+run_selector() {
+  local -a opts
+  local -a outside_tmux_opts
+  opts=(
+    --multi
+    --prompt='Projects > '
+    --header='Select one or more projects'
+    --layout=reverse
+    --border=rounded
+    --height=80%
+    --info=inline
+  )
+  outside_tmux_opts=()
+
+  if fzf --help 2>/dev/null | grep -q -- '--width'; then
+    opts+=(--width=80%)
+  fi
+
+  if [ -z "${TMUX:-}" ]; then
+    if fzf --help 2>/dev/null | grep -q -- '--margin'; then
+      outside_tmux_opts+=(--margin=5%,10%)
+    fi
+    opts+=("${outside_tmux_opts[@]}")
+  fi
+
+  if [ -n "${TMUX:-}" ] && fzf --help 2>/dev/null | grep -q -- '--popup'; then
+    list_projects | fzf --popup 80%,70% "${opts[@]}"
+  elif [ -n "${TMUX:-}" ] && command -v fzf-tmux >/dev/null 2>&1; then
+    list_projects | fzf-tmux -p 80%,70% "${opts[@]}"
+  else
+    list_projects | fzf "${opts[@]}"
+  fi
+}
+
+window_name_for_path() {
+  local path="$1"
+  local base
+  base="${path##*/}"
+  printf '%s\n' "$base"
+}
+
+existing_window_target() {
+  local session="$1"
+  local desired_name="$2"
+  local desired_path="$3"
+  local line wid wname wpath
+
+  while IFS= read -r line; do
+    wid="${line%% *}"
+    line="${line#* }"
+    wname="${line%% *}"
+    wpath="${line#* }"
+    [ "$wname" = "$desired_name" ] || continue
+    [ "$wpath" = "$desired_path" ] || continue
+    printf '%s\n' "$wid"
+    return 0
+  done < <(tmux list-windows -t "$session" -F '#{window_id} #{window_name} #{pane_current_path}')
+
+  return 1
+}
+
+path_for_label() {
+  local label="$1"
+  local i
+  for ((i = 0; i < ${#project_labels[@]}; i++)); do
+    [ "${project_labels[$i]}" = "$label" ] || continue
+    printf '%s\n' "${project_paths[$i]}"
+    return 0
+  done
+  return 1
+}
+
+declare -a requested_projects=()
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --session)
+      [ "$#" -lt 2 ] && { printf 'tmux-focus: missing value for --session\n' >&2; exit 1; }
+      SESSION_NAME="$2"
+      shift 2
+      ;;
+    --list)
+      build_project_index
+      list_projects
+      exit 0
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      while [ "$#" -gt 0 ]; do
+        requested_projects+=("$1")
+        shift
+      done
+      ;;
+    -*)
+      printf 'tmux-focus: unknown option: %s\n' "$1" >&2
+      usage >&2
+      exit 1
+      ;;
+    *)
+      requested_projects+=("$1")
+      shift
+      ;;
+  esac
+done
+
+build_project_index
+
+if [ "${#project_labels[@]}" -eq 0 ]; then
+  printf 'tmux-focus: no project directories found\n' >&2
+  exit 1
+fi
+
+declare -a selected_projects=()
+
+if [ "${#requested_projects[@]}" -gt 0 ]; then
+  selected_projects=("${requested_projects[@]}")
+elif command -v fzf >/dev/null 2>&1; then
+  mapfile -t selected_projects < <(run_selector)
+else
+  printf 'tmux-focus: pass project names as args or install fzf for interactive selection.\n' >&2
+  printf 'Available projects:\n' >&2
+  list_projects >&2
+  exit 1
+fi
+
+if [ "${#selected_projects[@]}" -eq 0 ]; then
+  exit 0
+fi
+
+session_exists=0
+if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+  session_exists=1
+fi
+
+created_session=0
+last_created_window=''
+last_selected_window=''
+for selected_name in "${selected_projects[@]}"; do
+  window_name=''
+  if [ "$selected_name" = '[blank]' ] || [ "$selected_name" = 'blank' ]; then
+    if [ "$session_exists" -eq 0 ] && [ "$created_session" -eq 0 ]; then
+      tmux new-session -d -s "$SESSION_NAME" -n shell -c "$HOME"
+      created_session=1
+      session_exists=1
+      last_selected_window='shell'
+    else
+      tmux new-window -t "$SESSION_NAME" -n shell -c "$HOME"
+      last_selected_window='shell'
+    fi
+    continue
+  fi
+
+  if ! full_path="$(path_for_label "$selected_name")"; then
+    printf 'tmux-focus: unknown project: %s\n' "$selected_name" >&2
+    continue
+  fi
+
+  window_name="$(window_name_for_path "$full_path")"
+
+  if [ "$session_exists" -eq 0 ] && [ "$created_session" -eq 0 ]; then
+    tmux new-session -d -s "$SESSION_NAME" -n "$window_name" -c "$full_path"
+    created_session=1
+    session_exists=1
+    last_created_window="$window_name"
+    last_selected_window="$window_name"
+  else
+    existing_window_id="$(existing_window_target "$SESSION_NAME" "$window_name" "$full_path" || true)"
+
+    if [ -n "$existing_window_id" ]; then
+      last_selected_window="$existing_window_id"
+    elif tmux list-windows -t "$SESSION_NAME" -F '#{window_name}' | grep -Fxq "$window_name"; then
+      tmux new-window -t "$SESSION_NAME" -n "$selected_name" -c "$full_path"
+      last_created_window="$selected_name"
+      last_selected_window="$selected_name"
+    else
+      tmux new-window -t "$SESSION_NAME" -n "$window_name" -c "$full_path"
+      last_created_window="$window_name"
+      last_selected_window="$window_name"
+    fi
+  fi
+done
+
+if [ "$created_session" -eq 0 ] && [ "$session_exists" -eq 0 ]; then
+  printf 'tmux-focus: nothing to open\n' >&2
+  exit 1
+fi
+
+if [ -n "${TMUX:-}" ]; then
+  if [ -n "$last_selected_window" ]; then
+    tmux select-window -t "$SESSION_NAME:$last_selected_window"
+  fi
+  tmux switch-client -t "$SESSION_NAME"
+else
+  if [ -n "$last_selected_window" ]; then
+    tmux select-window -t "$SESSION_NAME:$last_selected_window"
+  fi
+  tmux attach -t "$SESSION_NAME"
+fi

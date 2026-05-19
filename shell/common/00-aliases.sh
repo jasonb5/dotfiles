@@ -7,3 +7,7 @@ alias webex-firefox='${DOTFILES_ROOT:?}/scripts/distro/arch/labwc-run env MOZ_EN
 dotfile() {
   "${DOTFILES_ROOT:?}/dotfiles" "$@"
 }
+
+tmux-focus() {
+  "${DOTFILES_ROOT:?}/scripts/tmux-focus" "$@"
+}
