@@ -67,6 +67,7 @@ bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
+bindsym $mod+Shift+m exec sh -c '"$dotfiles_root/scripts/distro/arch/sway-toggle-hidden-workspace.sh"'
 
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
 bindsym $mod+Shift+n exec swaync-client -t -sw
