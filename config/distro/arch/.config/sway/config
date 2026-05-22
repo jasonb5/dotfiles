@@ -81,6 +81,6 @@ exec_always sh -c 'export DOTFILES_ROOT="$dotfiles_root" MOZ_ENABLE_WAYLAND=1 QT
 exec_always swaymsg "smart_gaps $smart_gaps_mode; gaps inner all set $gaps_inner; gaps outer all set $gaps_outer"
 exec_always sh -c '"$dotfiles_root/scripts/distro/arch/wallpaper.sh"'
 exec_always sh -c 'pkill -x polkit-gnome-authentication-agent-1 >/dev/null 2>&1 || true; /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1'
-exec_always sh -c 'pkill -x ironbar >/dev/null 2>&1 || true; ironbar'
+exec_always sh -c 'pkill -x ironbar >/dev/null 2>&1 || true; DOTFILES_ROOT="$dotfiles_root" ironbar'
 exec_always sh -c 'pkill -x swaync >/dev/null 2>&1 || true; swaync'
 exec_always sh -c 'pkill -x swayidle >/dev/null 2>&1 || true; swayidle -w timeout $swayidle_lock_timeout "swaylock -f -c 232136" timeout $swayidle_suspend_timeout "systemctl suspend" before-sleep "swaylock -f -c 232136"'

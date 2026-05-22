@@ -47,6 +47,13 @@ format.enabled = ""
 format.connected = ""
 format.connected_battery = ""
 
+[[start]]
+type = "label"
+class = "sleep-inhibit"
+label = "{{1000:sh -c '\"${DOTFILES_ROOT:?}/scripts/distro/arch/sleep-inhibit\" icon'}}"
+on_click_left = "sh -c '\"${DOTFILES_ROOT:?}/scripts/distro/arch/sleep-inhibit\" toggle'"
+show_if = "sh -c 'test -x \"${DOTFILES_ROOT:?}/scripts/distro/arch/sleep-inhibit\"'"
+
 [[center]]
 type = "workspaces"
 

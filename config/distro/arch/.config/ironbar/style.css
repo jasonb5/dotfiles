@@ -107,6 +107,14 @@ button.bluetooth {
     color: var(--color-accent);
 }
 
+.sleep-inhibit {
+    color: var(--color-muted);
+}
+
+.sleep-inhibit:hover {
+    background-color: rgba(144, 140, 170, 0.14);
+}
+
 button.clock {
     color: var(--color-muted);
     background-color: transparent;

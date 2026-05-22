@@ -1,0 +1,56 @@
+#!/bin/sh
+# Toggle sleep/idle inhibitor using systemd-inhibit
+# Usage: sleep-inhibit [toggle|status|icon|info|start|stop]
+
+PIDFILE="${XDG_RUNTIME_DIR:-/tmp}/sleep-inhibit.pid"
+
+is_active() {
+    [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null
+}
+
+start_inhibit() {
+    systemd-inhibit --what=idle:sleep:handle-lid-switch \
+        --who="sleep-inhibit" \
+        --why="User requested via ironbar" \
+        --mode=block \
+        sleep infinity &
+    echo $! > "$PIDFILE"
+}
+
+stop_inhibit() {
+    [ -f "$PIDFILE" ] && kill "$(cat "$PIDFILE")" 2>/dev/null
+    rm -f "$PIDFILE"
+}
+
+case "${1:-toggle}" in
+    toggle)
+        if is_active; then
+            stop_inhibit
+        else
+            start_inhibit
+        fi
+        ;;
+    status)
+        is_active && echo "active" || echo "inactive"
+        ;;
+    icon)
+        is_active && printf "󰒳" || printf "󰒲"
+        ;;
+    info)
+        if is_active; then
+            printf 'Sleep inhibit: active\nPrevents idle, suspend, and lid sleep\nClick to disable'
+        else
+            printf 'Sleep inhibit: inactive\nClick to keep this machine awake'
+        fi
+        ;;
+    start)
+        is_active || start_inhibit
+        ;;
+    stop)
+        stop_inhibit
+        ;;
+    *)
+        echo "Usage: sleep-inhibit [toggle|status|icon|info|start|stop]"
+        exit 1
+        ;;
+esac
