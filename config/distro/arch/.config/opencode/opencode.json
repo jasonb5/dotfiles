@@ -1,0 +1,35 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "tasks_index": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "uv",
+        "run",
+        "--directory",
+        "/home/titters/devel/personal/dotfiles/tools/mcp/tasks-index",
+        "python",
+        "-m",
+        "tasks_index_mcp.server"
+      ],
+      "environment": {
+        "TASKS_DB_PATH": "~/.local/state/tasks/tasks.db"
+      },
+      "timeout": 10000
+    },
+    "github": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "environment": {
+        "GITHUB_TOKEN": "{env:GITHUB_TOKEN}"
+      },
+      "timeout": 15000
+    }
+  }
+}
