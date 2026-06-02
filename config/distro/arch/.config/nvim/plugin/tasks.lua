@@ -12,6 +12,10 @@ vim.api.nvim_create_user_command("TaskOpenToday", function()
   tasks.open_today()
 end, {})
 
+vim.api.nvim_create_user_command("TaskRecent", function()
+  tasks.open_recent_picker()
+end, {})
+
 vim.api.nvim_create_user_command("TaskAdd", function()
   tasks.add_task()
 end, {})
@@ -22,4 +26,8 @@ end, {})
 
 vim.api.nvim_create_user_command("TaskIndex", function()
   tasks.refresh_index()
+end, {})
+
+vim.api.nvim_create_user_command("TaskRegenerateToday", function()
+  tasks.regenerate_today()
 end, {})

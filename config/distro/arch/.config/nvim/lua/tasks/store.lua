@@ -27,6 +27,15 @@ function M.is_daily_path(path)
   return path:sub(1, #root) == root and path:match("/%d%d%d%d/%d%d%-%d%d%.md$") ~= nil
 end
 
+function M.date_for_path(path)
+  local year, month, date_day = path:match("/(%d%d%d%d)/(%d%d)%-(%d%d)%.md$")
+  if not year then
+    return nil
+  end
+
+  return string.format("%s-%s-%s", year, month, date_day)
+end
+
 function M.daily_path(day)
   return date.daily_path(config.get().root, day)
 end
