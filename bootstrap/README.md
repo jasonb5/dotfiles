@@ -20,6 +20,9 @@ The `lo` host also disables `avahi`, `cups`, and `bluetooth` by default.
 
 The `ganymede` host gets libvirt, a minimal x86 QEMU stack, virt-manager, firmware support for managing a dedicated VM, and NVIDIA Container Toolkit.
 
+Arch bootstrap also refreshes the managed Firefox `user.js` from `arkenfox` and
+registers a dedicated `dotfiles-arch` profile if Firefox is installed.
+
 `./dotfiles bootstrap` ends by running `./dotfiles install`.
 
 The YubiKey step installs the tools and agent config, then you can import your

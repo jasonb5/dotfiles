@@ -35,6 +35,11 @@ Current Arch steps include `yay`, `volta`, `npm packages`, and `uv`.
 Arch shell PATH setup lives under `shell/distro/arch/` and is sourced both by
 interactive shells and bootstrap.
 
+Firefox on Arch uses a dedicated `dotfiles-arch` profile under
+`config/distro/arch/.mozilla/firefox/dotfiles-arch/`. Its `user.js` is generated
+from upstream `arkenfox/user.js` plus local overrides in `user-overrides.js` via
+`scripts/distro/arch/firefox-refresh-userjs`.
+
 ## Commands
 
 - `./dotfiles detect`
