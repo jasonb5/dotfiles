@@ -41,6 +41,81 @@ local function context_defaults(bufnr, line_number)
   return current_scope, current_project
 end
 
+local function existing_projects(scope_name, preferred_project)
+  local seen = {}
+  local projects = {}
+
+  for _, path in ipairs(store.list_daily_paths()) do
+    local doc = store.load_daily_path(path)
+    if doc then
+      local scope = doc.scopes[scope_name]
+      for _, project_name in ipairs(scope.project_order) do
+        if not seen[project_name] then
+          seen[project_name] = true
+          projects[#projects + 1] = project_name
+        end
+      end
+    end
+  end
+
+  table.sort(projects)
+
+  if preferred_project and preferred_project ~= "" and seen[preferred_project] then
+    for index, project_name in ipairs(projects) do
+      if project_name == preferred_project then
+        table.remove(projects, index)
+        table.insert(projects, 1, project_name)
+        break
+      end
+    end
+  end
+
+  return projects
+end
+
+local function prompt_for_project(scope, default_project, callback)
+  local projects = existing_projects(scope, default_project)
+
+  local function prompt_new_project()
+    vim.ui.input({
+      prompt = "Project: ",
+      default = default_project or "",
+    }, function(project)
+      if not project or vim.trim(project) == "" then
+        return
+      end
+
+      callback(vim.trim(project))
+    end)
+  end
+
+  if #projects == 0 then
+    prompt_new_project()
+    return
+  end
+
+  local choices = { "New project..." }
+  vim.list_extend(choices, projects)
+
+  vim.ui.select(choices, {
+    prompt = "Project",
+    format_item = function(item)
+      return item
+    end,
+  }, function(project)
+    if not project then
+      return
+    end
+
+    if project == "New project..." then
+      prompt_new_project()
+      return
+    end
+
+    callback(project)
+  end)
+end
+
 function M.add_task(day, callback)
   local bufnr = vim.api.nvim_get_current_buf()
   local line_number = vim.api.nvim_win_get_cursor(0)[1]
@@ -57,14 +132,7 @@ function M.add_task(day, callback)
       return
     end
 
-    vim.ui.input({
-      prompt = "Project: ",
-      default = default_project or "",
-    }, function(project)
-      if not project or vim.trim(project) == "" then
-        return
-      end
-
+    prompt_for_project(scope, default_project, function(project)
       vim.ui.input({
         prompt = "Task: ",
       }, function(description)
