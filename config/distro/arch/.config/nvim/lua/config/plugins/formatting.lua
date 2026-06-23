@@ -4,18 +4,6 @@ local tools_bin = tools_root .. "/tools/bin"
 local conform = require("conform")
 
 conform.setup({
-  formatters = {
-    rustfmt = {
-      command = tools_bin .. "/rustfmt",
-    },
-    ruff_format = {
-      command = tools_bin .. "/ruff",
-      args = { "format" },
-    },
-    prettier = {
-      command = tools_bin .. "/prettier",
-    },
-  },
   formatters_by_ft = {
     rust = { "rustfmt" },
     python = { "ruff_format" },
