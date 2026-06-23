@@ -19,14 +19,17 @@ Arch PATH setup for `~/.volta/bin`, `~/.cargo/bin`, and `~/.local/bin` lives in
 Arch editor defaults (`EDITOR`/`VISUAL`) are set to `nvim` in
 `shell/distro/arch/15-editor.sh`.
 
-Secrets are loaded from `~/.config/secrets/secrets.env` and merged with repo
+Secrets are loaded from `~/.config/secrets/secrets.env`, then from dotfiles
+repo secrets at `$DOTFILES_ROOT/.secrets/secrets.env`, and then merged with repo
 secrets from `<repo>/.secrets/secrets.env` by `shell/distro/arch/12-secrets.sh`.
-Repo values override global values.
+Current repo values override dotfiles repo values, which override global values.
 
 App-specific overlays are also supported for commands run through
 `with_repo_secrets`. For a program named `foo`, the loader also checks:
-`~/.config/secrets/secrets.foo.env` and `<repo>/.secrets/secrets.foo.env`.
-Load order is global base -> global app -> repo base -> repo app.
+`~/.config/secrets/secrets.foo.env`, `$DOTFILES_ROOT/.secrets/secrets.foo.env`,
+and `<repo>/.secrets/secrets.foo.env`.
+Load order is global base -> global app -> dotfiles repo base -> dotfiles repo
+app -> current repo base -> current repo app.
 
 Secret values can reference Bitwarden with `BW:<item-name>`, for example
 `HASS_MCP_URL=BW:hass.mcp.url`. The value is resolved via

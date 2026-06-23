@@ -73,9 +73,13 @@ dotfiles_secrets_repo_root() {
   git rev-parse --show-toplevel 2>/dev/null || true
 }
 
+dotfiles_secrets_dotfiles_repo_root() {
+  printf '%s\n' "${DOTFILES_ROOT:-}"
+}
+
 dotfiles_secrets_reload() {
   local app="${1:-}"
-  local repo_root repo_file global_file repo_app_file global_app_file
+  local repo_root repo_file global_file repo_app_file global_app_file dotfiles_repo_root dotfiles_repo_file dotfiles_repo_app_file
 
   repo_root="$(dotfiles_secrets_repo_root)"
   if [[ "${DOTFILES_SECRETS_ACTIVE_REPO:-}" == "$repo_root" && "${DOTFILES_SECRETS_ACTIVE_APP:-}" == "$app" ]]; then
@@ -89,6 +93,16 @@ dotfiles_secrets_reload() {
   if [[ -n "$app" ]]; then
     global_app_file="$(dotfiles_secrets_app_file "$global_file" "$app")"
     dotfiles_secrets_load_env_file "$global_app_file"
+  fi
+
+  dotfiles_repo_root="$(dotfiles_secrets_dotfiles_repo_root)"
+  if [[ -n "$dotfiles_repo_root" ]]; then
+    dotfiles_repo_file="$dotfiles_repo_root/$(dotfiles_secrets_repo_relpath)"
+    dotfiles_secrets_load_env_file "$dotfiles_repo_file"
+    if [[ -n "$app" ]]; then
+      dotfiles_repo_app_file="$(dotfiles_secrets_app_file "$dotfiles_repo_file" "$app")"
+      dotfiles_secrets_load_env_file "$dotfiles_repo_app_file"
+    fi
   fi
 
   if [[ -n "$repo_root" ]]; then

@@ -1,4 +1,9 @@
 case ":$PATH:" in
+  *":$DOTFILES_ROOT/tools/bin:"*) ;;
+  *) PATH="$DOTFILES_ROOT/tools/bin${PATH:+:$PATH}" ;;
+esac
+
+case ":$PATH:" in
   *":$HOME/.volta/bin:"*) ;;
   *) PATH="$HOME/.volta/bin${PATH:+:$PATH}" ;;
 esac
