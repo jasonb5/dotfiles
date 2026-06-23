@@ -10,7 +10,7 @@ sudo pacman -S --needed --noconfirm \
   sway swaybg swww swayidle swaylock fuzzel grim slurp wl-clipboard \
   kitty chromium firefox labwc ironbar swaync ttf-iosevka-nerd xorg-xwayland \
   xdg-desktop-portal-wlr xdg-desktop-portal-gtk \
-  upower tuned polkit-gnome
+  upower tuned polkit-gnome gnome-keyring
 sudo systemctl enable --now tuned
 
 dotfiles_log_info "sway installed"
