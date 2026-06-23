@@ -1,0 +1,1 @@
+"""Proton Bridge MCP server."""

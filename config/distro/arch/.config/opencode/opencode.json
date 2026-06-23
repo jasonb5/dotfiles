@@ -1,5 +1,19 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "llama-swap": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "llama-swap",
+      "options": {
+        "baseURL": "https://llama-swap.c.angrydonkey.io/v1"
+      },
+      "models": {
+        "qwen3.5-4B": {
+          "name": "Qwen 3.5 4B"
+        }
+      }
+    }
+  },
   "mcp": {
     "tasks_index": {
       "type": "local",
@@ -21,15 +35,36 @@
     "github": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
+      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
       "environment": {
         "GITHUB_TOKEN": "{env:GITHUB_TOKEN}"
       },
       "timeout": 15000
+    },
+    "proton_bridge": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "uv",
+        "run",
+        "--directory",
+        "/home/titters/devel/personal/dotfiles/tools/mcp/proton-bridge",
+        "python",
+        "-m",
+        "proton_bridge_mcp.server"
+      ],
+      "environment": {
+        "PROTON_BRIDGE_HOST": "127.0.0.1",
+        "PROTON_BRIDGE_IMAP_PORT": "1143",
+        "PROTON_BRIDGE_SMTP_PORT": "1025",
+        "PROTON_BRIDGE_USERNAME": "boutte.jason@pm.me",
+        "PROTON_BRIDGE_PASSWORD": "{env:PROTON_BRIDGE_PASSWORD}",
+        "PROTON_BRIDGE_IMAP_SECURITY": "STARTTLS",
+        "PROTON_BRIDGE_SMTP_SECURITY": "STARTTLS",
+        "PROTON_BRIDGE_AUTOSTART": "1",
+        "PROTON_BRIDGE_AUTOSTART_COMMAND": "protonmail-bridge"
+      },
+      "timeout": 20000
     }
   }
 }
